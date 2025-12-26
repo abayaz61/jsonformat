@@ -2,7 +2,7 @@
 
 A modern, feature-rich JSON formatting and viewing tool built with Next.js 16. Format, beautify, minify, and explore JSON data with an intuitive interface.
 
-🌐 **Live Demo:** [jsonformatter.info](https://jsonformatter.info)
+🌐 **Live Demo:** [jsonformat.info](https://jsonformat.info/)
 
 ![Next.js](https://img.shields.io/badge/Next.js-16.1-black?style=flat-square&logo=next.js)
 ![React](https://img.shields.io/badge/React-19.2-61DAFB?style=flat-square&logo=react)
