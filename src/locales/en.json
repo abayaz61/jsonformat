@@ -1,0 +1,93 @@
+{
+  "header": {
+    "title": "JSON Formatter",
+    "subtitle": "Format, Validate & Beautify"
+  },
+  "toolbar": {
+    "format": "Format",
+    "minify": "Minify",
+    "copy": "Copy",
+    "paste": "Paste",
+    "download": "Download",
+    "upload": "Upload",
+    "clear": "Clear",
+    "fullscreen": "Fullscreen",
+    "exitFullscreen": "Exit Fullscreen",
+    "export": "Export Model"
+  },
+  "settings": {
+    "title": "Settings",
+    "theme": "Theme",
+    "language": "Language",
+    "colorTheme": "Color Theme",
+    "fontSize": "Font Size",
+    "indentSize": "Indent Size",
+    "wordWrap": "Word Wrap",
+    "lineNumbers": "Line Numbers",
+    "minimap": "Minimap"
+  },
+  "messages": {
+    "copied": "Copied to clipboard!",
+    "downloaded": "File downloaded!",
+    "cleared": "Editor cleared!",
+    "invalidJson": "Invalid JSON",
+    "formatted": "JSON formatted!",
+    "minified": "JSON minified!",
+    "pasteError": "Could not paste from clipboard",
+    "uploadError": "Could not read file"
+  },
+  "exportModal": {
+    "title": "Export as Model",
+    "invalidJson": "Invalid JSON - please enter valid JSON data",
+    "copy": "Copy",
+    "copied": "Copied!"
+  },
+  "themes": {
+    "light": "Light",
+    "dark": "Dark",
+    "ocean": "Ocean Blue",
+    "forest": "Forest Green",
+    "sunset": "Sunset Orange",
+    "purple": "Purple Night",
+    "rose": "Rose Pink",
+    "midnight": "Midnight Teal",
+    "crimson": "Crimson Red",
+    "gold": "Gold",
+    "emerald": "Emerald",
+    "sapphire": "Sapphire Blue",
+    "amber": "Amber",
+    "indigo": "Indigo",
+    "coral": "Coral",
+    "slate": "Slate Gray",
+    "lime": "Lime Green",
+    "violet": "Violet",
+    "bronze": "Bronze",
+    "cyan": "Cyan",
+    "magenta": "Magenta",
+    "olive": "Olive"
+  },
+  "installPrompt": {
+    "title": "Install JSON Formatter",
+    "description": "Add the app to your home screen and enjoy fast access with exclusive features!",
+    "benefit1Title": "Quick Access",
+    "benefit1Desc": "Launch instantly from your home screen",
+    "benefit2Title": "Works Offline",
+    "benefit2Desc": "No internet connection required",
+    "benefit3Title": "Full Screen Mode",
+    "benefit3Desc": "Distraction-free editing experience",
+    "later": "Maybe Later",
+    "install": "Install Now"
+  },
+  "privacyNotice": {
+    "title": "Your Privacy Matters",
+    "subtitle": "100% Client-Side Processing",
+    "description": "We care deeply about your data privacy. This application processes all your JSON data entirely in your browser.",
+    "feature1Title": "No Server Uploads",
+    "feature1Desc": "Your JSON data is never sent to any server. Everything stays on your device.",
+    "feature2Title": "No Tracking",
+    "feature2Desc": "We don't use analytics or tracking. Your activity remains completely private.",
+    "feature3Title": "Offline Capable",
+    "feature3Desc": "Once loaded, the app works offline. Your data never needs to leave your browser.",
+    "button": "Got it, thanks!"
+  }
+}

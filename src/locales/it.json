@@ -1,0 +1,93 @@
+{
+    "header": {
+        "title": "Formattatore JSON",
+        "subtitle": "Formatta, Valida e Abbellisci"
+    },
+    "toolbar": {
+        "format": "Formatta",
+        "minify": "Minimizza",
+        "copy": "Copia",
+        "paste": "Incolla",
+        "download": "Scarica",
+        "upload": "Carica",
+        "clear": "Cancella",
+        "fullscreen": "Schermo intero",
+        "exitFullscreen": "Esci da schermo intero",
+        "export": "Esporta come modello"
+    },
+    "settings": {
+        "title": "Impostazioni",
+        "theme": "Tema",
+        "language": "Lingua",
+        "colorTheme": "Colore Tema",
+        "fontSize": "Dimensione carattere",
+        "indentSize": "Dimensione rientro",
+        "wordWrap": "A capo automatico",
+        "lineNumbers": "Numeri di riga",
+        "minimap": "Minimappa"
+    },
+    "messages": {
+        "copied": "Copiato negli appunti!",
+        "downloaded": "File scaricato!",
+        "cleared": "Editor cancellato!",
+        "invalidJson": "JSON non valido",
+        "formatted": "JSON formattato!",
+        "minified": "JSON minimizzato!",
+        "pasteError": "Impossibile incollare",
+        "uploadError": "Impossibile leggere il file"
+    },
+    "exportModal": {
+        "title": "Esporta come modello",
+        "invalidJson": "JSON non valido - inserisci dati JSON validi",
+        "copy": "Copia",
+        "copied": "Copiato!"
+    },
+    "themes": {
+        "light": "Chiaro",
+        "dark": "Scuro",
+        "ocean": "Blu Oceano",
+        "forest": "Verde Foresta",
+        "sunset": "Tramonto",
+        "purple": "Notte Viola",
+        "rose": "Rosa",
+        "midnight": "Turchese di Mezzanotte",
+        "crimson": "Cremisi",
+        "gold": "Oro",
+        "emerald": "Smeraldo",
+        "sapphire": "Blu Zaffiro",
+        "amber": "Ambra",
+        "indigo": "Indaco",
+        "coral": "Corallo",
+        "slate": "Grigio Ardesia",
+        "lime": "Verde Lime",
+        "violet": "Viola",
+        "bronze": "Bronzo",
+        "cyan": "Ciano",
+        "magenta": "Magenta",
+        "olive": "Oliva"
+    },
+    "installPrompt": {
+        "title": "Installa JSON Formattatore",
+        "description": "Aggiungi l'app alla schermata iniziale e goditi un accesso rapido con funzionalità esclusive!",
+        "benefit1Title": "Accesso Rapido",
+        "benefit1Desc": "Avvia istantaneamente dalla schermata iniziale",
+        "benefit2Title": "Funziona Offline",
+        "benefit2Desc": "Nessuna connessione internet richiesta",
+        "benefit3Title": "Modalità Schermo Intero",
+        "benefit3Desc": "Esperienza di modifica senza distrazioni",
+        "later": "Forse più tardi",
+        "install": "Installa ora"
+    },
+    "privacyNotice": {
+        "title": "La tua privacy è importante",
+        "subtitle": "Elaborazione 100% lato client",
+        "description": "Teniamo molto alla privacy dei tuoi dati. Questa applicazione elabora tutti i tuoi dati JSON interamente nel browser.",
+        "feature1Title": "Nessun upload al server",
+        "feature1Desc": "I tuoi dati JSON non vengono mai inviati a nessun server. Tutto rimane sul tuo dispositivo.",
+        "feature2Title": "Nessun tracciamento",
+        "feature2Desc": "Non utilizziamo analisi o tracciamento. La tua attività rimane completamente privata.",
+        "feature3Title": "Funziona offline",
+        "feature3Desc": "Una volta caricata, l'app funziona offline. I tuoi dati non devono mai lasciare il browser.",
+        "button": "Capito, grazie!"
+    }
+}

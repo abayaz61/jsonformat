@@ -1,0 +1,93 @@
+{
+    "header": {
+        "title": "JSON Biçimlendirici",
+        "subtitle": "Biçimlendir, Doğrula & Güzelleştir"
+    },
+    "toolbar": {
+        "format": "Biçimlendir",
+        "minify": "Sıkıştır",
+        "copy": "Kopyala",
+        "paste": "Yapıştır",
+        "download": "İndir",
+        "upload": "Yükle",
+        "clear": "Temizle",
+        "fullscreen": "Tam Ekran",
+        "exitFullscreen": "Tam Ekrandan Çık",
+        "export": "Model Olarak Dışa Aktar"
+    },
+    "settings": {
+        "title": "Ayarlar",
+        "theme": "Tema",
+        "language": "Dil",
+        "colorTheme": "Renk Teması",
+        "fontSize": "Yazı Boyutu",
+        "indentSize": "Girinti Boyutu",
+        "wordWrap": "Sözcük Kaydırma",
+        "lineNumbers": "Satır Numaraları",
+        "minimap": "Mini Harita"
+    },
+    "messages": {
+        "copied": "Panoya kopyalandı!",
+        "downloaded": "Dosya indirildi!",
+        "cleared": "Editör temizlendi!",
+        "invalidJson": "Geçersiz JSON",
+        "formatted": "JSON biçimlendirildi!",
+        "minified": "JSON sıkıştırıldı!",
+        "pasteError": "Panodan yapıştırılamadı",
+        "uploadError": "Dosya okunamadı"
+    },
+    "exportModal": {
+        "title": "Model Olarak Dışa Aktar",
+        "invalidJson": "Geçersiz JSON - lütfen geçerli JSON verisi girin",
+        "copy": "Kopyala",
+        "copied": "Kopyalandı!"
+    },
+    "themes": {
+        "light": "Açık",
+        "dark": "Koyu",
+        "ocean": "Okyanus Mavisi",
+        "forest": "Orman Yeşili",
+        "sunset": "Gün Batımı",
+        "purple": "Mor Gece",
+        "rose": "Gül Pembesi",
+        "midnight": "Gece Turkuazı",
+        "crimson": "Kızıl",
+        "gold": "Altın",
+        "emerald": "Zümrüt",
+        "sapphire": "Safir Mavisi",
+        "amber": "Kehribar",
+        "indigo": "Çivit Mavisi",
+        "coral": "Mercan",
+        "slate": "Arduvaz Grisi",
+        "lime": "Misket Limonu",
+        "violet": "Menekşe",
+        "bronze": "Bronz",
+        "cyan": "Camgöbeği",
+        "magenta": "Magenta",
+        "olive": "Zeytin Yeşili"
+    },
+    "installPrompt": {
+        "title": "JSON Formatter'ı Yükle",
+        "description": "Uygulamayı ana ekranınıza ekleyin ve özel avantajlardan yararlanın!",
+        "benefit1Title": "Hızlı Erişim",
+        "benefit1Desc": "Ana ekrandan anında başlatın",
+        "benefit2Title": "Çevrimdışı Çalışır",
+        "benefit2Desc": "İnternet bağlantısı gerekmez",
+        "benefit3Title": "Tam Ekran Modu",
+        "benefit3Desc": "Dikkat dağıtmayan düzenleme deneyimi",
+        "later": "Daha Sonra",
+        "install": "Şimdi Yükle"
+    },
+    "privacyNotice": {
+        "title": "Gizliliğiniz Bizim İçin Önemli",
+        "subtitle": "%100 Tarayıcı Tabanlı İşlem",
+        "description": "Veri gizliliğinizi önemsiyoruz. Bu uygulama tüm JSON verilerinizi tamamen tarayıcınızda işler.",
+        "feature1Title": "Sunucuya Veri Gönderilmez",
+        "feature1Desc": "JSON verileriniz hiçbir zaman sunucuya gönderilmez. Her şey cihazınızda kalır.",
+        "feature2Title": "İzleme Yok",
+        "feature2Desc": "Analitik veya izleme kullanmıyoruz. Aktiviteniz tamamen gizli kalır.",
+        "feature3Title": "Çevrimdışı Çalışır",
+        "feature3Desc": "Yüklendikten sonra uygulama çevrimdışı çalışır. Verileriniz tarayıcınızdan çıkmaz.",
+        "button": "Anladım, teşekkürler!"
+    }
+}

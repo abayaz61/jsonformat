@@ -1,0 +1,93 @@
+{
+    "header": {
+        "title": "JSON-Formatierer",
+        "subtitle": "Formatieren, Validieren & Verschönern"
+    },
+    "toolbar": {
+        "format": "Formatieren",
+        "minify": "Minimieren",
+        "copy": "Kopieren",
+        "paste": "Einfügen",
+        "download": "Herunterladen",
+        "upload": "Hochladen",
+        "clear": "Löschen",
+        "fullscreen": "Vollbild",
+        "exitFullscreen": "Vollbild beenden",
+        "export": "Als Modell exportieren"
+    },
+    "settings": {
+        "title": "Einstellungen",
+        "theme": "Thema",
+        "language": "Sprache",
+        "colorTheme": "Farbthema",
+        "fontSize": "Schriftgröße",
+        "indentSize": "Einzugsgröße",
+        "wordWrap": "Zeilenumbruch",
+        "lineNumbers": "Zeilennummern",
+        "minimap": "Minimap"
+    },
+    "messages": {
+        "copied": "In Zwischenablage kopiert!",
+        "downloaded": "Datei heruntergeladen!",
+        "cleared": "Editor gelöscht!",
+        "invalidJson": "Ungültiges JSON",
+        "formatted": "JSON formatiert!",
+        "minified": "JSON minimiert!",
+        "pasteError": "Einfügen fehlgeschlagen",
+        "uploadError": "Datei konnte nicht gelesen werden"
+    },
+    "exportModal": {
+        "title": "Als Modell exportieren",
+        "invalidJson": "Ungültiges JSON - bitte gültige JSON-Daten eingeben",
+        "copy": "Kopieren",
+        "copied": "Kopiert!"
+    },
+    "themes": {
+        "light": "Hell",
+        "dark": "Dunkel",
+        "ocean": "Ozeanblau",
+        "forest": "Waldgrün",
+        "sunset": "Sonnenuntergang",
+        "purple": "Lila Nacht",
+        "rose": "Rosenrosa",
+        "midnight": "Mitternachts-Türkis",
+        "crimson": "Karmesinrot",
+        "gold": "Gold",
+        "emerald": "Smaragd",
+        "sapphire": "Saphirblau",
+        "amber": "Bernstein",
+        "indigo": "Indigo",
+        "coral": "Koralle",
+        "slate": "Schiefergrau",
+        "lime": "Limettengrün",
+        "violet": "Violett",
+        "bronze": "Bronze",
+        "cyan": "Cyan",
+        "magenta": "Magenta",
+        "olive": "Olivgrün"
+    },
+    "installPrompt": {
+        "title": "JSON-Formatierer installieren",
+        "description": "Fügen Sie die App Ihrem Startbildschirm hinzu und genießen Sie schnellen Zugriff mit exklusiven Funktionen!",
+        "benefit1Title": "Schneller Zugriff",
+        "benefit1Desc": "Starten Sie sofort vom Startbildschirm",
+        "benefit2Title": "Offline arbeiten",
+        "benefit2Desc": "Keine Internetverbindung erforderlich",
+        "benefit3Title": "Vollbildmodus",
+        "benefit3Desc": "Ablenkungsfreies Bearbeitungserlebnis",
+        "later": "Vielleicht später",
+        "install": "Jetzt installieren"
+    },
+    "privacyNotice": {
+        "title": "Ihre Privatsphäre ist wichtig",
+        "subtitle": "100% Client-seitige Verarbeitung",
+        "description": "Wir legen großen Wert auf Ihre Datensicherheit. Diese Anwendung verarbeitet alle JSON-Daten vollständig in Ihrem Browser.",
+        "feature1Title": "Keine Server-Uploads",
+        "feature1Desc": "Ihre JSON-Daten werden niemals an einen Server gesendet. Alles bleibt auf Ihrem Gerät.",
+        "feature2Title": "Kein Tracking",
+        "feature2Desc": "Wir verwenden keine Analysen oder Tracking. Ihre Aktivität bleibt vollständig privat.",
+        "feature3Title": "Offline-fähig",
+        "feature3Desc": "Nach dem Laden funktioniert die App offline. Ihre Daten müssen Ihren Browser nie verlassen.",
+        "button": "Verstanden, danke!"
+    }
+}

@@ -1,0 +1,92 @@
+{
+    "name": "JSON Formatter - JSON Düzenleme Aracı",
+    "short_name": "JSONFmt",
+    "description": "Ücretsiz JSON formatter ve validator aracı. JSON verilerinizi düzenleyin, doğrulayın ve güzelleştirin.",
+    "start_url": "/",
+    "id": "/",
+    "display": "standalone",
+    "background_color": "#0a0a0f",
+    "theme_color": "#667eea",
+    "orientation": "any",
+    "lang": "tr",
+    "categories": [
+        "developer",
+        "productivity",
+        "utilities"
+    ],
+    "icons": [
+        {
+            "src": "/icons/icon-72x72.png",
+            "sizes": "72x72",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "/icons/icon-96x96.png",
+            "sizes": "96x96",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "/icons/icon-128x128.png",
+            "sizes": "128x128",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "/icons/icon-144x144.png",
+            "sizes": "144x144",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "/icons/icon-152x152.png",
+            "sizes": "152x152",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "/icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "/icons/icon-384x384.png",
+            "sizes": "384x384",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "/icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "/icons/favicon-16x16.png",
+            "sizes": "16x16",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/favicon-32x32.png",
+            "sizes": "32x32",
+            "type": "image/png"
+        }
+    ],
+    "screenshots": [],
+    "shortcuts": [
+        {
+            "name": "Format JSON",
+            "short_name": "Format",
+            "description": "JSON Formatter'ı Aç",
+            "url": "/",
+            "icons": [
+                {
+                    "src": "/icons/icon-192x192.png",
+                    "sizes": "192x192"
+                }
+            ]
+        }
+    ]
+}

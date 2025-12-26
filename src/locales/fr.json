@@ -1,0 +1,93 @@
+{
+    "header": {
+        "title": "Formateur JSON",
+        "subtitle": "Formater, Valider & Embellir"
+    },
+    "toolbar": {
+        "format": "Formater",
+        "minify": "Minifier",
+        "copy": "Copier",
+        "paste": "Coller",
+        "download": "Télécharger",
+        "upload": "Importer",
+        "clear": "Effacer",
+        "fullscreen": "Plein écran",
+        "exitFullscreen": "Quitter le plein écran",
+        "export": "Exporter en modèle"
+    },
+    "settings": {
+        "title": "Paramètres",
+        "theme": "Thème",
+        "language": "Langue",
+        "colorTheme": "Couleur du thème",
+        "fontSize": "Taille de police",
+        "indentSize": "Taille d'indentation",
+        "wordWrap": "Retour à la ligne",
+        "lineNumbers": "Numéros de ligne",
+        "minimap": "Minimap"
+    },
+    "messages": {
+        "copied": "Copié dans le presse-papiers!",
+        "downloaded": "Fichier téléchargé!",
+        "cleared": "Éditeur effacé!",
+        "invalidJson": "JSON invalide",
+        "formatted": "JSON formaté!",
+        "minified": "JSON minifié!",
+        "pasteError": "Impossible de coller",
+        "uploadError": "Impossible de lire le fichier"
+    },
+    "exportModal": {
+        "title": "Exporter en modèle",
+        "invalidJson": "JSON invalide - veuillez entrer des données JSON valides",
+        "copy": "Copier",
+        "copied": "Copié!"
+    },
+    "themes": {
+        "light": "Clair",
+        "dark": "Sombre",
+        "ocean": "Bleu Océan",
+        "forest": "Vert Forêt",
+        "sunset": "Coucher de soleil",
+        "purple": "Nuit Violette",
+        "rose": "Rose",
+        "midnight": "Turquoise de Minuit",
+        "crimson": "Cramoisi",
+        "gold": "Or",
+        "emerald": "Émeraude",
+        "sapphire": "Bleu Saphir",
+        "amber": "Ambre",
+        "indigo": "Indigo",
+        "coral": "Corail",
+        "slate": "Gris Ardoise",
+        "lime": "Vert Citron",
+        "violet": "Violet",
+        "bronze": "Bronze",
+        "cyan": "Cyan",
+        "magenta": "Magenta",
+        "olive": "Olive"
+    },
+    "installPrompt": {
+        "title": "Installer JSON Formateur",
+        "description": "Ajoutez l'application à votre écran d'accueil et profitez d'un accès rapide avec des fonctionnalités exclusives!",
+        "benefit1Title": "Accès Rapide",
+        "benefit1Desc": "Lancez instantanément depuis l'écran d'accueil",
+        "benefit2Title": "Fonctionne Hors Ligne",
+        "benefit2Desc": "Aucune connexion internet requise",
+        "benefit3Title": "Mode Plein Écran",
+        "benefit3Desc": "Expérience d'édition sans distraction",
+        "later": "Peut-être plus tard",
+        "install": "Installer maintenant"
+    },
+    "privacyNotice": {
+        "title": "Votre vie privée compte",
+        "subtitle": "Traitement 100% côté client",
+        "description": "Nous accordons une grande importance à la confidentialité de vos données. Cette application traite toutes vos données JSON entièrement dans votre navigateur.",
+        "feature1Title": "Aucun envoi au serveur",
+        "feature1Desc": "Vos données JSON ne sont jamais envoyées à un serveur. Tout reste sur votre appareil.",
+        "feature2Title": "Pas de suivi",
+        "feature2Desc": "Nous n'utilisons pas d'analyses ni de suivi. Votre activité reste totalement privée.",
+        "feature3Title": "Fonctionne hors ligne",
+        "feature3Desc": "Une fois chargée, l'application fonctionne hors ligne. Vos données n'ont jamais besoin de quitter votre navigateur.",
+        "button": "Compris, merci!"
+    }
+}

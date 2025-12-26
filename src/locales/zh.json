@@ -1,0 +1,93 @@
+{
+    "header": {
+        "title": "JSON 格式化工具",
+        "subtitle": "格式化、验证与美化"
+    },
+    "toolbar": {
+        "format": "格式化",
+        "minify": "压缩",
+        "copy": "复制",
+        "paste": "粘贴",
+        "download": "下载",
+        "upload": "上传",
+        "clear": "清空",
+        "fullscreen": "全屏",
+        "exitFullscreen": "退出全屏",
+        "export": "导出模型"
+    },
+    "settings": {
+        "title": "设置",
+        "theme": "主题",
+        "language": "语言",
+        "colorTheme": "颜色主题",
+        "fontSize": "字体大小",
+        "indentSize": "缩进大小",
+        "wordWrap": "自动换行",
+        "lineNumbers": "行号",
+        "minimap": "小地图"
+    },
+    "messages": {
+        "copied": "已复制到剪贴板！",
+        "downloaded": "文件已下载！",
+        "cleared": "编辑器已清空！",
+        "invalidJson": "无效的 JSON",
+        "formatted": "JSON 已格式化！",
+        "minified": "JSON 已压缩！",
+        "pasteError": "无法粘贴",
+        "uploadError": "无法读取文件"
+    },
+    "exportModal": {
+        "title": "导出为模型",
+        "invalidJson": "无效的 JSON - 请输入有效的 JSON 数据",
+        "copy": "复制",
+        "copied": "已复制！"
+    },
+    "themes": {
+        "light": "浅色",
+        "dark": "深色",
+        "ocean": "海洋蓝",
+        "forest": "森林绿",
+        "sunset": "日落橙",
+        "purple": "紫夜",
+        "rose": "玫瑰粉",
+        "midnight": "午夜青",
+        "crimson": "绯红",
+        "gold": "金色",
+        "emerald": "翡翠绿",
+        "sapphire": "宝石蓝",
+        "amber": "琥珀",
+        "indigo": "靛蓝",
+        "coral": "珊瑚",
+        "slate": "石板灰",
+        "lime": "青柠绿",
+        "violet": "紫罗兰",
+        "bronze": "青铜",
+        "cyan": "青色",
+        "magenta": "品红",
+        "olive": "橄榄绿"
+    },
+    "installPrompt": {
+        "title": "安装 JSON 格式化工具",
+        "description": "将应用添加到主屏幕，享受快速访问和专属功能！",
+        "benefit1Title": "快速访问",
+        "benefit1Desc": "从主屏幕即时启动",
+        "benefit2Title": "离线工作",
+        "benefit2Desc": "无需网络连接",
+        "benefit3Title": "全屏模式",
+        "benefit3Desc": "无干扰的编辑体验",
+        "later": "稍后再说",
+        "install": "立即安装"
+    },
+    "privacyNotice": {
+        "title": "您的隐私很重要",
+        "subtitle": "100% 客户端处理",
+        "description": "我们非常重视您的数据隐私。此应用程序完全在您的浏览器中处理所有 JSON 数据。",
+        "feature1Title": "不上传到服务器",
+        "feature1Desc": "您的 JSON 数据永远不会发送到任何服务器。所有内容都保留在您的设备上。",
+        "feature2Title": "无跟踪",
+        "feature2Desc": "我们不使用分析或跟踪。您的活动完全保密。",
+        "feature3Title": "支持离线",
+        "feature3Desc": "加载后，应用可离线工作。您的数据永远不需要离开浏览器。",
+        "button": "知道了，谢谢！"
+    }
+}
