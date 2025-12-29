@@ -3,12 +3,18 @@
 
 import { useEffect, useState } from "react";
 import { RefreshCw } from "lucide-react";
+import { isTauri } from "@/utils/tauri";
 
 export default function UpdateNotification() {
     const [showReload, setShowReload] = useState(false);
     const [waitingWorker, setWaitingWorker] = useState<ServiceWorker | null>(null);
 
     useEffect(() => {
+        // Tauri ortamında Service Worker kullanma (native update mekanizması var)
+        if (isTauri()) {
+            return;
+        }
+
         if (typeof window !== "undefined" && "serviceWorker" in navigator) {
             // Register the service worker
             navigator.serviceWorker
