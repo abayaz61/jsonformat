@@ -1419,9 +1419,12 @@ body {
 
 /* ===== SKELETON LOADING ===== */
 @keyframes skeleton-pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0.4;
   }
+
   50% {
     opacity: 0.7;
   }
@@ -1572,9 +1575,31 @@ body {
 
 .tauri-loading-logo {
   font-family: var(--font-geist-mono), monospace;
-  font-size: 32px;
+  font-size: 64px;
   font-weight: 700;
   color: var(--accent);
+  animation: logo-pulse 2s ease-in-out infinite;
+}
+
+@keyframes logo-pulse {
+
+  0%,
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.tauri-loading-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
 }
 
 .tauri-loading-bar {
@@ -1597,10 +1622,12 @@ body {
     width: 0%;
     margin-left: 0%;
   }
+
   50% {
     width: 60%;
     margin-left: 20%;
   }
+
   100% {
     width: 0%;
     margin-left: 100%;

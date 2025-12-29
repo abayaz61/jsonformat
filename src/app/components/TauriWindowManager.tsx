@@ -6,13 +6,11 @@ import { isTauri } from '@/utils/tauri';
 /**
  * TauriWindowManager
  * 
- * Tauri uygulamasında splash screen benzeri deneyim sağlar.
- * - İlk yüklemede loading ekranı gösterir
- * - Uygulama tamamen yüklendiğinde pencereyi gösterir
- * - Web ortamında hiçbir şey yapmaz
+ * Tauri uygulamasında loading durumunu yönetir.
+ * Pencere hemen görünür, içerik yüklenene kadar loading ekranı gösterilir.
  */
 export default function TauriWindowManager() {
-    const [isLoading, setIsLoading] = useState(true);
+    const [isReady, setIsReady] = useState(false);
     const [isTauriEnv, setIsTauriEnv] = useState(false);
 
     useEffect(() => {
@@ -20,48 +18,28 @@ export default function TauriWindowManager() {
         const checkTauri = isTauri();
         setIsTauriEnv(checkTauri);
 
+        // Tauri değilse hemen hazır
         if (!checkTauri) {
-            setIsLoading(false);
+            setIsReady(true);
             return;
         }
 
-        const showWindow = async () => {
-            try {
-                // Tauri 2.0 window API'sini dinamik olarak yükle
-                const { getCurrentWindow } = await import('@tauri-apps/api/window');
-                const currentWindow = getCurrentWindow();
-
-                // Biraz bekle - tüm JS'lerin yüklenmesi için
-                await new Promise(resolve => setTimeout(resolve, 100));
-
-                // Pencereyi göster
-                await currentWindow.show();
-
-                // Pencereyi odakla
-                await currentWindow.setFocus();
-
-                // Loading'i kapat
-                setIsLoading(false);
-            } catch (error) {
-                console.error('Tauri pencere gösterme hatası:', error);
-                setIsLoading(false);
-            }
+        // DOM tamamen yüklendikten sonra loading'i kapat
+        const handleReady = () => {
+            // Kısa bir gecikme - smooth transition için
+            setTimeout(() => setIsReady(true), 100);
         };
 
-        // DOM tamamen yüklendikten sonra pencereyi göster
         if (document.readyState === 'complete') {
-            showWindow();
+            handleReady();
         } else {
-            const handleLoad = () => {
-                showWindow();
-            };
-            window.addEventListener('load', handleLoad);
-            return () => window.removeEventListener('load', handleLoad);
+            window.addEventListener('load', handleReady);
+            return () => window.removeEventListener('load', handleReady);
         }
     }, []);
 
-    // Web ortamında veya yükleme tamamlandıysa hiçbir şey gösterme
-    if (!isTauriEnv || !isLoading) {
+    // Web ortamında veya hazırsa hiçbir şey gösterme
+    if (!isTauriEnv || isReady) {
         return null;
     }
 
@@ -69,6 +47,7 @@ export default function TauriWindowManager() {
     return (
         <div className="tauri-loading-screen">
             <div className="tauri-loading-logo">{'{}'}</div>
+            <div className="tauri-loading-text">JSON Formatter</div>
             <div className="tauri-loading-bar">
                 <div className="tauri-loading-progress" />
             </div>
