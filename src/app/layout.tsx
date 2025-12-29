@@ -7,6 +7,7 @@ import InstallPrompt from "@/app/components/InstallPrompt";
 import PrivacyNotice from "@/app/components/PrivacyNotice";
 import GoogleAnalytics from "@/app/components/GoogleAnalytics";
 import StructuredData from "@/app/components/StructuredData";
+import TauriWindowManager from "@/app/components/TauriWindowManager";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -123,11 +124,23 @@ export default function RootLayout({
   return (
     <html lang="tr" data-theme="dark" data-color="ocean" suppressHydrationWarning>
       <head>
-        {/* DNS Prefetch */}
+        {/* DNS Prefetch & Preconnect for faster loading */}
         <link rel="dns-prefetch" href="//www.googletagmanager.com" />
         <link rel="dns-prefetch" href="//www.google-analytics.com" />
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
         <link rel="dns-prefetch" href="//cdnjs.cloudflare.com" />
+
+        {/* Monaco Editor CDN - Critical for fast editor loading */}
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="//cdn.jsdelivr.net" />
+
+        {/* Preload critical resources */}
+        <link
+          rel="preload"
+          href="https://cdn.jsdelivr.net/npm/monaco-editor@0.50.0/min/vs/loader.js"
+          as="script"
+          crossOrigin="anonymous"
+        />
 
         {/* Favicon */}
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
@@ -137,6 +150,7 @@ export default function RootLayout({
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <TauriWindowManager />
         <SettingsProvider>
           <ThemeProvider>
             <LanguageProvider>

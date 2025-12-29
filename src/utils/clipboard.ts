@@ -1,7 +1,18 @@
 /**
+ * Clipboard Utilities - Tauri & Web Compatible
+ */
+import { isTauri, clipboard as tauriClipboard } from './tauri';
+
+/**
  * Copy text to clipboard
  */
 export async function copyToClipboard(text: string): Promise<boolean> {
+    // Tauri ortamında native API kullan
+    if (isTauri()) {
+        return await tauriClipboard.writeText(text);
+    }
+
+    // Web ortamı
     try {
         if (navigator.clipboard && window.isSecureContext) {
             await navigator.clipboard.writeText(text);
@@ -29,6 +40,12 @@ export async function copyToClipboard(text: string): Promise<boolean> {
  * Paste text from clipboard
  */
 export async function pasteFromClipboard(): Promise<string | null> {
+    // Tauri ortamında native API kullan
+    if (isTauri()) {
+        return await tauriClipboard.readText();
+    }
+
+    // Web ortamı
     try {
         if (navigator.clipboard && window.isSecureContext) {
             return await navigator.clipboard.readText();

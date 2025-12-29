@@ -1,162 +1,145 @@
-# JSON Formatter
+# JSON Formatter - Cross-Platform Desktop Application
 
-A modern, feature-rich JSON formatting and viewing tool built with Next.js 16. Format, beautify, minify, and explore JSON data with an intuitive interface.
+Modern JSON formatter, validator ve tree viewer uygulaması. **Tauri 2.0** ile Windows ve Linux için native masaüstü uygulaması olarak derlenebilir.
 
-🌐 **Live Demo:** [jsonformat.info](https://jsonformat.info/)
+## 🖥️ Desteklenen Platformlar
 
-![Next.js](https://img.shields.io/badge/Next.js-16.1-black?style=flat-square&logo=next.js)
-![React](https://img.shields.io/badge/React-19.2-61DAFB?style=flat-square&logo=react)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript)
-![PWA](https://img.shields.io/badge/PWA-Ready-5A0FC8?style=flat-square&logo=pwa)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+| Platform | Paket Formatları | Durum |
+|----------|-----------------|-------|
+| **Windows** | MSI, NSIS (exe) | ✅ Hazır |
+| **Ubuntu/Linux** | DEB, AppImage | ✅ Hazır |
+| **macOS** | DMG, App Bundle | 📋 Planlandı |
+| **iOS** | IPA | 📋 Planlandı |
+| **Android** | APK | 📋 Planlandı |
 
-## ✨ Features
+## 🚀 Hızlı Başlangıç
 
-### Core Functionality
-- **JSON Formatting** - Beautify and minify JSON with customizable indentation
-- **Syntax Validation** - Real-time JSON syntax error detection
-- **JSON Tree View** - Interactive collapsible tree visualization with context menu
-- **Monaco Editor** - Professional code editing experience with syntax highlighting
+### Gereksinimler
 
-### Export & Conversion
-- **Model Generation** - Export JSON structure as type definitions:
-  - TypeScript interfaces
-  - Python dataclasses
-  - Java classes
-  - C# classes
-  - Go structs
-  - Rust structs
+1. **Node.js** 20.x veya üzeri
+2. **pnpm** veya **npm**
+3. **Rust** 1.77.2 veya üzeri (masaüstü derlemesi için)
+4. **Tauri CLI** (`cargo install tauri-cli`)
 
-### User Experience
-- **🌍 Multi-Language Support** - Available in 6 languages:
-  - English, Türkçe, Deutsch, Français, Italiano, 中文
-- **🎨 Theme Customization** - Multiple color palettes with interactive carousel selector
-- **📱 PWA Support** - Install as a native app on any device
-- **⌨️ Keyboard Shortcuts** - Full keyboard navigation support
-
-### Technical Features
-- **Static Export** - Optimized static site generation
-- **SEO Optimized** - Full meta tags, structured data, and sitemap
-- **Offline Ready** - Service worker with Serwist for offline functionality
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js 18.x or higher
-- npm, yarn, pnpm, or bun
-
-### Installation
+### Geliştirme Modu
 
 ```bash
-# Clone the repository
-git clone https://github.com/abayaz61/json-formatter.git
-cd json-formatter
-
-# Install dependencies
+cd src
 npm install
+npm run tauri:dev
 ```
 
-### Development
+Bu komut:
+- Next.js dev server'ı başlatır (http://localhost:3000)
+- Tauri uygulamasını debug modunda çalıştırır
+- DevTools otomatik açılır (debug modunda)
+
+### Üretim Derlemesi
+
+#### Windows için:
 
 ```bash
-# Start development server
-npm run dev
+cd src
+npm run tauri:build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Çıktı dosyaları:
+- `src-tauri/target/release/bundle/nsis/JSON Formatter_x.x.x_x64-setup.exe`
+- `src-tauri/target/release/bundle/msi/JSON Formatter_x.x.x_x64_en-US.msi`
 
-### Production Build
+#### Ubuntu/Linux için:
+
+Linux makinede veya WSL2'de:
 
 ```bash
-# Build for production (static export)
-npm run build
+# Gerekli sistem bağımlılıkları (Ubuntu/Debian)
+sudo apt update
+sudo apt install -y libwebkit2gtk-4.1-dev build-essential curl wget file \
+  libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
 
-# Serve the static build locally
-npm run serve
+# Rust kurulumu (yoksa)
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+# Derleme
+cd src
+npm install
+npm run tauri:build
 ```
 
-## 📁 Project Structure
+Çıktı dosyaları:
+- `src-tauri/target/release/bundle/deb/json-formatter_x.x.x_amd64.deb`
+- `src-tauri/target/release/bundle/appimage/json-formatter_x.x.x_amd64.AppImage`
+
+## 📦 Proje Yapısı
 
 ```
-src/
-├── app/                    # Next.js App Router
-│   ├── components/         # Page-specific components
-│   ├── layout.tsx          # Root layout with SEO metadata
-│   ├── page.tsx            # Main application page
-│   ├── globals.css         # Global styles and theme variables
-│   └── sw.ts               # Service worker entry point
-├── components/             # Reusable components
-│   ├── ExportModal/        # Model export functionality
-│   ├── Header/             # App header with theme/language controls
-│   ├── JsonEditor/         # Monaco-based JSON editor
-│   ├── JsonTree/           # Tree view visualization
-│   ├── Toolbar/            # Action toolbar
-│   └── ui/                 # Base UI components
-├── contexts/               # React contexts (Theme, Language, etc.)
-├── hooks/                  # Custom React hooks
-├── locales/                # i18n translation files
-├── public/                 # Static assets, PWA manifest, icons
-├── types/                  # TypeScript type definitions
-└── utils/                  # Utility functions
+json-formatter2/
+├── src/                         # Next.js kaynak kodu
+│   ├── app/                     # Next.js App Router
+│   ├── components/              # React bileşenleri
+│   ├── hooks/                   # Custom React hooks
+│   ├── utils/                   # Utility fonksiyonları
+│   │   ├── tauri.ts            # Tauri platform abstraction
+│   │   ├── clipboard.ts        # Clipboard işlemleri
+│   │   └── fileOperations.ts   # Dosya işlemleri
+│   └── src-tauri/              # Tauri/Rust kaynak kodu
+│       ├── Cargo.toml          # Rust bağımlılıkları
+│       ├── tauri.conf.json     # Tauri yapılandırması
+│       ├── capabilities/       # Güvenlik izinleri
+│       └── src/
+│           ├── lib.rs          # Rust ana modülü
+│           └── main.rs         # Uygulama giriş noktası
+└── docs/                        # Dokümantasyon
 ```
 
-## 🛠️ Tech Stack
+## 🔧 Yapılandırma
 
-| Category | Technology |
-|----------|------------|
-| Framework | Next.js 16.1 |
-| Language | TypeScript 5 |
-| UI Library | React 19.2 |
-| Styling | Tailwind CSS 4 |
-| Editor | Monaco Editor |
-| Icons | Lucide React |
-| PWA | Serwist |
-| Image Processing | Sharp |
+### Tauri Yapılandırması (`src/src-tauri/tauri.conf.json`)
 
-## 📜 Available Scripts
+- **productName**: Uygulama adı
+- **identifier**: Benzersiz uygulama tanımlayıcısı
+- **build.frontendDist**: Web çıktı dizini
+- **bundle.targets**: Oluşturulacak paket formatları
 
-| Script | Description |
-|--------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Create production build (static export) |
-| `npm run serve` | Serve the production build locally |
-| `npm run lint` | Run ESLint for code quality |
+### İzinler (`src/src-tauri/capabilities/default.json`)
 
-## 🌐 Supported Languages
+Uygulama şu izinlere sahip:
+- Dosya okuma/yazma
+- Clipboard okuma/yazma
+- Dosya aç/kaydet dialogları
+- Harici URL açma
 
-| Language | Code | File |
-|----------|------|------|
-| English | en | `locales/en.json` |
-| Türkçe | tr | `locales/tr.json` |
-| Deutsch | de | `locales/de.json` |
-| Français | fr | `locales/fr.json` |
-| Italiano | it | `locales/it.json` |
-| 中文 | zh | `locales/zh.json` |
+## 🛠️ NPM Script'leri
 
-## 🎨 Theming
+```bash
+npm run dev              # Next.js geliştirme sunucusu
+npm run build            # Sadece web build
+npm run tauri:dev        # Tauri geliştirme modu
+npm run tauri:build      # Tauri üretim derlemesi
+```
 
-The application supports multiple color palettes that can be selected via the interactive carousel in the header. Each theme defines a complete color system including:
-- Primary and accent colors
-- Background and surface colors
-- Text and border colors
-- Syntax highlighting colors
+## 📱 Web Versiyonu
 
-## 📄 License
+Uygulama ayrıca PWA olarak web'de de çalışır:
+- **Demo**: [jsonformat.com](https://jsonformat.com)
+- Offline çalışma desteği
+- Cihaza kurulabilir
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## 🔐 Güvenlik
 
-## 🤝 Contributing
+Tauri, güvenlik odaklı bir framework'tür:
+- Minimal izin sistemi (capabilities)
+- WebView içerik güvenliği (CSP)
+- Rust'ın bellek güvenliği garantileri
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+## 📄 Lisans
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+MIT License
+
+## 🤝 Katkıda Bulunma
+
+Pull request'ler memnuniyetle karşılanır. Büyük değişiklikler için önce bir issue açınız.
 
 ---
 
-<p align="center">
-  Made with ❤️ using Next.js
-</p>
+**JSON Formatter** - Hızlı, güvenli, cross-platform JSON aracı 🚀
