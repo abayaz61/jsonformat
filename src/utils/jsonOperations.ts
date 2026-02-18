@@ -29,18 +29,93 @@ function stripTrailingJunk(input: string): string {
 }
 
 /**
- * Detect comma-separated JSON objects/arrays without surrounding [] brackets
- * and wrap them in an array. E.g.: {"a":1},{"b":2} → [{"a":1},{"b":2}]
+ * Detect multiple JSON values without surrounding [] brackets and/or missing commas.
+ * Inserts commas between adjacent values and wraps in array.
+ * E.g.: {"a":1} {"b":2} → [{"a":1},{"b":2}]
  */
 function wrapAsArray(input: string): string {
     const trimmed = input.trim();
-    // Only wrap if it doesn't already start with [ and contains multiple values
+    // Only process if it doesn't already start with [
     if (trimmed.startsWith('[')) return input;
-    // Check if it looks like comma-separated objects/values
-    if (trimmed.startsWith('{') || trimmed.startsWith('"') || /^[\d\-]/.test(trimmed)) {
-        return '[' + trimmed + ']';
+    // Check if it looks like it starts with a JSON value
+    if (!(trimmed.startsWith('{') || trimmed.startsWith('"') || /^[\d\-]/.test(trimmed))) {
+        return input;
     }
-    return input;
+
+    // Insert missing commas between adjacent JSON values
+    // e.g. } { → }, { or } \n { → }, \n {
+    const fixed = insertMissingCommas(trimmed);
+    return '[' + fixed + ']';
+}
+
+/**
+ * Insert commas between adjacent JSON values where commas are missing.
+ * Handles: }\s*{ , ]\s*{ , }\s*[ , ]\s*[ , }\s*" , etc.
+ * Respects string literals and nested structures.
+ */
+function insertMissingCommas(input: string): string {
+    const result: string[] = [];
+    let i = 0;
+    const len = input.length;
+
+    while (i < len) {
+        // Skip whitespace
+        if (/\s/.test(input[i])) {
+            result.push(input[i]);
+            i++;
+            continue;
+        }
+
+        // Find the end of the current JSON value
+        const end = findJsonValueEnd(input, i);
+        if (end === -1) {
+            // Can't parse, just push rest
+            result.push(input.substring(i));
+            break;
+        }
+
+        // Push the value
+        result.push(input.substring(i, end + 1));
+        i = end + 1;
+
+        // Skip whitespace after value
+        const wsStart = i;
+        while (i < len && /\s/.test(input[i])) i++;
+
+        if (i >= len) {
+            // End of input
+            result.push(input.substring(wsStart, i));
+            break;
+        }
+
+        // Check if next char is already a comma
+        if (input[i] === ',') {
+            result.push(input.substring(wsStart, i + 1));
+            i++;
+            continue;
+        }
+
+        // Check if next char starts a new JSON value
+        const nextCh = input[i];
+        if (nextCh === '{' || nextCh === '[' || nextCh === '"' ||
+            nextCh === '-' || (nextCh >= '0' && nextCh <= '9') ||
+            input.startsWith('true', i) || input.startsWith('false', i) || input.startsWith('null', i)) {
+            // Missing comma — insert one
+            result.push(input.substring(wsStart));
+            // Find the whitespace portion and inject comma
+            const ws = input.substring(wsStart, i);
+            result.length--; // remove last push
+            result.push(',');
+            result.push(ws || ' ');
+            continue;
+        }
+
+        // Unknown char, push and continue
+        result.push(input.substring(wsStart, i + 1));
+        i++;
+    }
+
+    return result.join('');
 }
 
 /**
