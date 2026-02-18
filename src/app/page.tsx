@@ -34,12 +34,13 @@ export default function Home() {
   const [ignoreNull, setIgnoreNull] = useLocalStorage('json-formatter-ignore-null', false);
   const [ignoreDefaultDates, setIgnoreDefaultDates] = useLocalStorage('json-formatter-ignore-dates', false);
   const [ignoreZeros, setIgnoreZeros] = useLocalStorage('json-formatter-ignore-zeros', false);
+  const [convertDotNetDates, setConvertDotNetDates] = useLocalStorage('json-formatter-convert-dotnet-dates', false);
   const [showZoomPopup, setShowZoomPopup] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const prevContentRef = useRef<string>(content);
 
-  const filterOptions = { ignoreNull, ignoreDefaultDates, ignoreZeros };
+  const filterOptions = { ignoreNull, ignoreDefaultDates, ignoreZeros, convertDotNetDates };
 
   // Hydration
   useEffect(() => {
@@ -255,6 +256,7 @@ export default function Home() {
             case 'ignoreNull': setIgnoreNull(!ignoreNull); break;
             case 'ignoreDefaultDates': setIgnoreDefaultDates(!ignoreDefaultDates); break;
             case 'ignoreZeros': setIgnoreZeros(!ignoreZeros); break;
+            case 'convertDotNetDates': setConvertDotNetDates(!convertDotNetDates); break;
           }
         }}
         disabled={!content.trim()}

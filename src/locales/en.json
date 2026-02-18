@@ -18,6 +18,7 @@
     "ignoreNull": "Ignore Null Values",
     "ignoreDefaultDates": "Ignore Default Dates",
     "ignoreZeros": "Ignore Zero Values",
+    "convertDotNetDates": "Convert .NET Dates",
     "formatOptions": "Format Options"
   },
   "settings": {

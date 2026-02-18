@@ -70,13 +70,14 @@ export function Header({
         }
     };
 
-    const hasActiveFilters = formatOptions.ignoreNull || formatOptions.ignoreDefaultDates || formatOptions.ignoreZeros || formatOptions.autoFormat;
+    const hasActiveFilters = formatOptions.ignoreNull || formatOptions.ignoreDefaultDates || formatOptions.ignoreZeros || formatOptions.convertDotNetDates || formatOptions.autoFormat;
 
     const formatOptionItems = [
         { key: 'autoFormat', label: t.toolbar.autoFormat, active: formatOptions.autoFormat },
         { key: 'ignoreNull', label: t.toolbar.ignoreNull, active: !!formatOptions.ignoreNull },
         { key: 'ignoreDefaultDates', label: t.toolbar.ignoreDefaultDates, active: !!formatOptions.ignoreDefaultDates },
         { key: 'ignoreZeros', label: t.toolbar.ignoreZeros, active: !!formatOptions.ignoreZeros },
+        { key: 'convertDotNetDates', label: t.toolbar.convertDotNetDates, active: !!formatOptions.convertDotNetDates },
     ];
 
     return (

@@ -4,6 +4,7 @@ export interface FormatOptions {
     ignoreNull?: boolean;
     ignoreDefaultDates?: boolean;
     ignoreZeros?: boolean;
+    convertDotNetDates?: boolean;
 }
 
 /**
@@ -293,11 +294,42 @@ export function removeZeros(value: unknown): unknown {
 /**
  * Apply all enabled filters to a parsed JSON value.
  */
+/**
+ * Recursively convert .NET-style date strings like /Date(1234567890)/ to ISO date strings.
+ */
+export function convertDotNetDates(value: unknown): unknown {
+    if (typeof value === 'string') {
+        const dotNetPattern = /^[/\\]*Date\((\d+)([+-]\d{4})?\)[/\\]*$/;
+        const match = value.match(dotNetPattern);
+        if (match) {
+            const timestamp = parseInt(match[1], 10);
+            const date = new Date(timestamp);
+            return date.toISOString().replace('T', ' ').replace('Z', '');
+        }
+        return value;
+    }
+
+    if (Array.isArray(value)) {
+        return value.map(item => convertDotNetDates(item));
+    }
+
+    if (value !== null && typeof value === 'object') {
+        const result: Record<string, unknown> = {};
+        for (const [key, val] of Object.entries(value as Record<string, unknown>)) {
+            result[key] = convertDotNetDates(val);
+        }
+        return result;
+    }
+
+    return value;
+}
+
 function applyFilters(value: unknown, options: FormatOptions): unknown {
     let result = value;
     if (options.ignoreNull) result = removeNulls(result);
     if (options.ignoreDefaultDates) result = removeDefaultDates(result);
     if (options.ignoreZeros) result = removeZeros(result);
+    if (options.convertDotNetDates) result = convertDotNetDates(result);
     return result;
 }
 

@@ -18,6 +18,7 @@
         "ignoreNull": "忽略空值",
         "ignoreDefaultDates": "忽略默认日期",
         "ignoreZeros": "忽略零值",
+        "convertDotNetDates": "转换.NET日期",
         "formatOptions": "格式选项"
     },
     "settings": {

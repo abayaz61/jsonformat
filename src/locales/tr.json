@@ -17,7 +17,8 @@
         "autoFormat": "Yapıştırınca Otomatik Formatla",
         "ignoreNull": "Null Değerleri Yoksay",
         "ignoreDefaultDates": "Varsayılan Tarihleri Yoksay",
-        "ignoreZeros": "Sıfır Değerleri Yoksay",
+        "ignoreZeros": "Sıfır Değerleri Kaldır",
+        "convertDotNetDates": ".NET Tarihlerini Dönüştür",
         "formatOptions": "Format Seçenekleri"
     },
     "settings": {
