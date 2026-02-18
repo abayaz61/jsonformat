@@ -6,7 +6,8 @@ import type { JsonValidationResult } from '@/types';
  * Tolerates trailing invalid characters (commas, semicolons, etc.) after valid JSON.
  */
 export function formatJson(input: string, indent: number = 2): string {
-    const candidates = [input, stripTrailingJunk(input)];
+    const stripped = stripTrailingJunk(input);
+    const candidates = [input, stripped, wrapAsArray(stripped)];
     for (const candidate of candidates) {
         try {
             const parsed = JSON.parse(candidate);
@@ -25,6 +26,21 @@ export function formatJson(input: string, indent: number = 2): string {
  */
 function stripTrailingJunk(input: string): string {
     return input.replace(/[\s,;]+$/, '');
+}
+
+/**
+ * Detect comma-separated JSON objects/arrays without surrounding [] brackets
+ * and wrap them in an array. E.g.: {"a":1},{"b":2} → [{"a":1},{"b":2}]
+ */
+function wrapAsArray(input: string): string {
+    const trimmed = input.trim();
+    // Only wrap if it doesn't already start with [ and contains multiple values
+    if (trimmed.startsWith('[')) return input;
+    // Check if it looks like comma-separated objects/values
+    if (trimmed.startsWith('{') || trimmed.startsWith('"') || /^[\d\-]/.test(trimmed)) {
+        return '[' + trimmed + ']';
+    }
+    return input;
 }
 
 /**
