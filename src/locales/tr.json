@@ -33,6 +33,7 @@
         "invalidJson": "Geçersiz JSON",
         "formatted": "JSON biçimlendirildi!",
         "minified": "JSON sıkıştırıldı!",
+        "partialFormatted": "Kısmen biçimlendirildi — geçerli bölümden sonra JSON bozuk",
         "pasteError": "Panodan yapıştırılamadı",
         "uploadError": "Dosya okunamadı"
     },

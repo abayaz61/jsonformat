@@ -33,6 +33,7 @@
         "invalidJson": "JSON invalide",
         "formatted": "JSON formaté!",
         "minified": "JSON minifié!",
+        "partialFormatted": "Partiellement formaté — JSON invalide après la section valide",
         "pasteError": "Impossible de coller",
         "uploadError": "Impossible de lire le fichier"
     },

@@ -33,6 +33,7 @@
         "invalidJson": "无效的 JSON",
         "formatted": "JSON 已格式化！",
         "minified": "JSON 已压缩！",
+        "partialFormatted": "部分格式化 — 有效部分之后的 JSON 无效",
         "pasteError": "无法粘贴",
         "uploadError": "无法读取文件"
     },

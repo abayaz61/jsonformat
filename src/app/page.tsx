@@ -72,12 +72,15 @@ export default function Home() {
 
   // Handlers with useCallback
   const handleFormat = useCallback(() => {
-    if (format()) {
+    const result = format();
+    if (result === 'full') {
       showToast(t.messages.formatted, 'success');
+    } else if (result === 'partial') {
+      showToast(t.messages.partialFormatted, 'warning');
     } else {
       showToast(t.messages.invalidJson, 'error');
     }
-  }, [format, showToast, t.messages.formatted, t.messages.invalidJson]);
+  }, [format, showToast, t.messages.formatted, t.messages.partialFormatted, t.messages.invalidJson]);
 
   const handleMinify = useCallback(() => {
     if (minify()) {

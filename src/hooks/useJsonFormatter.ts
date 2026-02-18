@@ -1,14 +1,14 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { formatJson, minifyJson, validateJson } from '@/utils/jsonOperations';
+import { formatJson, minifyJson, validateJson, partialFormatJson } from '@/utils/jsonOperations';
 import type { JsonValidationResult } from '@/types';
 
 interface UseJsonFormatterReturn {
     content: string;
     setContent: (content: string) => void;
     validation: JsonValidationResult;
-    format: (indent?: number) => boolean;
+    format: (indent?: number) => 'full' | 'partial' | false;
     minify: () => boolean;
     clear: () => void;
 }
@@ -27,15 +27,27 @@ export function useJsonFormatter(initialContent: string = ''): UseJsonFormatterR
     }, []);
 
     // Format JSON with specified indentation
-    const format = useCallback((indent: number = 2): boolean => {
+    const format = useCallback((indent: number = 2): 'full' | 'partial' | false => {
         try {
             const formatted = formatJson(content, indent);
             setContent(formatted);
             setValidation({ valid: true });
-            return true;
+            return 'full';
         } catch {
-            setValidation(validateJson(content));
-            return false;
+            // Try partial formatting as fallback
+            try {
+                const { result, isPartial } = partialFormatJson(content, indent);
+                setContent(result);
+                if (isPartial) {
+                    setValidation(validateJson(result));
+                    return 'partial';
+                }
+                setValidation({ valid: true });
+                return 'full';
+            } catch {
+                setValidation(validateJson(content));
+                return false;
+            }
         }
     }, [content]);
 

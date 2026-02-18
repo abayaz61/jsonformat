@@ -33,6 +33,7 @@
         "invalidJson": "JSON non valido",
         "formatted": "JSON formattato!",
         "minified": "JSON minimizzato!",
+        "partialFormatted": "Parzialmente formattato — JSON non valido dopo la sezione valida",
         "pasteError": "Impossibile incollare",
         "uploadError": "Impossibile leggere il file"
     },

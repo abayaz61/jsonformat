@@ -82,6 +82,7 @@ export interface TranslationStrings {
     invalidJson: string;
     formatted: string;
     minified: string;
+    partialFormatted: string;
     pasteError: string;
     uploadError: string;
   };
