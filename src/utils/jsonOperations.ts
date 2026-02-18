@@ -180,10 +180,7 @@ export function expandJsonStrings(value: unknown): unknown {
         // e.g. "betastore yanıtı: OK - {\"d\":{...}}"
         const embedded = extractEmbeddedJson(trimmed);
         if (embedded) {
-            return {
-                __prefix: embedded.prefix,
-                __data: expandJsonStrings(embedded.json)
-            };
+            return expandJsonStrings(embedded.json);
         }
 
         return value;
