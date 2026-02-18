@@ -5,13 +5,14 @@ import type { JsonValidationResult } from '@/types';
  * Also expands nested JSON strings (JSON-in-JSON) into proper objects.
  * Tolerates trailing invalid characters (commas, semicolons, etc.) after valid JSON.
  */
-export function formatJson(input: string, indent: number = 2): string {
+export function formatJson(input: string, indent: number = 2, ignoreNull: boolean = false): string {
     const stripped = stripTrailingJunk(input);
     const candidates = [input, stripped, wrapAsArray(stripped)];
     for (const candidate of candidates) {
         try {
             const parsed = JSON.parse(candidate);
-            const expanded = expandJsonStrings(parsed);
+            let expanded = expandJsonStrings(parsed);
+            if (ignoreNull) expanded = removeNulls(expanded);
             return JSON.stringify(expanded, null, indent);
         } catch {
             // try next candidate
@@ -154,6 +155,29 @@ export function expandJsonStrings(value: unknown): unknown {
     return value;
 }
 
+/**
+ * Recursively remove null values from a parsed JSON structure.
+ */
+export function removeNulls(value: unknown): unknown {
+    if (value === null) return undefined;
+
+    if (Array.isArray(value)) {
+        return value.filter(item => item !== null).map(item => removeNulls(item));
+    }
+
+    if (typeof value === 'object' && value !== null) {
+        const result: Record<string, unknown> = {};
+        for (const [key, val] of Object.entries(value as Record<string, unknown>)) {
+            if (val !== null) {
+                result[key] = removeNulls(val);
+            }
+        }
+        return result;
+    }
+
+    return value;
+}
+
 export interface PartialFormatResult {
     result: string;
     isPartial: boolean;
@@ -164,11 +188,13 @@ export interface PartialFormatResult {
  * If the full input is valid JSON, formats it normally.
  * If only a prefix is valid, formats that prefix and appends the broken remainder.
  */
-export function partialFormatJson(input: string, indent: number = 2): PartialFormatResult {
+export function partialFormatJson(input: string, indent: number = 2, ignoreNull: boolean = false): PartialFormatResult {
     // First, try full parse
     try {
         const parsed = JSON.parse(input);
-        return { result: JSON.stringify(parsed, null, indent), isPartial: false };
+        let expanded = expandJsonStrings(parsed);
+        if (ignoreNull) expanded = removeNulls(expanded);
+        return { result: JSON.stringify(expanded, null, indent), isPartial: false };
     } catch {
         // Continue to partial formatting
     }
@@ -224,7 +250,8 @@ export function partialFormatJson(input: string, indent: number = 2): PartialFor
 
     try {
         const parsed = JSON.parse(validPart);
-        const expanded = expandJsonStrings(parsed);
+        let expanded = expandJsonStrings(parsed);
+        if (ignoreNull) expanded = removeNulls(expanded);
         const formatted = JSON.stringify(expanded, null, indent);
         if (!remainder) {
             return { result: formatted, isPartial: false };

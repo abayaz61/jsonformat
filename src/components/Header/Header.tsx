@@ -12,6 +12,7 @@ import {
     Palette,
     Wand2,
     Zap,
+    EyeOff,
     Copy,
     ClipboardPaste,
     Download,
@@ -33,6 +34,8 @@ interface HeaderProps {
     onExport: () => void;
     autoFormat: boolean;
     onToggleAutoFormat: () => void;
+    ignoreNull: boolean;
+    onToggleIgnoreNull: () => void;
     disabled?: boolean;
 }
 
@@ -50,6 +53,8 @@ export function Header({
     onExport,
     autoFormat,
     onToggleAutoFormat,
+    ignoreNull,
+    onToggleIgnoreNull,
     disabled = false
 }: HeaderProps) {
     const { theme, toggleMode } = useTheme();
@@ -92,6 +97,13 @@ export function Header({
                     title={t.toolbar.autoFormat}
                 >
                     <Zap size={16} />
+                </button>
+                <button
+                    className={`header-action-btn ${ignoreNull ? 'active' : ''}`}
+                    onClick={onToggleIgnoreNull}
+                    title={t.toolbar.ignoreNull}
+                >
+                    <EyeOff size={16} />
                 </button>
                 <button
                     className="header-action-btn"

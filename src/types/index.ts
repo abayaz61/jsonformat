@@ -64,6 +64,7 @@ export interface TranslationStrings {
     exitFullscreen: string;
     export: string;
     autoFormat: string;
+    ignoreNull: string;
   };
   settings: {
     title: string;

@@ -14,7 +14,8 @@
         "fullscreen": "Tam Ekran",
         "exitFullscreen": "Tam Ekrandan Çık",
         "export": "Model Olarak Dışa Aktar",
-        "autoFormat": "Yapıştırınca Otomatik Formatla"
+        "autoFormat": "Yapıştırınca Otomatik Formatla",
+        "ignoreNull": "Null Değerleri Yoksay"
     },
     "settings": {
         "title": "Ayarlar",

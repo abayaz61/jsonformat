@@ -14,7 +14,8 @@
     "fullscreen": "Fullscreen",
     "exitFullscreen": "Exit Fullscreen",
     "export": "Export Model",
-    "autoFormat": "Auto Format on Paste"
+    "autoFormat": "Auto Format on Paste",
+    "ignoreNull": "Ignore Null Values"
   },
   "settings": {
     "title": "Settings",

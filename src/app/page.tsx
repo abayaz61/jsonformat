@@ -31,6 +31,7 @@ export default function Home() {
   const [treeExpandKey, setTreeExpandKey] = useState<{ key: number; expand: boolean | null }>({ key: 0, expand: null });
   const [zoomLevel, setZoomLevel] = useLocalStorage('json-formatter-zoom', 100);
   const [autoFormat, setAutoFormat] = useLocalStorage('json-formatter-auto-format', false);
+  const [ignoreNull, setIgnoreNull] = useLocalStorage('json-formatter-ignore-null', false);
   const [showZoomPopup, setShowZoomPopup] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -56,7 +57,7 @@ export default function Home() {
       // Detect paste: content grew significantly (more than just typing a char)
       if (newLen - prevLen > 1) {
         // Delay slightly for state to settle
-        const timer = setTimeout(() => format(), 50);
+        const timer = setTimeout(() => format(2, ignoreNull), 50);
         prevContentRef.current = content;
         return () => clearTimeout(timer);
       }
@@ -90,7 +91,7 @@ export default function Home() {
 
   // Handlers with useCallback
   const handleFormat = useCallback(() => {
-    const result = format();
+    const result = format(2, ignoreNull);
     if (result === 'full') {
       showToast(t.messages.formatted, 'success');
     } else if (result === 'partial') {
@@ -98,7 +99,7 @@ export default function Home() {
     } else {
       showToast(t.messages.invalidJson, 'error');
     }
-  }, [format, showToast, t.messages.formatted, t.messages.partialFormatted, t.messages.invalidJson]);
+  }, [format, ignoreNull, showToast, t.messages.formatted, t.messages.partialFormatted, t.messages.invalidJson]);
 
   const handleMinify = useCallback(() => {
     if (minify()) {
@@ -245,6 +246,8 @@ export default function Home() {
         onExport={() => setShowExportModal(true)}
         autoFormat={autoFormat}
         onToggleAutoFormat={() => setAutoFormat(!autoFormat)}
+        ignoreNull={ignoreNull}
+        onToggleIgnoreNull={() => setIgnoreNull(!ignoreNull)}
         disabled={!content.trim()}
       />
 

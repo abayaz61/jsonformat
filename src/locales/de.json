@@ -14,7 +14,8 @@
         "fullscreen": "Vollbild",
         "exitFullscreen": "Vollbild beenden",
         "export": "Als Modell exportieren",
-        "autoFormat": "Automatisch beim Einfügen formatieren"
+        "autoFormat": "Automatisch beim Einfügen formatieren",
+        "ignoreNull": "Null-Werte ignorieren"
     },
     "settings": {
         "title": "Einstellungen",

@@ -14,7 +14,8 @@
         "fullscreen": "Plein écran",
         "exitFullscreen": "Quitter le plein écran",
         "export": "Exporter en modèle",
-        "autoFormat": "Formater automatiquement au collage"
+        "autoFormat": "Formater automatiquement au collage",
+        "ignoreNull": "Ignorer les valeurs null"
     },
     "settings": {
         "title": "Paramètres",
