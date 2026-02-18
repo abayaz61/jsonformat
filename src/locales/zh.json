@@ -13,7 +13,8 @@
         "clear": "清空",
         "fullscreen": "全屏",
         "exitFullscreen": "退出全屏",
-        "export": "导出模型"
+        "export": "导出模型",
+        "autoFormat": "粘贴时自动格式化"
     },
     "settings": {
         "title": "设置",

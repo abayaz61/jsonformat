@@ -13,7 +13,8 @@
         "clear": "Löschen",
         "fullscreen": "Vollbild",
         "exitFullscreen": "Vollbild beenden",
-        "export": "Als Modell exportieren"
+        "export": "Als Modell exportieren",
+        "autoFormat": "Automatisch beim Einfügen formatieren"
     },
     "settings": {
         "title": "Einstellungen",

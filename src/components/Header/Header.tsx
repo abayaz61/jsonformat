@@ -11,6 +11,7 @@ import {
     Minimize2,
     Palette,
     Wand2,
+    Zap,
     Copy,
     ClipboardPaste,
     Download,
@@ -30,6 +31,8 @@ interface HeaderProps {
     onUpload: (file: File) => void;
     onClear: () => void;
     onExport: () => void;
+    autoFormat: boolean;
+    onToggleAutoFormat: () => void;
     disabled?: boolean;
 }
 
@@ -45,6 +48,8 @@ export function Header({
     onUpload,
     onClear,
     onExport,
+    autoFormat,
+    onToggleAutoFormat,
     disabled = false
 }: HeaderProps) {
     const { theme, toggleMode } = useTheme();
@@ -80,6 +85,13 @@ export function Header({
                     title={t.toolbar.format}
                 >
                     <Wand2 size={16} />
+                </button>
+                <button
+                    className={`header-action-btn ${autoFormat ? 'active' : ''}`}
+                    onClick={onToggleAutoFormat}
+                    title={t.toolbar.autoFormat}
+                >
+                    <Zap size={16} />
                 </button>
                 <button
                     className="header-action-btn"

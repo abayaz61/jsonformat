@@ -13,7 +13,8 @@
         "clear": "Temizle",
         "fullscreen": "Tam Ekran",
         "exitFullscreen": "Tam Ekrandan Çık",
-        "export": "Model Olarak Dışa Aktar"
+        "export": "Model Olarak Dışa Aktar",
+        "autoFormat": "Yapıştırınca Otomatik Formatla"
     },
     "settings": {
         "title": "Ayarlar",

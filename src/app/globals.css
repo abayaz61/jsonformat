@@ -440,6 +440,17 @@ body {
   color: var(--error);
 }
 
+.header-action-btn.active {
+  background: var(--accent-light);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.header-action-btn.active:hover {
+  background: var(--accent);
+  color: white;
+}
+
 /* Header Settings */
 .header-settings {
   display: flex;

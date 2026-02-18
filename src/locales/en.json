@@ -13,7 +13,8 @@
     "clear": "Clear",
     "fullscreen": "Fullscreen",
     "exitFullscreen": "Exit Fullscreen",
-    "export": "Export Model"
+    "export": "Export Model",
+    "autoFormat": "Auto Format on Paste"
   },
   "settings": {
     "title": "Settings",

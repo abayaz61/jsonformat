@@ -13,7 +13,8 @@
         "clear": "Cancella",
         "fullscreen": "Schermo intero",
         "exitFullscreen": "Esci da schermo intero",
-        "export": "Esporta come modello"
+        "export": "Esporta come modello",
+        "autoFormat": "Formatta automaticamente al incollamento"
     },
     "settings": {
         "title": "Impostazioni",

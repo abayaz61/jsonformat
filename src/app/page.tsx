@@ -30,9 +30,11 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<ViewTab>('editor');
   const [treeExpandKey, setTreeExpandKey] = useState<{ key: number; expand: boolean | null }>({ key: 0, expand: null });
   const [zoomLevel, setZoomLevel] = useLocalStorage('json-formatter-zoom', 100);
+  const [autoFormat, setAutoFormat] = useLocalStorage('json-formatter-auto-format', false);
   const [showZoomPopup, setShowZoomPopup] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const prevContentRef = useRef<string>(content);
 
   // Hydration
   useEffect(() => {
@@ -45,6 +47,22 @@ export default function Home() {
       setContent(savedContent);
     }
   }, [isHydrated, savedContent, setContent]);
+
+  // Auto-format on paste: detect large content changes (paste event)
+  useEffect(() => {
+    if (autoFormat && isHydrated && content && content !== prevContentRef.current) {
+      const prevLen = prevContentRef.current.length;
+      const newLen = content.length;
+      // Detect paste: content grew significantly (more than just typing a char)
+      if (newLen - prevLen > 1) {
+        // Delay slightly for state to settle
+        const timer = setTimeout(() => format(), 50);
+        prevContentRef.current = content;
+        return () => clearTimeout(timer);
+      }
+    }
+    prevContentRef.current = content;
+  }, [content, autoFormat, isHydrated, format]);
 
   // Save content on change
   useEffect(() => {
@@ -225,6 +243,8 @@ export default function Home() {
         onUpload={handleUpload}
         onClear={handleClear}
         onExport={() => setShowExportModal(true)}
+        autoFormat={autoFormat}
+        onToggleAutoFormat={() => setAutoFormat(!autoFormat)}
         disabled={!content.trim()}
       />
 
