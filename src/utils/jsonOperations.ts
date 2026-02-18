@@ -1,15 +1,66 @@
 import type { JsonValidationResult } from '@/types';
 
 /**
- * Format JSON string with specified indentation
+ * Format JSON string with specified indentation.
+ * Also expands nested JSON strings (JSON-in-JSON) into proper objects.
+ * Tolerates trailing invalid characters (commas, semicolons, etc.) after valid JSON.
  */
 export function formatJson(input: string, indent: number = 2): string {
-    try {
-        const parsed = JSON.parse(input);
-        return JSON.stringify(parsed, null, indent);
-    } catch {
-        throw new Error('Invalid JSON');
+    const candidates = [input, stripTrailingJunk(input)];
+    for (const candidate of candidates) {
+        try {
+            const parsed = JSON.parse(candidate);
+            const expanded = expandJsonStrings(parsed);
+            return JSON.stringify(expanded, null, indent);
+        } catch {
+            // try next candidate
+        }
     }
+    throw new Error('Invalid JSON');
+}
+
+/**
+ * Strip trailing non-JSON characters (commas, semicolons, whitespace, etc.)
+ * that commonly appear in log outputs.
+ */
+function stripTrailingJunk(input: string): string {
+    return input.replace(/[\s,;]+$/, '');
+}
+
+/**
+ * Recursively walk a parsed JSON value and expand any string values
+ * that are themselves valid JSON into parsed objects.
+ */
+export function expandJsonStrings(value: unknown): unknown {
+    if (typeof value === 'string') {
+        // Try to parse the string as JSON
+        const trimmed = value.trim();
+        if ((trimmed.startsWith('{') && trimmed.endsWith('}')) ||
+            (trimmed.startsWith('[') && trimmed.endsWith(']'))) {
+            try {
+                const parsed = JSON.parse(trimmed);
+                // Recursively expand in case of nested-nested JSON
+                return expandJsonStrings(parsed);
+            } catch {
+                return value;
+            }
+        }
+        return value;
+    }
+
+    if (Array.isArray(value)) {
+        return value.map(item => expandJsonStrings(item));
+    }
+
+    if (value !== null && typeof value === 'object') {
+        const result: Record<string, unknown> = {};
+        for (const [key, val] of Object.entries(value as Record<string, unknown>)) {
+            result[key] = expandJsonStrings(val);
+        }
+        return result;
+    }
+
+    return value;
 }
 
 export interface PartialFormatResult {
@@ -81,12 +132,14 @@ export function partialFormatJson(input: string, indent: number = 2): PartialFor
     const remainder = trimmed.substring(lastValidEnd + 1).trim();
 
     try {
-        const formatted = JSON.stringify(JSON.parse(validPart), null, indent);
+        const parsed = JSON.parse(validPart);
+        const expanded = expandJsonStrings(parsed);
+        const formatted = JSON.stringify(expanded, null, indent);
         if (!remainder) {
             return { result: formatted, isPartial: false };
         }
         return {
-            result: formatted + '\n\n// ⚠️ INVALID JSON BELOW\n' + remainder,
+            result: formatted + '\n\n' + remainder,
             isPartial: true
         };
     } catch {
