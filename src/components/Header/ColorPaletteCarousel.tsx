@@ -191,15 +191,22 @@ export function ColorPaletteCarousel({ isOpen, onClose }: ColorPaletteCarouselPr
                                 const scale = isCenter ? 1 : 0.7;
                                 const opacity = isCenter ? 1 : 0.5;
                                 const zIndex = isCenter ? 10 : 5 - Math.abs(ct.offset);
+                                const actualIndex = colorThemes.findIndex(c => c.id === ct.id);
 
                                 return (
                                     <div
                                         key={`${ct.id}-${ct.offset}`}
                                         className="flex flex-col items-center transition-all duration-300"
+                                        onClick={() => {
+                                            if (!isCenter) {
+                                                setCurrentIndex(actualIndex);
+                                            }
+                                        }}
                                         style={{
                                             transform: `scale(${scale})`,
                                             opacity,
                                             zIndex,
+                                            cursor: isCenter ? 'default' : 'pointer',
                                         }}
                                     >
                                         <div
