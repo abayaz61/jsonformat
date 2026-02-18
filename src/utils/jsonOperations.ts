@@ -126,6 +126,37 @@ function insertMissingCommas(input: string): string {
 }
 
 /**
+ * Try to extract embedded JSON from a string that may have a prefix.
+ * e.g. "betastore yanıtı: OK - {\"d\":{...}}" → { prefix, json }
+ */
+function extractEmbeddedJson(str: string): { prefix: string; json: unknown } | null {
+    // Find the first { or [ that could start a JSON value
+    const braceIdx = str.indexOf('{');
+    const bracketIdx = str.indexOf('[');
+    let startIdx = -1;
+
+    if (braceIdx === -1 && bracketIdx === -1) return null;
+    if (braceIdx === -1) startIdx = bracketIdx;
+    else if (bracketIdx === -1) startIdx = braceIdx;
+    else startIdx = Math.min(braceIdx, bracketIdx);
+
+    // Only consider if there's a prefix (otherwise the normal path handles it)
+    if (startIdx === 0) return null;
+
+    const candidate = str.substring(startIdx).trim();
+    if ((candidate.startsWith('{') && candidate.endsWith('}')) ||
+        (candidate.startsWith('[') && candidate.endsWith(']'))) {
+        try {
+            const parsed = JSON.parse(candidate);
+            return { prefix: str.substring(0, startIdx).trim(), json: parsed };
+        } catch {
+            // Not valid JSON
+        }
+    }
+    return null;
+}
+
+/**
  * Recursively walk a parsed JSON value and expand any string values
  * that are themselves valid JSON into parsed objects.
  */
@@ -140,9 +171,20 @@ export function expandJsonStrings(value: unknown): unknown {
                 // Recursively expand in case of nested-nested JSON
                 return expandJsonStrings(parsed);
             } catch {
-                return value;
+                // Fall through to embedded extraction
             }
         }
+
+        // Try to extract embedded JSON from a string with prefix text
+        // e.g. "betastore yanıtı: OK - {\"d\":{...}}"
+        const embedded = extractEmbeddedJson(trimmed);
+        if (embedded) {
+            return {
+                __prefix: embedded.prefix,
+                __data: expandJsonStrings(embedded.json)
+            };
+        }
+
         return value;
     }
 
