@@ -15,7 +15,10 @@
         "exitFullscreen": "Tam Ekrandan Çık",
         "export": "Model Olarak Dışa Aktar",
         "autoFormat": "Yapıştırınca Otomatik Formatla",
-        "ignoreNull": "Null Değerleri Yoksay"
+        "ignoreNull": "Null Değerleri Yoksay",
+        "ignoreDefaultDates": "Varsayılan Tarihleri Yoksay",
+        "ignoreZeros": "Sıfır Değerleri Yoksay",
+        "formatOptions": "Format Seçenekleri"
     },
     "settings": {
         "title": "Ayarlar",

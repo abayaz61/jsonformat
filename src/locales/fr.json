@@ -15,7 +15,10 @@
         "exitFullscreen": "Quitter le plein écran",
         "export": "Exporter en modèle",
         "autoFormat": "Formater automatiquement au collage",
-        "ignoreNull": "Ignorer les valeurs null"
+        "ignoreNull": "Ignorer les valeurs null",
+        "ignoreDefaultDates": "Ignorer les dates par défaut",
+        "ignoreZeros": "Ignorer les valeurs zéro",
+        "formatOptions": "Options de format"
     },
     "settings": {
         "title": "Paramètres",

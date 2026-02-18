@@ -3,6 +3,7 @@
 import React, { useRef } from 'react';
 import { useTheme, useLanguage } from '@/contexts';
 import { ColorPaletteCarousel } from './ColorPaletteCarousel';
+import type { FormatOptions } from '@/utils/jsonOperations';
 import {
     Moon,
     Sun,
@@ -11,8 +12,7 @@ import {
     Minimize2,
     Palette,
     Wand2,
-    Zap,
-    EyeOff,
+    SlidersHorizontal,
     Copy,
     ClipboardPaste,
     Download,
@@ -32,10 +32,8 @@ interface HeaderProps {
     onUpload: (file: File) => void;
     onClear: () => void;
     onExport: () => void;
-    autoFormat: boolean;
-    onToggleAutoFormat: () => void;
-    ignoreNull: boolean;
-    onToggleIgnoreNull: () => void;
+    formatOptions: FormatOptions & { autoFormat: boolean };
+    onToggleFormatOption: (key: string) => void;
     disabled?: boolean;
 }
 
@@ -51,16 +49,15 @@ export function Header({
     onUpload,
     onClear,
     onExport,
-    autoFormat,
-    onToggleAutoFormat,
-    ignoreNull,
-    onToggleIgnoreNull,
+    formatOptions,
+    onToggleFormatOption,
     disabled = false
 }: HeaderProps) {
     const { theme, toggleMode } = useTheme();
     const { t, language, setLanguage, availableLanguages } = useLanguage();
     const [showLanguageMenu, setShowLanguageMenu] = React.useState(false);
     const [showColorMenu, setShowColorMenu] = React.useState(false);
+    const [showFormatOptions, setShowFormatOptions] = React.useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,6 +69,15 @@ export function Header({
             }
         }
     };
+
+    const hasActiveFilters = formatOptions.ignoreNull || formatOptions.ignoreDefaultDates || formatOptions.ignoreZeros || formatOptions.autoFormat;
+
+    const formatOptionItems = [
+        { key: 'autoFormat', label: t.toolbar.autoFormat, active: formatOptions.autoFormat },
+        { key: 'ignoreNull', label: t.toolbar.ignoreNull, active: !!formatOptions.ignoreNull },
+        { key: 'ignoreDefaultDates', label: t.toolbar.ignoreDefaultDates, active: !!formatOptions.ignoreDefaultDates },
+        { key: 'ignoreZeros', label: t.toolbar.ignoreZeros, active: !!formatOptions.ignoreZeros },
+    ];
 
     return (
         <header className="header">
@@ -91,20 +97,38 @@ export function Header({
                 >
                     <Wand2 size={16} />
                 </button>
-                <button
-                    className={`header-action-btn ${autoFormat ? 'active' : ''}`}
-                    onClick={onToggleAutoFormat}
-                    title={t.toolbar.autoFormat}
-                >
-                    <Zap size={16} />
-                </button>
-                <button
-                    className={`header-action-btn ${ignoreNull ? 'active' : ''}`}
-                    onClick={onToggleIgnoreNull}
-                    title={t.toolbar.ignoreNull}
-                >
-                    <EyeOff size={16} />
-                </button>
+
+                {/* Format Options */}
+                <div className="header-dropdown">
+                    <button
+                        className={`header-action-btn ${hasActiveFilters ? 'active' : ''}`}
+                        onClick={() => setShowFormatOptions(!showFormatOptions)}
+                        title={t.toolbar.formatOptions}
+                    >
+                        <SlidersHorizontal size={16} />
+                    </button>
+                    {showFormatOptions && (
+                        <>
+                            <div className="dropdown-backdrop" onClick={() => setShowFormatOptions(false)} />
+                            <div className="dropdown-menu format-options-menu">
+                                <div className="format-options-title">{t.toolbar.formatOptions}</div>
+                                {formatOptionItems.map((item) => (
+                                    <button
+                                        key={item.key}
+                                        className="format-option-item"
+                                        onClick={() => onToggleFormatOption(item.key)}
+                                    >
+                                        <span className="format-option-label">{item.label}</span>
+                                        <span className={`format-option-toggle ${item.active ? 'active' : ''}`}>
+                                            <span className="format-option-toggle-thumb" />
+                                        </span>
+                                    </button>
+                                ))}
+                            </div>
+                        </>
+                    )}
+                </div>
+
                 <button
                     className="header-action-btn"
                     onClick={onMinify}

@@ -15,7 +15,10 @@
         "exitFullscreen": "退出全屏",
         "export": "导出模型",
         "autoFormat": "粘贴时自动格式化",
-        "ignoreNull": "忽略空值"
+        "ignoreNull": "忽略空值",
+        "ignoreDefaultDates": "忽略默认日期",
+        "ignoreZeros": "忽略零值",
+        "formatOptions": "格式选项"
     },
     "settings": {
         "title": "设置",

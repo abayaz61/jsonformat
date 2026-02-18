@@ -65,6 +65,9 @@ export interface TranslationStrings {
     export: string;
     autoFormat: string;
     ignoreNull: string;
+    ignoreDefaultDates: string;
+    ignoreZeros: string;
+    formatOptions: string;
   };
   settings: {
     title: string;

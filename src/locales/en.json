@@ -15,7 +15,10 @@
     "exitFullscreen": "Exit Fullscreen",
     "export": "Export Model",
     "autoFormat": "Auto Format on Paste",
-    "ignoreNull": "Ignore Null Values"
+    "ignoreNull": "Ignore Null Values",
+    "ignoreDefaultDates": "Ignore Default Dates",
+    "ignoreZeros": "Ignore Zero Values",
+    "formatOptions": "Format Options"
   },
   "settings": {
     "title": "Settings",

@@ -15,7 +15,10 @@
         "exitFullscreen": "Vollbild beenden",
         "export": "Als Modell exportieren",
         "autoFormat": "Automatisch beim Einfügen formatieren",
-        "ignoreNull": "Null-Werte ignorieren"
+        "ignoreNull": "Null-Werte ignorieren",
+        "ignoreDefaultDates": "Standarddaten ignorieren",
+        "ignoreZeros": "Nullwerte ignorieren",
+        "formatOptions": "Formatoptionen"
     },
     "settings": {
         "title": "Einstellungen",

@@ -1,19 +1,25 @@
 import type { JsonValidationResult } from '@/types';
 
+export interface FormatOptions {
+    ignoreNull?: boolean;
+    ignoreDefaultDates?: boolean;
+    ignoreZeros?: boolean;
+}
+
 /**
  * Format JSON string with specified indentation.
  * Also expands nested JSON strings (JSON-in-JSON) into proper objects.
  * Tolerates trailing invalid characters (commas, semicolons, etc.) after valid JSON.
  */
-export function formatJson(input: string, indent: number = 2, ignoreNull: boolean = false): string {
+export function formatJson(input: string, indent: number = 2, options: FormatOptions = {}): string {
     const stripped = stripTrailingJunk(input);
     const candidates = [input, stripped, wrapAsArray(stripped)];
     for (const candidate of candidates) {
         try {
             const parsed = JSON.parse(candidate);
-            let expanded = expandJsonStrings(parsed);
-            if (ignoreNull) expanded = removeNulls(expanded);
-            return JSON.stringify(expanded, null, indent);
+            const expanded = expandJsonStrings(parsed);
+            const filtered = applyFilters(expanded, options);
+            return JSON.stringify(filtered, null, indent);
         } catch {
             // try next candidate
         }
@@ -178,6 +184,81 @@ export function removeNulls(value: unknown): unknown {
     return value;
 }
 
+/**
+ * Check if a string looks like a default/empty date.
+ */
+function isDefaultDate(value: string): boolean {
+    const defaultDatePatterns = [
+        /^0001-01-01/,
+        /^1970-01-01T00:00:00/,
+        /^01\.01\.0001/,
+        /^01\/01\/0001/,
+        /^0001\/01\/01/,
+    ];
+    return defaultDatePatterns.some(p => p.test(value.trim()));
+}
+
+/**
+ * Recursively remove default/empty date values.
+ */
+export function removeDefaultDates(value: unknown): unknown {
+    if (typeof value === 'string' && isDefaultDate(value)) {
+        return undefined;
+    }
+
+    if (Array.isArray(value)) {
+        return value
+            .filter(item => !(typeof item === 'string' && isDefaultDate(item)))
+            .map(item => removeDefaultDates(item));
+    }
+
+    if (value !== null && typeof value === 'object') {
+        const result: Record<string, unknown> = {};
+        for (const [key, val] of Object.entries(value as Record<string, unknown>)) {
+            if (!(typeof val === 'string' && isDefaultDate(val))) {
+                result[key] = removeDefaultDates(val);
+            }
+        }
+        return result;
+    }
+
+    return value;
+}
+
+/**
+ * Recursively remove zero numeric values.
+ */
+export function removeZeros(value: unknown): unknown {
+    if (Array.isArray(value)) {
+        return value
+            .filter(item => item !== 0)
+            .map(item => removeZeros(item));
+    }
+
+    if (value !== null && typeof value === 'object') {
+        const result: Record<string, unknown> = {};
+        for (const [key, val] of Object.entries(value as Record<string, unknown>)) {
+            if (val !== 0) {
+                result[key] = removeZeros(val);
+            }
+        }
+        return result;
+    }
+
+    return value;
+}
+
+/**
+ * Apply all enabled filters to a parsed JSON value.
+ */
+function applyFilters(value: unknown, options: FormatOptions): unknown {
+    let result = value;
+    if (options.ignoreNull) result = removeNulls(result);
+    if (options.ignoreDefaultDates) result = removeDefaultDates(result);
+    if (options.ignoreZeros) result = removeZeros(result);
+    return result;
+}
+
 export interface PartialFormatResult {
     result: string;
     isPartial: boolean;
@@ -188,13 +269,13 @@ export interface PartialFormatResult {
  * If the full input is valid JSON, formats it normally.
  * If only a prefix is valid, formats that prefix and appends the broken remainder.
  */
-export function partialFormatJson(input: string, indent: number = 2, ignoreNull: boolean = false): PartialFormatResult {
+export function partialFormatJson(input: string, indent: number = 2, options: FormatOptions = {}): PartialFormatResult {
     // First, try full parse
     try {
         const parsed = JSON.parse(input);
-        let expanded = expandJsonStrings(parsed);
-        if (ignoreNull) expanded = removeNulls(expanded);
-        return { result: JSON.stringify(expanded, null, indent), isPartial: false };
+        const expanded = expandJsonStrings(parsed);
+        const filtered = applyFilters(expanded, options);
+        return { result: JSON.stringify(filtered, null, indent), isPartial: false };
     } catch {
         // Continue to partial formatting
     }
@@ -250,9 +331,9 @@ export function partialFormatJson(input: string, indent: number = 2, ignoreNull:
 
     try {
         const parsed = JSON.parse(validPart);
-        let expanded = expandJsonStrings(parsed);
-        if (ignoreNull) expanded = removeNulls(expanded);
-        const formatted = JSON.stringify(expanded, null, indent);
+        const expanded = expandJsonStrings(parsed);
+        const filtered = applyFilters(expanded, options);
+        const formatted = JSON.stringify(filtered, null, indent);
         if (!remainder) {
             return { result: formatted, isPartial: false };
         }

@@ -3,12 +3,13 @@
 import { useState, useCallback } from 'react';
 import { formatJson, minifyJson, validateJson, partialFormatJson } from '@/utils/jsonOperations';
 import type { JsonValidationResult } from '@/types';
+import type { FormatOptions } from '@/utils/jsonOperations';
 
 interface UseJsonFormatterReturn {
     content: string;
     setContent: (content: string) => void;
     validation: JsonValidationResult;
-    format: (indent?: number, ignoreNull?: boolean) => 'full' | 'partial' | false;
+    format: (indent?: number, options?: FormatOptions) => 'full' | 'partial' | false;
     minify: () => boolean;
     clear: () => void;
 }
@@ -27,16 +28,16 @@ export function useJsonFormatter(initialContent: string = ''): UseJsonFormatterR
     }, []);
 
     // Format JSON with specified indentation
-    const format = useCallback((indent: number = 2, ignoreNull: boolean = false): 'full' | 'partial' | false => {
+    const format = useCallback((indent: number = 2, options: FormatOptions = {}): 'full' | 'partial' | false => {
         try {
-            const formatted = formatJson(content, indent, ignoreNull);
+            const formatted = formatJson(content, indent, options);
             setContent(formatted);
             setValidation({ valid: true });
             return 'full';
         } catch {
             // Try partial formatting as fallback
             try {
-                const { result, isPartial } = partialFormatJson(content, indent, ignoreNull);
+                const { result, isPartial } = partialFormatJson(content, indent, options);
                 setContent(result);
                 if (isPartial) {
                     setValidation(validateJson(result));

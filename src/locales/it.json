@@ -15,7 +15,10 @@
         "exitFullscreen": "Esci da schermo intero",
         "export": "Esporta come modello",
         "autoFormat": "Formatta automaticamente al incollamento",
-        "ignoreNull": "Ignora valori null"
+        "ignoreNull": "Ignora valori null",
+        "ignoreDefaultDates": "Ignora date predefinite",
+        "ignoreZeros": "Ignora valori zero",
+        "formatOptions": "Opzioni di formato"
     },
     "settings": {
         "title": "Impostazioni",
