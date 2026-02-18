@@ -96,5 +96,28 @@
         "feature3Title": "Offline-fähig",
         "feature3Desc": "Nach dem Laden funktioniert die App offline. Ihre Daten müssen Ihren Browser nie verlassen.",
         "button": "Verstanden, danke!"
+    },
+    "welcomePopup": {
+        "title": "Willkommen beim JSON-Formatierer",
+        "subtitle": "Entdecken Sie die Möglichkeiten",
+        "feature1Title": "Formatieren & Verschönern",
+        "feature1Desc": "Formatieren und verschönern Sie Ihre JSON-Daten sofort mit einem Klick",
+        "feature2Title": "Minimieren",
+        "feature2Desc": "JSON komprimieren, indem Leerzeichen für den Produktionseinsatz entfernt werden",
+        "feature3Title": "Baumansicht",
+        "feature3Desc": "Navigieren Sie mit einer interaktiven, klappbaren Baumansicht durch Ihr JSON",
+        "feature4Title": "Als Modell exportieren",
+        "feature4Desc": "Klassenmodelle in TypeScript, Python, Java, C#, Go, Rust generieren",
+        "feature5Title": "Fehlerhaftes JSON reparieren",
+        "feature5Desc": "Teilweise formatieren und Inhalte aus fehlerhaftem oder ungültigem JSON wiederherstellen",
+        "feature6Title": "Intelligente Filter",
+        "feature6Desc": "Null-Werte, Standarddaten, Nullen entfernen und .NET-Daten konvertieren",
+        "feature7Title": "20 Farbthemen",
+        "feature7Desc": "Wählen Sie aus 20 Themen mit Dunkel- und Hellmodus",
+        "feature8Title": "Tastenkürzel",
+        "feature8Desc": "Strg+Umschalt+F zum Formatieren, Strg+S zum Herunterladen und mehr",
+        "feature9Title": "Plattformübergreifend",
+        "feature9Desc": "Verfügbar als Web-, Windows- und Linux-Desktop-App mit Offline-Unterstützung",
+        "button": "Loslegen"
     }
 }

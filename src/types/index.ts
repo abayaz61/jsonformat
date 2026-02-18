@@ -122,5 +122,28 @@ export interface TranslationStrings {
     feature3Desc: string;
     button: string;
   };
+  welcomePopup: {
+    title: string;
+    subtitle: string;
+    feature1Title: string;
+    feature1Desc: string;
+    feature2Title: string;
+    feature2Desc: string;
+    feature3Title: string;
+    feature3Desc: string;
+    feature4Title: string;
+    feature4Desc: string;
+    feature5Title: string;
+    feature5Desc: string;
+    feature6Title: string;
+    feature6Desc: string;
+    feature7Title: string;
+    feature7Desc: string;
+    feature8Title: string;
+    feature8Desc: string;
+    feature9Title: string;
+    feature9Desc: string;
+    button: string;
+  };
   themes: Record<string, string>;
 }

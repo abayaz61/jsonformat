@@ -5,6 +5,7 @@ import "./globals.css";
 import UpdateNotification from "@/app/components/UpdateNotification";
 import InstallPrompt from "@/app/components/InstallPrompt";
 import PrivacyNotice from "@/app/components/PrivacyNotice";
+import WelcomePopup from "@/app/components/WelcomePopup";
 import GoogleAnalytics from "@/app/components/GoogleAnalytics";
 import StructuredData from "@/app/components/StructuredData";
 import TauriWindowManager from "@/app/components/TauriWindowManager";
@@ -158,6 +159,7 @@ export default function RootLayout({
               <UpdateNotification />
               <InstallPrompt />
               <PrivacyNotice />
+              <WelcomePopup />
             </LanguageProvider>
           </ThemeProvider>
         </SettingsProvider>

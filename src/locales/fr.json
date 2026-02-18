@@ -96,5 +96,28 @@
         "feature3Title": "Fonctionne hors ligne",
         "feature3Desc": "Une fois chargée, l'application fonctionne hors ligne. Vos données n'ont jamais besoin de quitter votre navigateur.",
         "button": "Compris, merci!"
+    },
+    "welcomePopup": {
+        "title": "Bienvenue dans JSON Formateur",
+        "subtitle": "Découvrez ce que vous pouvez faire",
+        "feature1Title": "Formater & Embellir",
+        "feature1Desc": "Formatez et embellissez instantanément vos données JSON en un clic",
+        "feature2Title": "Minifier",
+        "feature2Desc": "Compressez le JSON en supprimant les espaces pour la production",
+        "feature3Title": "Vue Arborescence",
+        "feature3Desc": "Naviguez dans votre JSON avec une vue arborescente interactive et repliable",
+        "feature4Title": "Exporter en Modèle",
+        "feature4Desc": "Générez des modèles de classe en TypeScript, Python, Java, C#, Go, Rust",
+        "feature5Title": "Réparer JSON Cassé",
+        "feature5Desc": "Formater partiellement et récupérer le contenu d'un JSON cassé ou invalide",
+        "feature6Title": "Filtres Intelligents",
+        "feature6Desc": "Supprimez les valeurs null, dates par défaut, zéros et convertissez les dates .NET",
+        "feature7Title": "20 Thèmes de Couleurs",
+        "feature7Desc": "Choisissez parmi 20 thèmes avec support mode sombre et clair",
+        "feature8Title": "Raccourcis Clavier",
+        "feature8Desc": "Ctrl+Maj+F pour formater, Ctrl+S pour télécharger, et plus encore",
+        "feature9Title": "Multiplateforme",
+        "feature9Desc": "Disponible en Web, application de bureau Windows et Linux avec support hors ligne",
+        "button": "Commencer"
     }
 }

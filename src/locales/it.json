@@ -96,5 +96,28 @@
         "feature3Title": "Funziona offline",
         "feature3Desc": "Una volta caricata, l'app funziona offline. I tuoi dati non devono mai lasciare il browser.",
         "button": "Capito, grazie!"
+    },
+    "welcomePopup": {
+        "title": "Benvenuto in JSON Formattatore",
+        "subtitle": "Scopri cosa puoi fare",
+        "feature1Title": "Formatta & Abbellisci",
+        "feature1Desc": "Formatta e abbellisci istantaneamente i tuoi dati JSON con un clic",
+        "feature2Title": "Minimizza",
+        "feature2Desc": "Comprimi il JSON rimuovendo gli spazi per l'uso in produzione",
+        "feature3Title": "Vista ad Albero",
+        "feature3Desc": "Naviga nel tuo JSON con una vista ad albero interattiva e comprimibile",
+        "feature4Title": "Esporta come Modello",
+        "feature4Desc": "Genera modelli di classe in TypeScript, Python, Java, C#, Go, Rust",
+        "feature5Title": "Ripara JSON Rotto",
+        "feature5Desc": "Formatta parzialmente e recupera contenuti da JSON rotto o non valido",
+        "feature6Title": "Filtri Intelligenti",
+        "feature6Desc": "Rimuovi valori null, date predefinite, zeri e converti date .NET",
+        "feature7Title": "20 Temi di Colore",
+        "feature7Desc": "Scegli tra 20 temi con supporto modalità scura e chiara",
+        "feature8Title": "Scorciatoie da Tastiera",
+        "feature8Desc": "Ctrl+Maiusc+F per formattare, Ctrl+S per scaricare e altro",
+        "feature9Title": "Multipiattaforma",
+        "feature9Desc": "Disponibile come Web, app desktop Windows e Linux con supporto offline",
+        "button": "Inizia"
     }
 }

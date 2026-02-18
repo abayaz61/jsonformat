@@ -96,5 +96,28 @@
     "feature3Title": "Offline Capable",
     "feature3Desc": "Once loaded, the app works offline. Your data never needs to leave your browser.",
     "button": "Got it, thanks!"
+  },
+  "welcomePopup": {
+    "title": "Welcome to JSON Formatter",
+    "subtitle": "Discover what you can do",
+    "feature1Title": "Format & Beautify",
+    "feature1Desc": "Instantly format and beautify your JSON data with one click",
+    "feature2Title": "Minify",
+    "feature2Desc": "Compress JSON by removing whitespace for production use",
+    "feature3Title": "Tree View",
+    "feature3Desc": "Navigate your JSON with an interactive, collapsible tree view",
+    "feature4Title": "Export as Model",
+    "feature4Desc": "Generate class models in TypeScript, Python, Java, C#, Go, Rust",
+    "feature5Title": "Fix Broken JSON",
+    "feature5Desc": "Partially format and recover content from broken or invalid JSON",
+    "feature6Title": "Smart Filters",
+    "feature6Desc": "Remove null values, default dates, zeros and convert .NET dates",
+    "feature7Title": "20 Color Themes",
+    "feature7Desc": "Choose from 20 themes with dark and light mode support",
+    "feature8Title": "Keyboard Shortcuts",
+    "feature8Desc": "Ctrl+Shift+F to format, Ctrl+S to download, and more",
+    "feature9Title": "Cross-Platform",
+    "feature9Desc": "Available as Web, Windows and Linux desktop app with offline support",
+    "button": "Get Started"
   }
 }

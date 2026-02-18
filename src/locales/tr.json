@@ -96,5 +96,28 @@
         "feature3Title": "Çevrimdışı Çalışır",
         "feature3Desc": "Yüklendikten sonra uygulama çevrimdışı çalışır. Verileriniz tarayıcınızdan çıkmaz.",
         "button": "Anladım, teşekkürler!"
+    },
+    "welcomePopup": {
+        "title": "JSON Formatter'a Hoş Geldiniz",
+        "subtitle": "Neler yapabileceğinizi keşfedin",
+        "feature1Title": "Biçimlendir & Güzelleştir",
+        "feature1Desc": "JSON verilerinizi tek tıkla anında biçimlendirin ve güzelleştirin",
+        "feature2Title": "Sıkıştır",
+        "feature2Desc": "Boşlukları kaldırarak JSON'u üretim kullanımı için sıkıştırın",
+        "feature3Title": "Ağaç Görünümü",
+        "feature3Desc": "JSON'unuzu etkileşimli, katlanabilir ağaç görünümüyle keşfedin",
+        "feature4Title": "Model Olarak Dışa Aktar",
+        "feature4Desc": "TypeScript, Python, Java, C#, Go, Rust dillerinde sınıf modeli oluşturun",
+        "feature5Title": "Bozuk JSON Düzeltme",
+        "feature5Desc": "Bozuk veya geçersiz JSON içeriğini kısmen biçimlendirip kurtarın",
+        "feature6Title": "Akıllı Filtreler",
+        "feature6Desc": "Null değerleri, varsayılan tarihleri, sıfırları kaldırın ve .NET tarihlerini dönüştürün",
+        "feature7Title": "20 Renk Teması",
+        "feature7Desc": "Karanlık ve aydınlık mod desteğiyle 20 tema arasından seçin",
+        "feature8Title": "Klavye Kısayolları",
+        "feature8Desc": "Ctrl+Shift+F ile biçimlendirin, Ctrl+S ile indirin ve daha fazlası",
+        "feature9Title": "Çapraz Platform",
+        "feature9Desc": "Web, Windows ve Linux masaüstü uygulaması olarak çevrimdışı destek ile kullanın",
+        "button": "Başla"
     }
 }

@@ -96,5 +96,28 @@
         "feature3Title": "支持离线",
         "feature3Desc": "加载后，应用可离线工作。您的数据永远不需要离开浏览器。",
         "button": "知道了，谢谢！"
+    },
+    "welcomePopup": {
+        "title": "欢迎使用 JSON 格式化工具",
+        "subtitle": "探索您可以做什么",
+        "feature1Title": "格式化与美化",
+        "feature1Desc": "一键即时格式化和美化您的 JSON 数据",
+        "feature2Title": "压缩",
+        "feature2Desc": "移除空白字符，将 JSON 压缩用于生产环境",
+        "feature3Title": "树形视图",
+        "feature3Desc": "通过交互式可折叠树形视图浏览您的 JSON",
+        "feature4Title": "导出为模型",
+        "feature4Desc": "生成 TypeScript、Python、Java、C#、Go、Rust 的类模型",
+        "feature5Title": "修复损坏的 JSON",
+        "feature5Desc": "部分格式化并从损坏或无效的 JSON 中恢复内容",
+        "feature6Title": "智能过滤器",
+        "feature6Desc": "移除空值、默认日期、零值并转换 .NET 日期",
+        "feature7Title": "20 种颜色主题",
+        "feature7Desc": "从 20 种主题中选择，支持深色和浅色模式",
+        "feature8Title": "键盘快捷键",
+        "feature8Desc": "Ctrl+Shift+F 格式化，Ctrl+S 下载，以及更多",
+        "feature9Title": "跨平台",
+        "feature9Desc": "支持 Web、Windows 和 Linux 桌面应用，并支持离线使用",
+        "button": "开始使用"
     }
 }
