@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { CheckCircle2, X, AlertCircle, Info } from 'lucide-react';
 
-export type ToastType = 'success' | 'error' | 'info';
+export type ToastType = 'success' | 'error' | 'warning' | 'info';
 
 interface ToastProps {
     message: string;
