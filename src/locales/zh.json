@@ -18,6 +18,7 @@
         "ignoreNull": "忽略空值",
         "ignoreDefaultDates": "忽略默认日期",
         "ignoreZeros": "忽略零值",
+        "ignoreEmptyArrays": "忽略空数组",
         "convertDotNetDates": "转换.NET日期",
         "formatOptions": "格式选项"
     },
@@ -111,7 +112,7 @@
         "feature5Title": "修复损坏的 JSON",
         "feature5Desc": "部分格式化并从损坏或无效的 JSON 中恢复内容",
         "feature6Title": "智能过滤器",
-        "feature6Desc": "移除空值、默认日期、零值并转换 .NET 日期",
+        "feature6Desc": "移除空值、默认日期、零值、空数组并转换 .NET 日期",
         "feature7Title": "20 种颜色主题",
         "feature7Desc": "从 20 种主题中选择，支持深色和浅色模式",
         "feature8Title": "键盘快捷键",

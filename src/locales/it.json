@@ -18,6 +18,7 @@
         "ignoreNull": "Ignora valori null",
         "ignoreDefaultDates": "Ignora date predefinite",
         "ignoreZeros": "Ignora valori zero",
+        "ignoreEmptyArrays": "Ignora array vuoti",
         "convertDotNetDates": "Converti date .NET",
         "formatOptions": "Opzioni di formato"
     },
@@ -111,7 +112,7 @@
         "feature5Title": "Ripara JSON Rotto",
         "feature5Desc": "Formatta parzialmente e recupera contenuti da JSON rotto o non valido",
         "feature6Title": "Filtri Intelligenti",
-        "feature6Desc": "Rimuovi valori null, date predefinite, zeri e converti date .NET",
+        "feature6Desc": "Rimuovi valori null, date predefinite, zeri, array vuoti e converti date .NET",
         "feature7Title": "20 Temi di Colore",
         "feature7Desc": "Scegli tra 20 temi con supporto modalità scura e chiara",
         "feature8Title": "Scorciatoie da Tastiera",

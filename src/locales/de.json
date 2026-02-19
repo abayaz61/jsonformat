@@ -18,6 +18,7 @@
         "ignoreNull": "Null-Werte ignorieren",
         "ignoreDefaultDates": "Standarddaten ignorieren",
         "ignoreZeros": "Nullwerte ignorieren",
+        "ignoreEmptyArrays": "Leere Arrays ignorieren",
         "convertDotNetDates": ".NET-Daten konvertieren",
         "formatOptions": "Formatoptionen"
     },
@@ -111,7 +112,7 @@
         "feature5Title": "Fehlerhaftes JSON reparieren",
         "feature5Desc": "Teilweise formatieren und Inhalte aus fehlerhaftem oder ungültigem JSON wiederherstellen",
         "feature6Title": "Intelligente Filter",
-        "feature6Desc": "Null-Werte, Standarddaten, Nullen entfernen und .NET-Daten konvertieren",
+        "feature6Desc": "Null-Werte, Standarddaten, Nullen, leere Arrays entfernen und .NET-Daten konvertieren",
         "feature7Title": "20 Farbthemen",
         "feature7Desc": "Wählen Sie aus 20 Themen mit Dunkel- und Hellmodus",
         "feature8Title": "Tastenkürzel",

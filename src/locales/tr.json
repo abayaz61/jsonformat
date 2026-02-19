@@ -18,6 +18,7 @@
         "ignoreNull": "Null Değerleri Yoksay",
         "ignoreDefaultDates": "Varsayılan Tarihleri Yoksay",
         "ignoreZeros": "Sıfır Değerleri Kaldır",
+        "ignoreEmptyArrays": "Boş Dizileri Yoksay",
         "convertDotNetDates": ".NET Tarihlerini Dönüştür",
         "formatOptions": "Format Seçenekleri"
     },
@@ -111,7 +112,7 @@
         "feature5Title": "Bozuk JSON Düzeltme",
         "feature5Desc": "Bozuk veya geçersiz JSON içeriğini kısmen biçimlendirip kurtarın",
         "feature6Title": "Akıllı Filtreler",
-        "feature6Desc": "Null değerleri, varsayılan tarihleri, sıfırları kaldırın ve .NET tarihlerini dönüştürün",
+        "feature6Desc": "Null değerleri, varsayılan tarihleri, sıfırları, boş dizileri kaldırın ve .NET tarihlerini dönüştürün",
         "feature7Title": "20 Renk Teması",
         "feature7Desc": "Karanlık ve aydınlık mod desteğiyle 20 tema arasından seçin",
         "feature8Title": "Klavye Kısayolları",

@@ -2,6 +2,25 @@
 
 Modern JSON formatter, validator ve tree viewer uygulaması. **Tauri 2.0** ile Windows ve Linux için native masaüstü uygulaması olarak derlenebilir.
 
+## ✨ Özellikler
+
+- **JSON Format & Beautify** — Tek tıkla JSON biçimlendirme ve güzelleştirme
+- **Minify** — Boşlukları kaldırarak JSON sıkıştırma
+- **Tree View** — Etkileşimli, katlanabilir ağaç görünümü
+- **Model Export** — TypeScript, Python, Java, C#, Go, Rust sınıf modeli oluşturma
+- **Bozuk JSON Düzeltme** — Kısmen geçerli JSON'u biçimlendirip kurtarma
+- **Akıllı Filtreler**:
+  - Null değerleri yoksayma
+  - Varsayılan tarihleri yoksayma
+  - Sıfır değerleri kaldırma
+  - **Boş dizileri yoksayma** (`[]` length 0 olan array'ler)
+  - .NET tarihlerini dönüştürme
+- **20 Renk Teması** — Karanlık ve aydınlık mod desteği
+- **Klavye Kısayolları** — Ctrl+Shift+F, Ctrl+S ve dahası
+- **6 Dil Desteği** — İngilizce, Türkçe, Almanca, Fransızca, İtalyanca, Çince
+- **PWA & Offline** — Progressive Web App olarak kurulabilir, çevrimdışı çalışır
+- **Cross-Platform** — Web, Windows ve Linux masaüstü uygulaması
+
 ## 🖥️ Desteklenen Platformlar
 
 | Platform | Paket Formatları | Durum |

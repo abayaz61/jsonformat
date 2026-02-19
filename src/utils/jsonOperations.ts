@@ -4,6 +4,7 @@ export interface FormatOptions {
     ignoreNull?: boolean;
     ignoreDefaultDates?: boolean;
     ignoreZeros?: boolean;
+    ignoreEmptyArrays?: boolean;
     convertDotNetDates?: boolean;
 }
 
@@ -289,6 +290,27 @@ export function removeZeros(value: unknown): unknown {
 }
 
 /**
+ * Recursively remove empty array values (arrays with length 0).
+ */
+export function removeEmptyArrays(value: unknown): unknown {
+    if (Array.isArray(value)) {
+        if (value.length === 0) return undefined;
+        return value.map(item => removeEmptyArrays(item));
+    }
+
+    if (value !== null && typeof value === 'object') {
+        const result: Record<string, unknown> = {};
+        for (const [key, val] of Object.entries(value as Record<string, unknown>)) {
+            if (Array.isArray(val) && val.length === 0) continue;
+            result[key] = removeEmptyArrays(val);
+        }
+        return result;
+    }
+
+    return value;
+}
+
+/**
  * Apply all enabled filters to a parsed JSON value.
  */
 /**
@@ -326,6 +348,7 @@ function applyFilters(value: unknown, options: FormatOptions): unknown {
     if (options.ignoreNull) result = removeNulls(result);
     if (options.ignoreDefaultDates) result = removeDefaultDates(result);
     if (options.ignoreZeros) result = removeZeros(result);
+    if (options.ignoreEmptyArrays) result = removeEmptyArrays(result);
     if (options.convertDotNetDates) result = convertDotNetDates(result);
     return result;
 }
