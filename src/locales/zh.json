@@ -6,7 +6,8 @@
         "invalidJsonFix": "无效的 JSON - 请修复错误以查看树",
         "items": "项",
         "tabEditor": "编辑器",
-        "tabTree": "树"
+        "tabTree": "树",
+        "zoom": "缩放"
     },
     "header": {
         "title": "JSON 格式化工具",

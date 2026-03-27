@@ -6,7 +6,8 @@
         "invalidJsonFix": "Ungültiges JSON - Fehler beheben, um den Baum anzuzeigen",
         "items": "Elemente",
         "tabEditor": "Editor",
-        "tabTree": "Baum"
+        "tabTree": "Baum",
+        "zoom": "Zoom"
     },
     "header": {
         "title": "JSON-Formatierer",

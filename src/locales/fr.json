@@ -6,7 +6,8 @@
         "invalidJsonFix": "JSON invalide - corrigez les erreurs pour voir l'arborescence",
         "items": "éléments",
         "tabEditor": "Éditeur",
-        "tabTree": "Arbre"
+        "tabTree": "Arbre",
+        "zoom": "Zoom"
     },
     "header": {
         "title": "Formateur JSON",

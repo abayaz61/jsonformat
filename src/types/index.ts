@@ -56,6 +56,7 @@ export interface TranslationStrings {
     items: string;
     tabEditor: string;
     tabTree: string;
+    zoom: string;
   };
   header: {
     title: string;

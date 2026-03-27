@@ -311,7 +311,7 @@ export default function Home() {
               <button
                 className="tab-action-button"
                 onClick={() => setShowZoomPopup(!showZoomPopup)}
-                title={`Zoom: ${zoomLevel}%`}
+                title={`${t.editor.zoom}: ${zoomLevel}%`}
               >
                 <ZoomIn size={16} />
               </button>
