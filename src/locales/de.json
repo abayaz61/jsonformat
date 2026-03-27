@@ -1,4 +1,13 @@
 {
+    "editor": {
+        "pasteOrType": "JSON hier einfügen oder eingeben...",
+        "validJson": "Gültiges JSON",
+        "pasteToView": "JSON einfügen oder eingeben, um den Baum anzuzeigen...",
+        "invalidJsonFix": "Ungültiges JSON - Fehler beheben, um den Baum anzuzeigen",
+        "items": "Elemente",
+        "tabEditor": "Editor",
+        "tabTree": "Baum"
+    },
     "header": {
         "title": "JSON-Formatierer",
         "subtitle": "Formatieren, Validieren & Verschönern"

@@ -1,4 +1,14 @@
 {
+    "editor": {
+        "pasteOrType": "JSON yazın veya yapıştırın...",
+        "validJson": "Geçerli JSON",
+        "pasteToView": "Ağaç görünümü için JSON yazın veya yapıştırın...",
+        "invalidJsonFix": "Geçersiz JSON - ağacı görmek için hataları düzeltin",
+        "items": "öğe",
+        "tabEditor": "Editör",
+        "tabTree": "Ağaç",
+        "zoom": "Yakınlaştırma"
+    },
     "header": {
         "title": "JSON Biçimlendirici",
         "subtitle": "Biçimlendir, Doğrula & Güzelleştir"

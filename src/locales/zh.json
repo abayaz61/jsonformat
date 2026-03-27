@@ -1,4 +1,13 @@
 {
+    "editor": {
+        "pasteOrType": "在此粘贴或输入 JSON...",
+        "validJson": "有效的 JSON",
+        "pasteToView": "粘贴或输入 JSON 以查看树...",
+        "invalidJsonFix": "无效的 JSON - 请修复错误以查看树",
+        "items": "项",
+        "tabEditor": "编辑器",
+        "tabTree": "树"
+    },
     "header": {
         "title": "JSON 格式化工具",
         "subtitle": "格式化、验证与美化"

@@ -1,4 +1,14 @@
 {
+  "editor": {
+    "pasteOrType": "Paste or type JSON here...",
+    "validJson": "Valid JSON",
+    "pasteToView": "Paste or type JSON to view tree...",
+    "invalidJsonFix": "Invalid JSON - fix errors to view tree",
+    "items": "items",
+    "tabEditor": "Editor",
+    "tabTree": "Tree",
+    "zoom": "Zoom"
+  },
   "header": {
     "title": "JSON Formatter",
     "subtitle": "Format, Validate & Beautify"

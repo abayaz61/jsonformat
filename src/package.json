@@ -15,29 +15,29 @@
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
-    "@serwist/next": "^9.4.2",
-    "@serwist/precaching": "^9.4.2",
-    "@serwist/sw": "^9.4.2",
-    "@tauri-apps/api": "^2.9.1",
+    "@serwist/next": "^9.5.7",
+    "@serwist/precaching": "^9.5.7",
+    "@serwist/sw": "^9.5.7",
+    "@tauri-apps/api": "^2.10.1",
     "@tauri-apps/plugin-clipboard-manager": "^2.3.2",
-    "@tauri-apps/plugin-dialog": "^2.4.2",
-    "@tauri-apps/plugin-fs": "^2.4.4",
-    "@tauri-apps/plugin-shell": "^2.3.3",
-    "lucide-react": "^0.562.0",
-    "next": "^16.1.6",
-    "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "@tauri-apps/plugin-dialog": "^2.6.0",
+    "@tauri-apps/plugin-fs": "^2.4.5",
+    "@tauri-apps/plugin-shell": "^2.3.5",
+    "lucide-react": "^1.7.0",
+    "next": "^16.2.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@tauri-apps/cli": "^2.9.6",
-    "@types/node": "^20",
+    "@tauri-apps/cli": "^2.10.1",
+    "@types/node": "^25",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^4.1.1",
-    "eslint-config-next": "^0.2.4",
+    "eslint": "^10.1.0",
+    "eslint-config-next": "^16.2.1",
     "sharp": "^0.34.5",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^6"
   }
 }

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import Editor, { OnMount, OnChange, Monaco } from '@monaco-editor/react';
-import { useTheme, useSettings } from '@/contexts';
+import { useTheme, useSettings, useLanguage } from '@/contexts';
 import type { JsonValidationResult, ColorTheme } from '@/types';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
 import type { editor } from 'monaco-editor';
@@ -450,6 +450,7 @@ function defineCustomTheme(monaco: Monaco, colorTheme: ColorTheme, mode: 'light'
 export function JsonEditor({ value, onChange, validation }: JsonEditorProps) {
     const { theme } = useTheme();
     const { settings } = useSettings();
+    const { t } = useLanguage();
     const [isLoading, setIsLoading] = useState(true);
     const [currentThemeName, setCurrentThemeName] = useState<string>('vs-dark');
     const monacoRef = useRef<Monaco | null>(null);
@@ -491,11 +492,11 @@ export function JsonEditor({ value, onChange, validation }: JsonEditorProps) {
             {/* Status Bar */}
             <div className="editor-status">
                 {value.trim() === '' ? (
-                    <span className="status-empty">Paste or type JSON here...</span>
+                    <span className="status-empty">{t.editor.pasteOrType}</span>
                 ) : validation.valid ? (
                     <span className="status-valid">
                         <CheckCircle2 size={14} />
-                        Valid JSON
+                        {t.editor.validJson}
                     </span>
                 ) : (
                     <span className="status-invalid">

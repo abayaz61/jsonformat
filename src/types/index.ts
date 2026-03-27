@@ -48,6 +48,15 @@ export interface JsonValidationResult {
 }
 
 export interface TranslationStrings {
+  editor: {
+    pasteOrType: string;
+    validJson: string;
+    pasteToView: string;
+    invalidJsonFix: string;
+    items: string;
+    tabEditor: string;
+    tabTree: string;
+  };
   header: {
     title: string;
     subtitle: string;

@@ -18,6 +18,7 @@ interface TreeNodeProps {
     isLast: boolean;
     forceExpand: boolean | null;
     onContextMenu: (e: React.MouseEvent, value: unknown) => void;
+    items: string;
 }
 
 interface ContextMenuState {
@@ -51,7 +52,7 @@ function getValuePreview(value: unknown, type: string): string {
     }
 }
 
-function TreeNode({ name, value, level, isLast, forceExpand, onContextMenu }: TreeNodeProps) {
+function TreeNode({ name, value, level, isLast, forceExpand, onContextMenu, items }: TreeNodeProps) {
     const [isExpanded, setIsExpanded] = useState(level < 2);
     const type = getValueType(value);
     const isExpandable = type === 'object' || type === 'array';
@@ -110,7 +111,7 @@ function TreeNode({ name, value, level, isLast, forceExpand, onContextMenu }: Tr
                         {type === 'array' ? '[' : '{'}
                         {!isExpanded && (
                             <>
-                                <span className="tree-preview">{children.length} items</span>
+                                <span className="tree-preview">{children.length} {items}</span>
                                 {type === 'array' ? ']' : '}'}
                             </>
                         )}
@@ -129,6 +130,7 @@ function TreeNode({ name, value, level, isLast, forceExpand, onContextMenu }: Tr
                             isLast={index === children.length - 1}
                             forceExpand={forceExpand}
                             onContextMenu={onContextMenu}
+                            items={items}
                         />
                     ))}
                     <div className="tree-bracket-close">
@@ -204,7 +206,7 @@ export function JsonTree({ data, expandAll = null, treeKey = 0 }: JsonTreeProps)
     if (!data.trim()) {
         return (
             <div className="tree-container tree-empty">
-                <span>Paste or type JSON to view tree...</span>
+                <span>{t.editor.pasteToView}</span>
             </div>
         );
     }
@@ -212,7 +214,7 @@ export function JsonTree({ data, expandAll = null, treeKey = 0 }: JsonTreeProps)
     if (parsedData === null) {
         return (
             <div className="tree-container tree-error">
-                <span>Invalid JSON - fix errors to view tree</span>
+                <span>{t.editor.invalidJsonFix}</span>
             </div>
         );
     }
@@ -230,6 +232,7 @@ export function JsonTree({ data, expandAll = null, treeKey = 0 }: JsonTreeProps)
                         isLast={true}
                         forceExpand={expandAll}
                         onContextMenu={handleContextMenu}
+                        items={t.editor.items}
                     />
                 ) : (
                     <div className="tree-node" onContextMenu={(e) => {

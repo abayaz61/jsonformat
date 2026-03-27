@@ -1,4 +1,13 @@
 {
+    "editor": {
+        "pasteOrType": "Collez ou saisissez du JSON ici...",
+        "validJson": "JSON valide",
+        "pasteToView": "Collez ou saisissez du JSON pour voir l'arborescence...",
+        "invalidJsonFix": "JSON invalide - corrigez les erreurs pour voir l'arborescence",
+        "items": "éléments",
+        "tabEditor": "Éditeur",
+        "tabTree": "Arbre"
+    },
     "header": {
         "title": "Formateur JSON",
         "subtitle": "Formater, Valider & Embellir"

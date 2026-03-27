@@ -1,4 +1,13 @@
 {
+    "editor": {
+        "pasteOrType": "Incolla o digita JSON qui...",
+        "validJson": "JSON valido",
+        "pasteToView": "Incolla o digita JSON per vedere l'albero...",
+        "invalidJsonFix": "JSON non valido - correggi gli errori per vedere l'albero",
+        "items": "elementi",
+        "tabEditor": "Editor",
+        "tabTree": "Albero"
+    },
     "header": {
         "title": "Formattatore JSON",
         "subtitle": "Formatta, Valida e Abbellisci"

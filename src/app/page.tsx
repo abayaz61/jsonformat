@@ -273,14 +273,14 @@ export default function Home() {
             onClick={() => setActiveTab('editor')}
           >
             <Code size={14} />
-            <span>Editor</span>
+            <span>{t.editor.tabEditor}</span>
           </button>
           <button
             className={`tab-button ${activeTab === 'tree' ? 'active' : ''}`}
             onClick={() => setActiveTab('tree')}
           >
             <GitBranch size={14} />
-            <span>Tree</span>
+            <span>{t.editor.tabTree}</span>
           </button>
 
           {/* Right side controls */}
