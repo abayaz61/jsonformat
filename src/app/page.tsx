@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Header, JsonEditor, JsonTree, ToastContainer, ExportModal } from '@/components';
+import { Header, JsonEditor, JsonTree, JsonQuery, ToastContainer, ExportModal } from '@/components';
 import type { ToastType } from '@/components';
 import { useSettings } from '@/contexts';
 import { useJsonFormatter } from '@/hooks/useJsonFormatter';
@@ -10,7 +10,7 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { copyToClipboard, pasteFromClipboard } from '@/utils/clipboard';
 import { downloadJson, readFile } from '@/utils/fileOperations';
 import { useLanguage } from '@/contexts';
-import { Code, GitBranch, ChevronsUpDown, ChevronsDownUp, ZoomIn } from 'lucide-react';
+import { Code, GitBranch, ChevronsUpDown, ChevronsDownUp, ZoomIn, Terminal } from 'lucide-react';
 
 interface Toast {
   id: string;
@@ -18,7 +18,7 @@ interface Toast {
   type: ToastType;
 }
 
-type ViewTab = 'editor' | 'tree';
+type ViewTab = 'editor' | 'tree' | 'query';
 
 export default function Home() {
   const { savedContent, setSavedContent } = useSettings();
@@ -220,6 +220,11 @@ export default function Home() {
         setActiveTab('tree');
         return;
       }
+      if (e.ctrlKey && !e.shiftKey && e.key === '3') {
+        e.preventDefault();
+        setActiveTab('query');
+        return;
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -281,6 +286,13 @@ export default function Home() {
           >
             <GitBranch size={14} />
             <span>{t.editor.tabTree}</span>
+          </button>
+          <button
+            className={`tab-button ${activeTab === 'query' ? 'active' : ''}`}
+            onClick={() => setActiveTab('query')}
+          >
+            <Terminal size={14} />
+            <span>Query</span>
           </button>
 
           {/* Right side controls */}
@@ -352,12 +364,14 @@ export default function Home() {
               onChange={setContent}
               validation={validation}
             />
-          ) : (
+          ) : activeTab === 'tree' ? (
             <JsonTree
               data={content}
               expandAll={treeExpandKey.expand}
               treeKey={treeExpandKey.key}
             />
+          ) : (
+            <JsonQuery data={content} />
           )}
         </div>
       </main>

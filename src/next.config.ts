@@ -2,6 +2,7 @@
 import type { NextConfig } from "next";
 import withSerwistInit from "@serwist/next";
 import packageJson from "./package.json";
+import path from "path";
 
 const withSerwist = withSerwistInit({
   swSrc: "app/sw.ts",
@@ -10,14 +11,24 @@ const withSerwist = withSerwistInit({
 });
 
 const nextConfig: NextConfig = {
-  output: "export", // Static HTML export için gerekli
-  trailingSlash: true, // SEO ve static hosting uyumluluğu için
+  output: "export",
+  trailingSlash: true,
   images: {
-    unoptimized: true, // Static export için image optimization kapatılmalı
+    unoptimized: true,
   },
   env: {
     NEXT_PUBLIC_APP_VERSION: packageJson.version,
   },
+  webpack: (config) => {
+    // AlaSQL's default entry (alasql.fs.js) requires react-native modules.
+    // Force webpack to use the browser-only bundle instead.
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'alasql': path.resolve(__dirname, 'node_modules/alasql/dist/alasql.min.js'),
+    };
+    return config;
+  },
 };
+
 
 export default withSerwist(nextConfig);
