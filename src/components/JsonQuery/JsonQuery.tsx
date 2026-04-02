@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import {
   Play,
   RotateCcw,
@@ -14,9 +14,13 @@ import {
   Rows3,
   ChevronDown,
   Database,
+  History,
+  X,
+  Trash2,
 } from 'lucide-react';
 import { runQuery, EXAMPLE_QUERIES, type QueryResult } from './QueryEngine';
 import { ResultTable } from './ResultTable';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 interface JsonQueryProps {
   data: string;
@@ -24,18 +28,53 @@ interface JsonQueryProps {
 
 type ViewMode = 'table' | 'raw';
 
+export interface HistoryEntry {
+  id: string;
+  sql: string;
+  rowCount: number;
+  executionTime: number;
+  timestamp: number;
+}
+
+const MAX_HISTORY = 20;
+const LS_SQL_KEY = 'json-query-last-sql';
+const LS_HISTORY_KEY = 'json-query-history';
+const LS_VIEWMODE_KEY = 'json-query-view-mode';
+
+function timeAgo(ts: number): string {
+  const diff = Date.now() - ts;
+  if (diff < 60_000) return 'just now';
+  if (diff < 3_600_000) return `${Math.floor(diff / 60_000)}m ago`;
+  if (diff < 86_400_000) return `${Math.floor(diff / 3_600_000)}h ago`;
+  return `${Math.floor(diff / 86_400_000)}d ago`;
+}
+
 export function JsonQuery({ data }: JsonQueryProps) {
-  const [sql, setSql] = useState('SELECT * FROM ?');
+  const [sql, setSql] = useLocalStorage<string>(LS_SQL_KEY, 'SELECT * FROM ?');
+  const [history, setHistory] = useLocalStorage<HistoryEntry[]>(LS_HISTORY_KEY, []);
+  const [viewMode, setViewMode] = useLocalStorage<ViewMode>(LS_VIEWMODE_KEY, 'table');
+
   const [result, setResult] = useState<QueryResult | null>(null);
   const [isRunning, setIsRunning] = useState(false);
-  const [viewMode, setViewMode] = useState<ViewMode>('table');
   const [copied, setCopied] = useState(false);
   const [showExamples, setShowExamples] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const examplesRef = useRef<HTMLDivElement>(null);
+  const historyRef = useRef<HTMLDivElement>(null);
+
+  // Track last data hash to detect JSON changes and clear stale results
+  const dataHashRef = useRef<string>(data);
+  useEffect(() => {
+    if (data !== dataHashRef.current) {
+      dataHashRef.current = data;
+      setResult(null); // clear stale results when source JSON changes
+    }
+  }, [data]);
 
   // Parse JSON data
-  const parsedData = React.useMemo(() => {
+  const parsedData = useMemo(() => {
     if (!data.trim()) return null;
     try {
       return JSON.parse(data);
@@ -44,16 +83,39 @@ export function JsonQuery({ data }: JsonQueryProps) {
     }
   }, [data]);
 
-  // Close examples dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (examplesRef.current && !examplesRef.current.contains(e.target as Node)) {
         setShowExamples(false);
       }
+      if (historyRef.current && !historyRef.current.contains(e.target as Node)) {
+        setShowHistory(false);
+      }
     };
-    if (showExamples) document.addEventListener('mousedown', handler);
+    document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
-  }, [showExamples]);
+  }, []);
+
+  const addToHistory = useCallback(
+    (querySql: string, res: QueryResult) => {
+      if (res.error) return; // only cache successful queries
+      const entry: HistoryEntry = {
+        id: Date.now().toString(),
+        sql: querySql.trim(),
+        rowCount: res.rowCount,
+        executionTime: res.executionTime,
+        timestamp: Date.now(),
+      };
+      setHistory((prev) => {
+        // Deduplicate: remove identical sql already in history
+        const deduped = prev.filter((h) => h.sql !== entry.sql);
+        // Prepend and cap at MAX_HISTORY
+        return [entry, ...deduped].slice(0, MAX_HISTORY);
+      });
+    },
+    [setHistory]
+  );
 
   const handleRun = useCallback(async () => {
     if (!sql.trim() || !parsedData) return;
@@ -61,10 +123,11 @@ export function JsonQuery({ data }: JsonQueryProps) {
     try {
       const res = await runQuery(sql.trim(), parsedData);
       setResult(res);
+      addToHistory(sql, res);
     } finally {
       setIsRunning(false);
     }
-  }, [sql, parsedData]);
+  }, [sql, parsedData, addToHistory]);
 
   // Ctrl+Enter to run
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -99,10 +162,21 @@ export function JsonQuery({ data }: JsonQueryProps) {
     setResult(null);
   };
 
-  const selectExample = (querySql: string) => {
+  const selectQuery = (querySql: string) => {
     setSql(querySql);
     setShowExamples(false);
+    setShowHistory(false);
     textareaRef.current?.focus();
+  };
+
+  const deleteHistoryEntry = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setHistory((prev) => prev.filter((h) => h.id !== id));
+  };
+
+  const clearHistory = () => {
+    setHistory([]);
+    setShowHistory(false);
   };
 
   const isEmpty = !data.trim();
@@ -120,11 +194,75 @@ export function JsonQuery({ data }: JsonQueryProps) {
             <span>SQL Query</span>
           </div>
           <div className="query-panel-actions">
+
+            {/* History Dropdown */}
+            <div className="query-examples-dropdown" ref={historyRef}>
+              <button
+                className="query-btn query-btn-secondary"
+                onClick={() => { setShowHistory(!showHistory); setShowExamples(false); }}
+                title="Query history"
+              >
+                <History size={13} />
+                <span>History</span>
+                {history.length > 0 && (
+                  <span className="query-history-badge">{history.length}</span>
+                )}
+              </button>
+              {showHistory && (
+                <div className="query-examples-menu query-history-menu">
+                  <div className="query-history-header">
+                    <span className="query-examples-title">Query History</span>
+                    {history.length > 0 && (
+                      <button
+                        className="query-history-clear-btn"
+                        onClick={clearHistory}
+                        title="Clear all history"
+                      >
+                        <Trash2 size={11} />
+                        Clear
+                      </button>
+                    )}
+                  </div>
+                  {history.length === 0 ? (
+                    <div className="query-history-empty">No history yet — run a query to start</div>
+                  ) : (
+                    history.map((entry) => (
+                      <button
+                        key={entry.id}
+                        className="query-example-item query-history-item"
+                        onClick={() => selectQuery(entry.sql)}
+                      >
+                        <div className="query-history-item-header">
+                          <span className="query-history-meta">
+                            <Rows3 size={10} />
+                            {entry.rowCount} rows
+                          </span>
+                          <span className="query-history-meta">
+                            <Clock size={10} />
+                            {entry.executionTime}ms
+                          </span>
+                          <span className="query-history-time">{timeAgo(entry.timestamp)}</span>
+                          <button
+                            className="query-history-delete"
+                            onClick={(e) => deleteHistoryEntry(entry.id, e)}
+                            title="Remove from history"
+                          >
+                            <X size={10} />
+                          </button>
+                        </div>
+                        <code className="query-example-sql">{entry.sql}</code>
+                      </button>
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
+
             {/* Examples Dropdown */}
             <div className="query-examples-dropdown" ref={examplesRef}>
               <button
                 className="query-btn query-btn-secondary"
-                onClick={() => setShowExamples(!showExamples)}
+                onClick={() => { setShowExamples(!showExamples); setShowHistory(false); }}
                 title="Example queries"
               >
                 <span>Examples</span>
@@ -137,7 +275,7 @@ export function JsonQuery({ data }: JsonQueryProps) {
                     <button
                       key={ex.label}
                       className="query-example-item"
-                      onClick={() => selectExample(ex.sql)}
+                      onClick={() => selectQuery(ex.sql)}
                     >
                       <span className="query-example-label">{ex.label}</span>
                       <code className="query-example-sql">{ex.sql}</code>
