@@ -237,7 +237,21 @@ export function JsonQuery({ data }: JsonQueryProps) {
   }, [setHistory]);
 
   const handleRun = useCallback(async () => {
-    const currentSql = sqlEditorRef.current?.getValue() ?? sql;
+    let currentSql = sqlEditorRef.current?.getValue() ?? sql;
+    
+    if (sqlEditorRef.current) {
+      const selection = sqlEditorRef.current.getSelection();
+      if (selection && !selection.isEmpty()) {
+        const model = sqlEditorRef.current.getModel();
+        if (model) {
+          const selectedText = model.getValueInRange(selection);
+          if (selectedText.trim()) {
+            currentSql = selectedText;
+          }
+        }
+      }
+    }
+
     if (!currentSql.trim() || !parsedData) return;
     setIsRunning(true);
     try {
