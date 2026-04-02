@@ -138,6 +138,10 @@
     "welcomePopup": {
         "title": "JSON Formatter'a Hoş Geldiniz",
         "subtitle": "Neler yapabileceğinizi keşfedin",
+        "newFeatureBadge": "Yeni Özellik",
+        "newFeatureTitle": "JSON Üzerinde SQL Sorgulama",
+        "newFeatureDesc": "Doğrudan JSON veriniz üzerinde SQL sorgusu yazın (SELECT, WHERE, ORDER BY, GROUP BY). Sonuçları tablo veya ham JSON olarak görüntüleyin. Otomatik biçimlendirme ve sorgu geçmişi dahil.",
+        "newFeatureTry": "Deneyin → Sorgu sekmesi",
         "feature1Title": "Biçimlendir & Güzelleştir",
         "feature1Desc": "JSON verilerinizi tek tıkla anında biçimlendirin ve güzelleştirin",
         "feature2Title": "Sıkıştır",

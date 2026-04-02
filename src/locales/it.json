@@ -138,6 +138,10 @@
     "welcomePopup": {
         "title": "Benvenuto in JSON Formattatore",
         "subtitle": "Scopri cosa puoi fare",
+        "newFeatureBadge": "Nuova Funzionalità",
+        "newFeatureTitle": "Query SQL sui dati JSON",
+        "newFeatureDesc": "Scrivi query SQL (SELECT, WHERE, ORDER BY, GROUP BY) direttamente sul tuo JSON. Visualizza i risultati in tabella o JSON grezzo. Formattazione automatica e cronologia incluse.",
+        "newFeatureTry": "Prova → Scheda Query",
         "feature1Title": "Formatta & Abbellisci",
         "feature1Desc": "Formatta e abbellisci istantaneamente i tuoi dati JSON con un clic",
         "feature2Title": "Minimizza",

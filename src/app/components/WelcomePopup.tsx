@@ -15,6 +15,7 @@ import {
     Monitor,
     X,
     ArrowRight,
+    Database,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -219,6 +220,88 @@ export default function WelcomePopup() {
                         </div>
                     </div>
                 </div>
+
+                {/* New Feature Promo */}
+                {t.welcomePopup?.newFeatureTitle && (
+                    <div
+                        style={{
+                            margin: "20px 24px 0",
+                            padding: "16px",
+                            background: "linear-gradient(135deg, rgba(79, 209, 197, 0.15) 0%, rgba(102, 126, 234, 0.15) 100%)",
+                            border: "1px solid rgba(79, 209, 197, 0.3)",
+                            borderRadius: "14px",
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "8px",
+                            position: "relative",
+                            overflow: "hidden",
+                            animation: isClosing ? "none" : "welcomeFeatureIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both"
+                        }}
+                    >
+                        <div
+                            style={{
+                                position: "absolute",
+                                right: -20,
+                                top: -20,
+                                opacity: 0.1,
+                                color: "var(--accent)",
+                            }}
+                        >
+                            <Database size={120} />
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: "10px", position: "relative", zIndex: 1 }}>
+                            <span
+                                style={{
+                                    background: "var(--accent)",
+                                    color: "white",
+                                    padding: "3px 8px",
+                                    borderRadius: "8px",
+                                    fontSize: "11px",
+                                    fontWeight: 700,
+                                    letterSpacing: "0.5px",
+                                    textTransform: "uppercase",
+                                    boxShadow: "0 2px 8px rgba(0,0,0,0.2)"
+                                }}
+                            >
+                                {t.welcomePopup.newFeatureBadge}
+                            </span>
+                            <h3
+                                style={{
+                                    margin: 0,
+                                    fontSize: "15px",
+                                    fontWeight: 700,
+                                    color: "var(--text-primary)",
+                                }}
+                            >
+                                {t.welcomePopup.newFeatureTitle}
+                            </h3>
+                        </div>
+                        <p
+                            style={{
+                                margin: 0,
+                                fontSize: "13px",
+                                color: "var(--text-secondary)",
+                                lineHeight: 1.5,
+                                position: "relative",
+                                zIndex: 1,
+                            }}
+                        >
+                            {t.welcomePopup.newFeatureDesc}
+                        </p>
+                        <div
+                            style={{
+                                marginTop: "4px",
+                                fontSize: "13px",
+                                fontWeight: 700,
+                                color: "var(--accent)",
+                                position: "relative",
+                                zIndex: 1,
+                            }}
+                        >
+                            {t.welcomePopup.newFeatureTry}
+                        </div>
+                    </div>
+                )}
 
                 {/* Features Grid */}
                 <div

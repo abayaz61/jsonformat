@@ -138,6 +138,10 @@
     "welcomePopup": {
         "title": "欢迎使用 JSON 格式化工具",
         "subtitle": "探索您可以做什么",
+        "newFeatureBadge": "新功能",
+        "newFeatureTitle": "对 JSON 数据进行 SQL 查询",
+        "newFeatureDesc": "直接在 JSON 上编写 SQL 查询 (SELECT, WHERE, ORDER BY, GROUP BY)。将结果作为表格或原始 JSON 查看，包含自动格式化和查询历史功能。",
+        "newFeatureTry": "立即体验 → 查询标签页",
         "feature1Title": "格式化与美化",
         "feature1Desc": "一键即时格式化和美化您的 JSON 数据",
         "feature2Title": "压缩",

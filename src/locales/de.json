@@ -138,6 +138,10 @@
     "welcomePopup": {
         "title": "Willkommen beim JSON-Formatierer",
         "subtitle": "Entdecken Sie die Möglichkeiten",
+        "newFeatureBadge": "Neue Funktion",
+        "newFeatureTitle": "SQL-Abfragen auf JSON-Daten",
+        "newFeatureDesc": "Schreiben Sie SQL-Abfragen (SELECT, WHERE, ORDER BY, GROUP BY) direkt auf Ihrem JSON. Ergebnisse als Tabelle oder rohem JSON anzeigen. Auto-Format und Abfrageverlauf inklusive.",
+        "newFeatureTry": "Ausprobieren → Abfrage-Tab",
         "feature1Title": "Formatieren & Verschönern",
         "feature1Desc": "Formatieren und verschönern Sie Ihre JSON-Daten sofort mit einem Klick",
         "feature2Title": "Minimieren",

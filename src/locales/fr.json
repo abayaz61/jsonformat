@@ -138,6 +138,10 @@
     "welcomePopup": {
         "title": "Bienvenue dans JSON Formateur",
         "subtitle": "Découvrez ce que vous pouvez faire",
+        "newFeatureBadge": "Nouvelle Fonctionnalité",
+        "newFeatureTitle": "Requête SQL sur données JSON",
+        "newFeatureDesc": "Écrivez des requêtes SQL (SELECT, WHERE, ORDER BY, GROUP BY) directement sur votre JSON. Visualisez les résultats en tableau ou JSON brut. Formatage auto et historique inclus.",
+        "newFeatureTry": "Essayez → Onglet Requête",
         "feature1Title": "Formater & Embellir",
         "feature1Desc": "Formatez et embellissez instantanément vos données JSON en un clic",
         "feature2Title": "Minifier",
