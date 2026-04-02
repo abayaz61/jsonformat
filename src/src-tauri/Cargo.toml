@@ -1,6 +1,6 @@
 [package]
 name = "json-formatter"
-version = "0.1.0"
+version = "3.0.0"
 description = "Modern JSON formatter, validator and tree viewer"
 authors = ["abayaz61"]
 license = "MIT"
