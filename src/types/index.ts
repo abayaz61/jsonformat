@@ -109,6 +109,33 @@ export interface TranslationStrings {
     copy: string;
     copied: string;
   };
+  query: {
+    tabQuery: string;
+    panelTitle: string;
+    history: string;
+    examples: string;
+    reset: string;
+    run: string;
+    running: string;
+    historyTitle: string;
+    clearHistory: string;
+    noHistory: string;
+    examplesTitle: string;
+    hint: string;
+    rows: string;
+    row: string;
+    noJsonData: string;
+    invalidJson: string;
+    readyTitle: string;
+    readyDesc: string;
+    errorTitle: string;
+    errorTip: string;
+    copyResult: string;
+    downloadResult: string;
+    tableView: string;
+    rawView: string;
+    remove: string;
+  };
   installPrompt: {
     title: string;
     description: string;

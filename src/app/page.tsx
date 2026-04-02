@@ -292,7 +292,7 @@ export default function Home() {
             onClick={() => setActiveTab('query')}
           >
             <Terminal size={14} />
-            <span>Query</span>
+            <span>{t.query.tabQuery}</span>
           </button>
 
           {/* Right side controls */}

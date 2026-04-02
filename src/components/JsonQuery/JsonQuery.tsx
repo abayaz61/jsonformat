@@ -22,7 +22,7 @@ import {
 import { runQuery, EXAMPLE_QUERIES, type QueryResult } from './QueryEngine';
 import { ResultTable } from './ResultTable';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { useTheme } from '@/contexts';
+import { useTheme, useLanguage } from '@/contexts';
 import { defineMonacoTheme } from '@/utils/monacoTheme';
 
 interface JsonQueryProps {
@@ -54,6 +54,7 @@ function timeAgo(ts: number): string {
 
 export function JsonQuery({ data }: JsonQueryProps) {
   const { theme } = useTheme();
+  const { t } = useLanguage();
 
   const [sql, setSql] = useLocalStorage<string>(LS_SQL_KEY, 'SELECT * FROM ?');
   const [history, setHistory] = useLocalStorage<HistoryEntry[]>(LS_HISTORY_KEY, []);
@@ -96,12 +97,10 @@ export function JsonQuery({ data }: JsonQueryProps) {
     sqlMonacoRef.current = monaco;
     sqlEditorRef.current = editor;
 
-    // Apply theme
     const name = defineMonacoTheme(monaco, theme.color, theme.mode);
     monaco.editor.setTheme(name);
     setMonacoThemeName(name);
 
-    // Ctrl+Enter to run inside Monaco
     editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
       handleRunRef.current?.();
     });
@@ -124,7 +123,6 @@ export function JsonQuery({ data }: JsonQueryProps) {
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  // Stable ref for handleRun so Monaco command closure can call it
   const handleRunRef = useRef<(() => void) | null>(null);
 
   const addToHistory = useCallback((querySql: string, res: QueryResult) => {
@@ -155,7 +153,6 @@ export function JsonQuery({ data }: JsonQueryProps) {
     }
   }, [sql, parsedData, addToHistory]);
 
-  // Keep ref in sync
   useEffect(() => { handleRunRef.current = handleRun; }, [handleRun]);
 
   const handleCopyResult = useCallback(async () => {
@@ -180,7 +177,6 @@ export function JsonQuery({ data }: JsonQueryProps) {
 
   const selectQuery = (querySql: string) => {
     setSql(querySql);
-    // Also update Monaco editor value directly
     sqlEditorRef.current?.setValue(querySql);
     setShowExamples(false);
     setShowHistory(false);
@@ -194,7 +190,6 @@ export function JsonQuery({ data }: JsonQueryProps) {
 
   const clearHistory = () => { setHistory([]); setShowHistory(false); };
 
-  // Raw JSON string for result viewer
   const rawJson = useMemo(() =>
     result && !result.error ? JSON.stringify(result.data, null, 2) : '',
     [result]
@@ -204,15 +199,17 @@ export function JsonQuery({ data }: JsonQueryProps) {
   const isInvalidJson = !isEmpty && parsedData === null;
   const canRun = !isEmpty && !isInvalidJson && sql.trim().length > 0;
 
+  // Row count label
+  const rowLabel = (count: number) => count === 1 ? t.query.row : t.query.rows;
+
   return (
     <div className="query-container">
       {/* Query Input Panel */}
       <div className="query-input-panel">
-        {/* Panel Header */}
         <div className="query-panel-header">
           <div className="query-panel-title">
             <Database size={14} />
-            <span>SQL Query</span>
+            <span>{t.query.panelTitle}</span>
           </div>
           <div className="query-panel-actions">
 
@@ -221,10 +218,10 @@ export function JsonQuery({ data }: JsonQueryProps) {
               <button
                 className="query-btn query-btn-secondary"
                 onClick={() => { setShowHistory(!showHistory); setShowExamples(false); }}
-                title="Query history"
+                title={t.query.history}
               >
                 <History size={13} />
-                <span>History</span>
+                <span>{t.query.history}</span>
                 {history.length > 0 && (
                   <span className="query-history-badge">{history.length}</span>
                 )}
@@ -232,20 +229,20 @@ export function JsonQuery({ data }: JsonQueryProps) {
               {showHistory && (
                 <div className="query-examples-menu query-history-menu">
                   <div className="query-history-header">
-                    <span className="query-examples-title">Query History</span>
+                    <span className="query-examples-title">{t.query.historyTitle}</span>
                     {history.length > 0 && (
-                      <button className="query-history-clear-btn" onClick={clearHistory} title="Clear all history">
-                        <Trash2 size={11} /> Clear
+                      <button className="query-history-clear-btn" onClick={clearHistory} title={t.query.clearHistory}>
+                        <Trash2 size={11} /> {t.query.clearHistory}
                       </button>
                     )}
                   </div>
                   {history.length === 0 ? (
-                    <div className="query-history-empty">No history yet — run a query to start</div>
+                    <div className="query-history-empty">{t.query.noHistory}</div>
                   ) : (
                     history.map((entry) => (
                       <button key={entry.id} className="query-example-item query-history-item" onClick={() => selectQuery(entry.sql)}>
                         <div className="query-history-item-header">
-                          <span className="query-history-meta"><Rows3 size={10} />{entry.rowCount} rows</span>
+                          <span className="query-history-meta"><Rows3 size={10} />{entry.rowCount} {rowLabel(entry.rowCount)}</span>
                           <span className="query-history-meta"><Clock size={10} />{entry.executionTime}ms</span>
                           <span className="query-history-time">{timeAgo(entry.timestamp)}</span>
                           <span
@@ -254,7 +251,7 @@ export function JsonQuery({ data }: JsonQueryProps) {
                             tabIndex={0}
                             onClick={(e) => deleteHistoryEntry(entry.id, e)}
                             onKeyDown={(e) => e.key === 'Enter' && deleteHistoryEntry(entry.id, e as unknown as React.MouseEvent)}
-                            title="Remove"
+                            title={t.query.remove}
                           ><X size={10} /></span>
                         </div>
                         <code className="query-example-sql">{entry.sql}</code>
@@ -270,14 +267,14 @@ export function JsonQuery({ data }: JsonQueryProps) {
               <button
                 className="query-btn query-btn-secondary"
                 onClick={() => { setShowExamples(!showExamples); setShowHistory(false); }}
-                title="Example queries"
+                title={t.query.examples}
               >
-                <span>Examples</span>
+                <span>{t.query.examples}</span>
                 <ChevronDown size={12} />
               </button>
               {showExamples && (
                 <div className="query-examples-menu">
-                  <div className="query-examples-title">Example Queries</div>
+                  <div className="query-examples-title">{t.query.examplesTitle}</div>
                   {EXAMPLE_QUERIES.map((ex) => (
                     <button key={ex.label} className="query-example-item" onClick={() => selectQuery(ex.sql)}>
                       <span className="query-example-label">{ex.label}</span>
@@ -288,7 +285,7 @@ export function JsonQuery({ data }: JsonQueryProps) {
               )}
             </div>
 
-            <button className="query-btn query-btn-ghost" onClick={handleReset} title="Reset">
+            <button className="query-btn query-btn-ghost" onClick={handleReset} title={t.query.reset}>
               <RotateCcw size={13} />
             </button>
 
@@ -296,10 +293,10 @@ export function JsonQuery({ data }: JsonQueryProps) {
               className="query-btn query-btn-primary"
               onClick={handleRun}
               disabled={!canRun || isRunning}
-              title="Run query (Ctrl+Enter)"
+              title={`${t.query.run} (Ctrl+Enter)`}
             >
               <Play size={13} />
-              <span>{isRunning ? 'Running…' : 'Run'}</span>
+              <span>{isRunning ? t.query.running : t.query.run}</span>
             </button>
           </div>
         </div>
@@ -338,20 +335,24 @@ export function JsonQuery({ data }: JsonQueryProps) {
 
         {/* Hint */}
         <div className="query-hint">
-          <span>Use <code>?</code> to reference your JSON data • <kbd>Ctrl+Enter</kbd> to run</span>
+          <span>{t.query.hint.split('Ctrl+Enter').map((part, i, arr) =>
+            i < arr.length - 1
+              ? <React.Fragment key={i}>{part}<kbd>Ctrl+Enter</kbd></React.Fragment>
+              : <React.Fragment key={i}>{part}</React.Fragment>
+          )}</span>
         </div>
 
         {/* Status Banners */}
         {isEmpty && (
           <div className="query-status-banner query-status-warning">
             <AlertCircle size={13} />
-            <span>No JSON data loaded. Paste or type JSON in the Editor tab first.</span>
+            <span>{t.query.noJsonData}</span>
           </div>
         )}
         {isInvalidJson && (
           <div className="query-status-banner query-status-error">
             <AlertCircle size={13} />
-            <span>Invalid JSON — fix errors in the Editor tab to run queries.</span>
+            <span>{t.query.invalidJson}</span>
           </div>
         )}
       </div>
@@ -359,14 +360,13 @@ export function JsonQuery({ data }: JsonQueryProps) {
       {/* Results Panel */}
       {result && (
         <div className="query-results-panel">
-          {/* Results Toolbar */}
           <div className="query-results-toolbar">
             <div className="query-results-meta">
               {result.error ? (
-                <span className="query-meta-error"><AlertCircle size={13} />Query Error</span>
+                <span className="query-meta-error"><AlertCircle size={13} />{t.query.errorTitle}</span>
               ) : (
                 <>
-                  <span className="query-meta-stat"><Rows3 size={13} />{result.rowCount.toLocaleString()} row{result.rowCount !== 1 ? 's' : ''}</span>
+                  <span className="query-meta-stat"><Rows3 size={13} />{result.rowCount.toLocaleString()} {rowLabel(result.rowCount)}</span>
                   <span className="query-meta-sep" />
                   <span className="query-meta-stat"><Clock size={13} />{result.executionTime}ms</span>
                 </>
@@ -376,18 +376,18 @@ export function JsonQuery({ data }: JsonQueryProps) {
             {!result.error && (
               <div className="query-results-actions">
                 <div className="query-view-toggle">
-                  <button className={`query-view-btn ${viewMode === 'table' ? 'active' : ''}`} onClick={() => setViewMode('table')} title="Table view">
-                    <Table2 size={13} /><span>Table</span>
+                  <button className={`query-view-btn ${viewMode === 'table' ? 'active' : ''}`} onClick={() => setViewMode('table')} title={t.query.tableView}>
+                    <Table2 size={13} /><span>{t.query.tableView}</span>
                   </button>
-                  <button className={`query-view-btn ${viewMode === 'raw' ? 'active' : ''}`} onClick={() => setViewMode('raw')} title="Raw JSON view">
-                    <Braces size={13} /><span>Raw</span>
+                  <button className={`query-view-btn ${viewMode === 'raw' ? 'active' : ''}`} onClick={() => setViewMode('raw')} title={t.query.rawView}>
+                    <Braces size={13} /><span>{t.query.rawView}</span>
                   </button>
                 </div>
                 <span className="query-meta-sep" />
-                <button className="query-btn query-btn-ghost" onClick={handleCopyResult} title="Copy result as JSON">
+                <button className="query-btn query-btn-ghost" onClick={handleCopyResult} title={t.query.copyResult}>
                   {copied ? <Check size={13} /> : <Copy size={13} />}
                 </button>
-                <button className="query-btn query-btn-ghost" onClick={handleDownloadResult} title="Download result as JSON">
+                <button className="query-btn query-btn-ghost" onClick={handleDownloadResult} title={t.query.downloadResult}>
                   <Download size={13} />
                 </button>
               </div>
@@ -400,17 +400,14 @@ export function JsonQuery({ data }: JsonQueryProps) {
               <div className="query-error-panel">
                 <div className="query-error-icon"><AlertCircle size={18} /></div>
                 <div className="query-error-body">
-                  <div className="query-error-title">Query Failed</div>
+                  <div className="query-error-title">{t.query.errorTitle}</div>
                   <pre className="query-error-message">{result.error}</pre>
-                  <div className="query-error-tip">
-                    💡 Make sure you use <code>?</code> as the table name. Example: <code>SELECT * FROM ?</code>
-                  </div>
+                  <div className="query-error-tip">{t.query.errorTip}</div>
                 </div>
               </div>
             ) : viewMode === 'table' ? (
               <ResultTable data={result.data} columns={result.columns} />
             ) : (
-              /* Monaco read-only JSON viewer — same look as the main editor */
               <div className="query-raw-monaco-wrapper">
                 <Editor
                   height="100%"
@@ -447,10 +444,8 @@ export function JsonQuery({ data }: JsonQueryProps) {
       {!result && canRun && (
         <div className="query-empty-state">
           <div className="query-empty-icon"><Database size={32} /></div>
-          <div className="query-empty-title">Ready to Query</div>
-          <div className="query-empty-desc">
-            Write a SQL query above and press <kbd>Run</kbd> or <kbd>Ctrl+Enter</kbd>
-          </div>
+          <div className="query-empty-title">{t.query.readyTitle}</div>
+          <div className="query-empty-desc">{t.query.readyDesc}</div>
         </div>
       )}
     </div>
