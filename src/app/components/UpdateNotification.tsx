@@ -16,6 +16,12 @@ export default function UpdateNotification() {
         }
 
         if (typeof window !== "undefined" && "serviceWorker" in navigator) {
+            // Development modunda next.config.ts sw.js'yi üretmediği için 404 hatası verir.
+            // Bu yüzden development modunda Service Worker kaydetmeyi atla.
+            if (process.env.NODE_ENV === "development") {
+                return;
+            }
+
             // Register the service worker
             navigator.serviceWorker
                 .register("/sw.js")

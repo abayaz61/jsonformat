@@ -171,13 +171,22 @@ export default function RootLayout({
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="//cdn.jsdelivr.net" />
 
-        {/* Preload critical resources */}
-        <link
-          rel="preload"
-          href="https://cdn.jsdelivr.net/npm/monaco-editor@0.50.0/min/vs/loader.js"
-          as="script"
-          crossOrigin="anonymous"
-        />
+        {/* Development SW Cleanup */}
+        {process.env.NODE_ENV === "development" && (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                if ('serviceWorker' in navigator) {
+                  navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for(let registration of registrations) {
+                      registration.unregister();
+                    }
+                  });
+                }
+              `,
+            }}
+          />
+        )}
 
         {/* Favicon */}
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />

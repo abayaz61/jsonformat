@@ -163,6 +163,10 @@ export interface TranslationStrings {
   welcomePopup: {
     title: string;
     subtitle: string;
+    newFeatureBadge?: string;
+    newFeatureTitle?: string;
+    newFeatureDesc?: string;
+    newFeatureTry?: string;
     feature1Title: string;
     feature1Desc: string;
     feature2Title: string;
