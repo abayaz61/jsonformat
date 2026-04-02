@@ -1,11 +1,56 @@
 'use client';
 
 import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
+
+/**
+ * Lightweight SQL beautifier — keeps column lists inline,
+ * only breaks on major SQL clauses.
+ */
+function beautifySql(raw: string): string {
+  // Collapse whitespace
+  let sql = raw.replace(/\s+/g, ' ').trim();
+
+  // Uppercase keywords — only whole words
+  const keywords = [
+    'SELECT','DISTINCT','FROM','WHERE','AND','OR','NOT','IN','IS','NULL',
+    'LIKE','BETWEEN','EXISTS','CASE','WHEN','THEN','ELSE','END',
+    'ORDER BY','GROUP BY','HAVING','LIMIT','OFFSET','UNION ALL','UNION',
+    'INTERSECT','EXCEPT','LEFT JOIN','RIGHT JOIN','INNER JOIN','FULL JOIN',
+    'CROSS JOIN','JOIN','ON','AS','ASC','DESC','INSERT INTO','VALUES',
+    'UPDATE','SET','DELETE FROM','CREATE TABLE','DROP TABLE','ALTER TABLE',
+    'COUNT','SUM','AVG','MIN','MAX','COALESCE','CAST','OVER','PARTITION BY',
+  ];
+  // Sort longest first to avoid partial replacement
+  keywords.sort((a, b) => b.length - a.length);
+  for (const kw of keywords) {
+    sql = sql.replace(new RegExp(`(?<!['"])\\b${kw}\\b(?!['"])`, 'gi'), kw);
+  }
+
+  // Break before major clauses
+  const breaks = ['FROM','WHERE','AND','OR','ORDER BY','GROUP BY','HAVING','LIMIT','OFFSET',
+                   'LEFT JOIN','RIGHT JOIN','INNER JOIN','FULL JOIN','CROSS JOIN','JOIN',
+                   'UNION ALL','UNION','INTERSECT','EXCEPT'];
+  for (const clause of breaks) {
+    sql = sql.replace(new RegExp(`\\s+(?=${clause}\\b)`, 'gi'), '\n');
+  }
+
+  // Indent continuation lines (AND / OR get extra indent)
+  const lines = sql.split('\n').map((line, i) => {
+    if (i === 0) return line;
+    const trimmed = line.trim();
+    if (/^(AND|OR)\b/i.test(trimmed)) return '  ' + trimmed;
+    return trimmed;
+  });
+
+  return lines.join('\n');
+}
 import Editor, { OnMount, Monaco } from '@monaco-editor/react';
 import {
   Play,
   RotateCcw,
   Copy,
+  Wand2,
+  GripVertical,
   Check,
   Download,
   Table2,
@@ -66,6 +111,35 @@ export function JsonQuery({ data }: JsonQueryProps) {
   const [showExamples, setShowExamples] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
 
+  // Resizable SQL editor panel
+  const MIN_EDITOR_H = 80;
+  const MAX_EDITOR_H = 400;
+  const [editorHeight, setEditorHeight] = useState(120);
+  const isDraggingRef = useRef(false);
+  const dragStartYRef = useRef(0);
+  const dragStartHRef = useRef(0);
+
+  const handleDragStart = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    isDraggingRef.current = true;
+    dragStartYRef.current = e.clientY;
+    dragStartHRef.current = editorHeight;
+
+    const onMove = (ev: MouseEvent) => {
+      if (!isDraggingRef.current) return;
+      const delta = ev.clientY - dragStartYRef.current;
+      const next = Math.min(MAX_EDITOR_H, Math.max(MIN_EDITOR_H, dragStartHRef.current + delta));
+      setEditorHeight(next);
+    };
+    const onUp = () => {
+      isDraggingRef.current = false;
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+    };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+  }, [editorHeight]);
+
   // Monaco refs
   const sqlMonacoRef = useRef<Monaco | null>(null);
   const sqlEditorRef = useRef<Parameters<OnMount>[0] | null>(null);
@@ -92,6 +166,22 @@ export function JsonQuery({ data }: JsonQueryProps) {
     }
   }, [theme.color, theme.mode]);
 
+  // Format the SQL query in the editor
+  const handleFormatSql = useCallback(() => {
+    const raw = sqlEditorRef.current?.getValue() ?? sql;
+    if (!raw.trim()) return;
+    try {
+      const formatted = beautifySql(raw);
+      sqlEditorRef.current?.setValue(formatted);
+      setSql(formatted);
+    } catch {
+      // silently ignore
+    }
+  }, [sql, setSql]);
+
+  const handleFormatRef = useRef<(() => void) | null>(null);
+  useEffect(() => { handleFormatRef.current = handleFormatSql; }, [handleFormatSql]);
+
   // SQL editor mount handler
   const handleSqlEditorMount: OnMount = (editor, monaco) => {
     sqlMonacoRef.current = monaco;
@@ -101,9 +191,15 @@ export function JsonQuery({ data }: JsonQueryProps) {
     monaco.editor.setTheme(name);
     setMonacoThemeName(name);
 
+    // Ctrl+Enter → run query
     editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
       handleRunRef.current?.();
     });
+    // Shift+Alt+F → format SQL
+    editor.addCommand(
+      monaco.KeyMod.Shift | monaco.KeyMod.Alt | monaco.KeyCode.KeyF,
+      () => { handleFormatRef.current?.(); }
+    );
   };
 
   // Parse JSON data
@@ -213,6 +309,16 @@ export function JsonQuery({ data }: JsonQueryProps) {
           </div>
           <div className="query-panel-actions">
 
+            {/* Format Button */}
+            <button
+              className="query-btn query-btn-secondary"
+              onClick={handleFormatSql}
+              title="Format SQL (Shift+Alt+F)"
+            >
+              <Wand2 size={13} />
+              <span>Format</span>
+            </button>
+
             {/* History Dropdown */}
             <div className="query-examples-dropdown" ref={historyRef}>
               <button
@@ -301,10 +407,10 @@ export function JsonQuery({ data }: JsonQueryProps) {
           </div>
         </div>
 
-        {/* Monaco SQL Editor */}
-        <div className="query-monaco-editor-wrapper">
+        {/* Monaco SQL Editor + resize handle */}
+        <div className="query-monaco-editor-wrapper" style={{ height: editorHeight }}>
           <Editor
-            height="120px"
+            height="100%"
             language="sql"
             value={sql}
             onChange={(val) => setSql(val ?? '')}
@@ -333,13 +439,25 @@ export function JsonQuery({ data }: JsonQueryProps) {
           />
         </div>
 
+        {/* Drag handle to resize the editor */}
+        <div
+          className="query-editor-resize-handle"
+          onMouseDown={handleDragStart}
+          title="Drag to resize"
+        >
+          <GripVertical size={14} />
+        </div>
+
         {/* Hint */}
         <div className="query-hint">
-          <span>{t.query.hint.split('Ctrl+Enter').map((part, i, arr) =>
-            i < arr.length - 1
-              ? <React.Fragment key={i}>{part}<kbd>Ctrl+Enter</kbd></React.Fragment>
-              : <React.Fragment key={i}>{part}</React.Fragment>
-          )}</span>
+          <span>
+            {t.query.hint.split('Ctrl+Enter').map((part, i, arr) =>
+              i < arr.length - 1
+                ? <React.Fragment key={i}>{part}<kbd>Ctrl+Enter</kbd></React.Fragment>
+                : <React.Fragment key={i}>{part}</React.Fragment>
+            )}
+            {' · '}<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>F</kbd> Format
+          </span>
         </div>
 
         {/* Status Banners */}
