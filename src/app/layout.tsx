@@ -21,79 +21,105 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  // Primary Meta Tags (Turkish)
-  title: "JSON Formatter - JSON Düzenleme Aracı | jsonformat.info",
+  // ── Primary Meta Tags ────────────────────────────────────────────
+  title: "JSON Formatter & SQL Query Tool — Format, Validate, Query JSON Online | jsonformat.info",
   description:
-    "Ücretsiz JSON formatter ve validator aracı. JSON verilerinizi düzenleyin, doğrulayın ve güzelleştirin. Hızlı, güvenli ve kullanıcı dostu online JSON düzenleyici.",
+    "Free online JSON formatter, validator and SQL query tool. Format, beautify, minify and validate JSON. Query and filter JSON data with SQL — SELECT, WHERE, GROUP BY, ORDER BY. Supports 6 languages. Fast, secure, works in browser.",
   keywords: [
-    "json formatter",
-    "json düzenleyici",
-    "json validator",
-    "json doğrulayıcı",
-    "json beautifier",
-    "json parser",
-    "online json araç",
-    "ücretsiz json formatter",
-    "json minify",
+    // Core tool
+    "json formatter", "json validator", "json beautifier", "json minifier",
+    "json parser", "json editor", "json viewer", "json pretty print",
+    // NEW: SQL query feature
+    "json sql query", "query json data", "json filter", "json search",
+    "sql json online", "json select where", "json data explorer",
+    "json to table", "alasql json", "json query tool",
+    // Turkish
+    "json düzenleyici", "json doğrulayıcı", "json sorgulama",
+    "json filtreleme", "json sql sorgusu", "ücretsiz json araç",
+    // German
+    "json formatieren", "json validator deutsch", "json abfrage",
+    // French
+    "formateur json", "validateur json", "requête json sql",
+    // Italian
+    "formattatore json", "validatore json", "interrogazione json",
+    // Chinese
+    "json格式化", "json验证", "json查询",
+    // Developer terms
+    "online json tool", "free json tool", "json api response formatter",
+    "json syntax highlighting", "json tree view", "developer tools",
   ],
-  authors: [{ name: "JSONFormat.info" }],
+  authors: [{ name: "JSONFormat.info", url: "https://jsonformat.info" }],
   creator: "JSONFormat.info",
   publisher: "JSONFormat.info",
   applicationName: "JSON Formatter",
-  robots: "index, follow",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   manifest: "/manifest.json",
 
-  // Apple Web App
+  // ── Apple Web App ─────────────────────────────────────────────────
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
     title: "JSON Formatter",
   },
-  formatDetection: {
-    telephone: false,
-  },
+  formatDetection: { telephone: false },
 
-  // Open Graph / Facebook
+  // ── Open Graph / Facebook ────────────────────────────────────────
   openGraph: {
     type: "website",
     url: "https://jsonformat.info/",
-    title: "JSON Formatter - JSON Düzenleyici ve Doğrulayıcı",
+    title: "JSON Formatter & SQL Query Tool — Free Online JSON Editor",
     description:
-      "Ücretsiz JSON formatter ve validator aracı. JSON verilerinizi düzenleyin, doğrulayın ve güzelleştirin.",
+      "Format, validate and beautify JSON. Query JSON data with SQL (SELECT, WHERE, ORDER BY). Tree view, syntax highlighting, 6 languages. Free & fast — no sign-up needed.",
     siteName: "JSONFormat.info",
-    locale: "tr_TR",
+    locale: "en_US",
+    alternateLocale: ["tr_TR", "de_DE", "fr_FR", "it_IT", "zh_CN"],
     images: [
       {
         url: "https://jsonformat.info/screenshot/desktop-1280x720.png",
         width: 1200,
         height: 630,
-        alt: "JSON Formatter Screenshot",
+        alt: "JSON Formatter — Format, Validate & Query JSON with SQL",
+        type: "image/png",
       },
     ],
   },
 
-  // Twitter Card
+  // ── Twitter Card ─────────────────────────────────────────────────
   twitter: {
     card: "summary_large_image",
-    title: "JSON Formatter - JSON Düzenleyici ve Doğrulayıcı",
+    title: "JSON Formatter & SQL Query Tool — Free Online",
     description:
-      "Ücretsiz JSON formatter ve validator aracı. JSON verilerinizi düzenleyin, doğrulayın ve güzelleştirin.",
+      "Format & validate JSON. Query JSON data with SQL. Tree view, syntax highlighting, 6 languages. Free & instant.",
     site: "@jsonformat",
     creator: "@jsonformat",
     images: ["https://jsonformat.info/screenshot/desktop-1280x720.png"],
   },
 
-  // Alternate Languages
+  // ── Hreflang / Alternate Languages ───────────────────────────────
   alternates: {
     canonical: "https://jsonformat.info/",
     languages: {
-      "tr": "https://jsonformat.info/?lang=tr",
-      "en": "https://jsonformat.info/?lang=en",
       "x-default": "https://jsonformat.info/",
+      "en":        "https://jsonformat.info/?lang=en",
+      "tr":        "https://jsonformat.info/?lang=tr",
+      "de":        "https://jsonformat.info/?lang=de",
+      "fr":        "https://jsonformat.info/?lang=fr",
+      "it":        "https://jsonformat.info/?lang=it",
+      "zh-Hans":   "https://jsonformat.info/?lang=zh",
     },
   },
 
-  // Search Engine Verification
+  // ── Search Engine Verification ───────────────────────────────────
   verification: {
     google: "nEMYj6IA_R51LxQf2T2PNpOP3y3Zd5ed0n9lWchWgnw",
     yandex: "96fde976efba257c",
@@ -102,10 +128,20 @@ export const metadata: Metadata = {
     },
   },
 
-  // Additional Meta
+  // ── Additional Meta ───────────────────────────────────────────────
   other: {
-    "revisit-after": "7 days",
-    "copyright": "© 2024 JSONFormat.info",
+    "revisit-after":  "7 days",
+    "copyright":      "© 2025 JSONFormat.info",
+    // Geo targeting — serve global audience
+    "geo.region":     "TR",
+    "geo.placename":  "Turkey",
+    "DC.language":    "en, tr, de, fr, it, zh",
+    "DC.title":       "JSON Formatter & SQL Query Tool",
+    "DC.description": "Free online JSON formatter, validator and SQL query tool.",
+    "DC.creator":     "JSONFormat.info",
+    "DC.rights":      "© 2025 JSONFormat.info. All rights reserved.",
+    "rating":         "general",
+    "category":       "developer tools",
   },
 };
 

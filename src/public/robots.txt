@@ -1,35 +1,63 @@
 # robots.txt for jsonformat.info
 # https://www.robotstxt.org/robotstxt.html
 
-# Allow all crawlers full access
+# ─── Allow all major search engines ───────────────────────────────────────
 User-agent: *
 Allow: /
-
-# Sitemap location
-Sitemap: https://jsonformat.info/sitemap.xml
-
-# Crawl-delay for respectful crawling
 Crawl-delay: 1
 
-# Disallow admin and private paths (if any)
+# Disallow server-internal paths
 Disallow: /api/
 Disallow: /_next/
 Disallow: /private/
 
-# Specific search engine directives
+# ─── Specific directives: Googlebot ───────────────────────────────────────
 User-agent: Googlebot
 Allow: /
+# Allow CSS/JS for full rendering
+Allow: /_next/static/
 
+# ─── Specific directives: Bingbot ─────────────────────────────────────────
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 2
 
+# ─── Specific directives: Yandex ──────────────────────────────────────────
 User-agent: Yandex
 Allow: /
+Crawl-delay: 2
+Clean-param: lang
 
+# ─── Specific directives: DuckDuckBot ─────────────────────────────────────
 User-agent: DuckDuckBot
 Allow: /
 
-# Block AI training bots (optional - remove if you want AI indexing)
+# ─── Specific directives: Baidu (China) ───────────────────────────────────
+User-agent: Baiduspider
+Allow: /
+Crawl-delay: 3
+
+# ─── Specific directives: Naver (Korea) ───────────────────────────────────
+User-agent: Yeti
+Allow: /
+
+# ─── Social media crawlers (for OG/Twitter previews) ──────────────────────
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+User-agent: TelegramBot
+Allow: /
+
+# ─── Block AI training bots ───────────────────────────────────────────────
 User-agent: GPTBot
 Disallow: /
 
@@ -44,3 +72,9 @@ Disallow: /
 
 User-agent: Claude-Web
 Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+# ─── Sitemap ──────────────────────────────────────────────────────────────
+Sitemap: https://jsonformat.info/sitemap.xml
