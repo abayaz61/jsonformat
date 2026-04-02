@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
+import Editor, { OnMount, Monaco } from '@monaco-editor/react';
 import {
   Play,
   RotateCcw,
@@ -21,6 +22,8 @@ import {
 import { runQuery, EXAMPLE_QUERIES, type QueryResult } from './QueryEngine';
 import { ResultTable } from './ResultTable';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { useTheme } from '@/contexts';
+import { defineMonacoTheme } from '@/utils/monacoTheme';
 
 interface JsonQueryProps {
   data: string;
@@ -50,6 +53,8 @@ function timeAgo(ts: number): string {
 }
 
 export function JsonQuery({ data }: JsonQueryProps) {
+  const { theme } = useTheme();
+
   const [sql, setSql] = useLocalStorage<string>(LS_SQL_KEY, 'SELECT * FROM ?');
   const [history, setHistory] = useLocalStorage<HistoryEntry[]>(LS_HISTORY_KEY, []);
   const [viewMode, setViewMode] = useLocalStorage<ViewMode>(LS_VIEWMODE_KEY, 'table');
@@ -60,82 +65,98 @@ export function JsonQuery({ data }: JsonQueryProps) {
   const [showExamples, setShowExamples] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
 
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  // Monaco refs
+  const sqlMonacoRef = useRef<Monaco | null>(null);
+  const sqlEditorRef = useRef<Parameters<OnMount>[0] | null>(null);
+  const [monacoThemeName, setMonacoThemeName] = useState('vs-dark');
+
   const examplesRef = useRef<HTMLDivElement>(null);
   const historyRef = useRef<HTMLDivElement>(null);
 
-  // Track last data hash to detect JSON changes and clear stale results
+  // Track JSON data changes → clear stale results
   const dataHashRef = useRef<string>(data);
   useEffect(() => {
     if (data !== dataHashRef.current) {
       dataHashRef.current = data;
-      setResult(null); // clear stale results when source JSON changes
+      setResult(null);
     }
   }, [data]);
+
+  // Keep Monaco theme in sync with app theme
+  useEffect(() => {
+    if (sqlMonacoRef.current) {
+      const name = defineMonacoTheme(sqlMonacoRef.current, theme.color, theme.mode);
+      sqlMonacoRef.current.editor.setTheme(name);
+      setMonacoThemeName(name);
+    }
+  }, [theme.color, theme.mode]);
+
+  // SQL editor mount handler
+  const handleSqlEditorMount: OnMount = (editor, monaco) => {
+    sqlMonacoRef.current = monaco;
+    sqlEditorRef.current = editor;
+
+    // Apply theme
+    const name = defineMonacoTheme(monaco, theme.color, theme.mode);
+    monaco.editor.setTheme(name);
+    setMonacoThemeName(name);
+
+    // Ctrl+Enter to run inside Monaco
+    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+      handleRunRef.current?.();
+    });
+  };
 
   // Parse JSON data
   const parsedData = useMemo(() => {
     if (!data.trim()) return null;
-    try {
-      return JSON.parse(data);
-    } catch {
-      return null;
-    }
+    try { return JSON.parse(data); }
+    catch { return null; }
   }, [data]);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (examplesRef.current && !examplesRef.current.contains(e.target as Node)) {
-        setShowExamples(false);
-      }
-      if (historyRef.current && !historyRef.current.contains(e.target as Node)) {
-        setShowHistory(false);
-      }
+      if (examplesRef.current && !examplesRef.current.contains(e.target as Node)) setShowExamples(false);
+      if (historyRef.current && !historyRef.current.contains(e.target as Node)) setShowHistory(false);
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  const addToHistory = useCallback(
-    (querySql: string, res: QueryResult) => {
-      if (res.error) return; // only cache successful queries
-      const entry: HistoryEntry = {
-        id: Date.now().toString(),
-        sql: querySql.trim(),
-        rowCount: res.rowCount,
-        executionTime: res.executionTime,
-        timestamp: Date.now(),
-      };
-      setHistory((prev) => {
-        // Deduplicate: remove identical sql already in history
-        const deduped = prev.filter((h) => h.sql !== entry.sql);
-        // Prepend and cap at MAX_HISTORY
-        return [entry, ...deduped].slice(0, MAX_HISTORY);
-      });
-    },
-    [setHistory]
-  );
+  // Stable ref for handleRun so Monaco command closure can call it
+  const handleRunRef = useRef<(() => void) | null>(null);
+
+  const addToHistory = useCallback((querySql: string, res: QueryResult) => {
+    if (res.error) return;
+    const entry: HistoryEntry = {
+      id: Date.now().toString(),
+      sql: querySql.trim(),
+      rowCount: res.rowCount,
+      executionTime: res.executionTime,
+      timestamp: Date.now(),
+    };
+    setHistory((prev) => {
+      const deduped = prev.filter((h) => h.sql !== entry.sql);
+      return [entry, ...deduped].slice(0, MAX_HISTORY);
+    });
+  }, [setHistory]);
 
   const handleRun = useCallback(async () => {
-    if (!sql.trim() || !parsedData) return;
+    const currentSql = sqlEditorRef.current?.getValue() ?? sql;
+    if (!currentSql.trim() || !parsedData) return;
     setIsRunning(true);
     try {
-      const res = await runQuery(sql.trim(), parsedData);
+      const res = await runQuery(currentSql.trim(), parsedData);
       setResult(res);
-      addToHistory(sql, res);
+      addToHistory(currentSql, res);
     } finally {
       setIsRunning(false);
     }
   }, [sql, parsedData, addToHistory]);
 
-  // Ctrl+Enter to run
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-      e.preventDefault();
-      handleRun();
-    }
-  };
+  // Keep ref in sync
+  useEffect(() => { handleRunRef.current = handleRun; }, [handleRun]);
 
   const handleCopyResult = useCallback(async () => {
     if (!result) return;
@@ -151,22 +172,19 @@ export function JsonQuery({ data }: JsonQueryProps) {
     const blob = new Blob([text], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url;
-    a.download = 'query-result.json';
-    a.click();
+    a.href = url; a.download = 'query-result.json'; a.click();
     URL.revokeObjectURL(url);
   }, [result]);
 
-  const handleReset = () => {
-    setSql('SELECT * FROM ?');
-    setResult(null);
-  };
+  const handleReset = () => { setSql('SELECT * FROM ?'); setResult(null); };
 
   const selectQuery = (querySql: string) => {
     setSql(querySql);
+    // Also update Monaco editor value directly
+    sqlEditorRef.current?.setValue(querySql);
     setShowExamples(false);
     setShowHistory(false);
-    textareaRef.current?.focus();
+    sqlEditorRef.current?.focus();
   };
 
   const deleteHistoryEntry = (id: string, e: React.MouseEvent) => {
@@ -174,10 +192,13 @@ export function JsonQuery({ data }: JsonQueryProps) {
     setHistory((prev) => prev.filter((h) => h.id !== id));
   };
 
-  const clearHistory = () => {
-    setHistory([]);
-    setShowHistory(false);
-  };
+  const clearHistory = () => { setHistory([]); setShowHistory(false); };
+
+  // Raw JSON string for result viewer
+  const rawJson = useMemo(() =>
+    result && !result.error ? JSON.stringify(result.data, null, 2) : '',
+    [result]
+  );
 
   const isEmpty = !data.trim();
   const isInvalidJson = !isEmpty && parsedData === null;
@@ -213,13 +234,8 @@ export function JsonQuery({ data }: JsonQueryProps) {
                   <div className="query-history-header">
                     <span className="query-examples-title">Query History</span>
                     {history.length > 0 && (
-                      <button
-                        className="query-history-clear-btn"
-                        onClick={clearHistory}
-                        title="Clear all history"
-                      >
-                        <Trash2 size={11} />
-                        Clear
+                      <button className="query-history-clear-btn" onClick={clearHistory} title="Clear all history">
+                        <Trash2 size={11} /> Clear
                       </button>
                     )}
                   </div>
@@ -227,28 +243,19 @@ export function JsonQuery({ data }: JsonQueryProps) {
                     <div className="query-history-empty">No history yet — run a query to start</div>
                   ) : (
                     history.map((entry) => (
-                      <button
-                        key={entry.id}
-                        className="query-example-item query-history-item"
-                        onClick={() => selectQuery(entry.sql)}
-                      >
+                      <button key={entry.id} className="query-example-item query-history-item" onClick={() => selectQuery(entry.sql)}>
                         <div className="query-history-item-header">
-                          <span className="query-history-meta">
-                            <Rows3 size={10} />
-                            {entry.rowCount} rows
-                          </span>
-                          <span className="query-history-meta">
-                            <Clock size={10} />
-                            {entry.executionTime}ms
-                          </span>
+                          <span className="query-history-meta"><Rows3 size={10} />{entry.rowCount} rows</span>
+                          <span className="query-history-meta"><Clock size={10} />{entry.executionTime}ms</span>
                           <span className="query-history-time">{timeAgo(entry.timestamp)}</span>
-                          <button
+                          <span
                             className="query-history-delete"
+                            role="button"
+                            tabIndex={0}
                             onClick={(e) => deleteHistoryEntry(entry.id, e)}
-                            title="Remove from history"
-                          >
-                            <X size={10} />
-                          </button>
+                            onKeyDown={(e) => e.key === 'Enter' && deleteHistoryEntry(entry.id, e as unknown as React.MouseEvent)}
+                            title="Remove"
+                          ><X size={10} /></span>
                         </div>
                         <code className="query-example-sql">{entry.sql}</code>
                       </button>
@@ -272,11 +279,7 @@ export function JsonQuery({ data }: JsonQueryProps) {
                 <div className="query-examples-menu">
                   <div className="query-examples-title">Example Queries</div>
                   {EXAMPLE_QUERIES.map((ex) => (
-                    <button
-                      key={ex.label}
-                      className="query-example-item"
-                      onClick={() => selectQuery(ex.sql)}
-                    >
+                    <button key={ex.label} className="query-example-item" onClick={() => selectQuery(ex.sql)}>
                       <span className="query-example-label">{ex.label}</span>
                       <code className="query-example-sql">{ex.sql}</code>
                     </button>
@@ -285,11 +288,7 @@ export function JsonQuery({ data }: JsonQueryProps) {
               )}
             </div>
 
-            <button
-              className="query-btn query-btn-ghost"
-              onClick={handleReset}
-              title="Reset"
-            >
+            <button className="query-btn query-btn-ghost" onClick={handleReset} title="Reset">
               <RotateCcw size={13} />
             </button>
 
@@ -305,22 +304,35 @@ export function JsonQuery({ data }: JsonQueryProps) {
           </div>
         </div>
 
-        {/* SQL Input */}
-        <div className="query-input-wrapper">
-          <div className="query-line-numbers">
-            {sql.split('\n').map((_, i) => (
-              <span key={i} className="query-line-num">{i + 1}</span>
-            ))}
-          </div>
-          <textarea
-            ref={textareaRef}
-            className="query-textarea"
+        {/* Monaco SQL Editor */}
+        <div className="query-monaco-editor-wrapper">
+          <Editor
+            height="120px"
+            language="sql"
             value={sql}
-            onChange={(e) => setSql(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="SELECT * FROM ? WHERE ..."
-            spellCheck={false}
-            rows={Math.max(3, sql.split('\n').length)}
+            onChange={(val) => setSql(val ?? '')}
+            onMount={handleSqlEditorMount}
+            theme={monacoThemeName}
+            options={{
+              fontSize: 13,
+              fontFamily: "'Geist Mono', 'Fira Code', 'Consolas', monospace",
+              fontLigatures: true,
+              lineNumbers: 'on',
+              minimap: { enabled: false },
+              scrollBeyondLastLine: false,
+              automaticLayout: true,
+              wordWrap: 'on',
+              padding: { top: 10, bottom: 10 },
+              renderLineHighlight: 'line',
+              cursorBlinking: 'smooth',
+              smoothScrolling: true,
+              folding: false,
+              lineDecorationsWidth: 8,
+              overviewRulerLanes: 0,
+              scrollbar: { vertical: 'hidden', horizontal: 'hidden', alwaysConsumeMouseWheel: false },
+              suggest: { showKeywords: true },
+            }}
+            loading={null}
           />
         </div>
 
@@ -329,7 +341,7 @@ export function JsonQuery({ data }: JsonQueryProps) {
           <span>Use <code>?</code> to reference your JSON data • <kbd>Ctrl+Enter</kbd> to run</span>
         </div>
 
-        {/* Status Banner */}
+        {/* Status Banners */}
         {isEmpty && (
           <div className="query-status-banner query-status-warning">
             <AlertCircle size={13} />
@@ -351,61 +363,31 @@ export function JsonQuery({ data }: JsonQueryProps) {
           <div className="query-results-toolbar">
             <div className="query-results-meta">
               {result.error ? (
-                <span className="query-meta-error">
-                  <AlertCircle size={13} />
-                  Query Error
-                </span>
+                <span className="query-meta-error"><AlertCircle size={13} />Query Error</span>
               ) : (
                 <>
-                  <span className="query-meta-stat">
-                    <Rows3 size={13} />
-                    {result.rowCount.toLocaleString()} row{result.rowCount !== 1 ? 's' : ''}
-                  </span>
+                  <span className="query-meta-stat"><Rows3 size={13} />{result.rowCount.toLocaleString()} row{result.rowCount !== 1 ? 's' : ''}</span>
                   <span className="query-meta-sep" />
-                  <span className="query-meta-stat">
-                    <Clock size={13} />
-                    {result.executionTime}ms
-                  </span>
+                  <span className="query-meta-stat"><Clock size={13} />{result.executionTime}ms</span>
                 </>
               )}
             </div>
 
             {!result.error && (
               <div className="query-results-actions">
-                {/* View Mode Toggle */}
                 <div className="query-view-toggle">
-                  <button
-                    className={`query-view-btn ${viewMode === 'table' ? 'active' : ''}`}
-                    onClick={() => setViewMode('table')}
-                    title="Table view"
-                  >
-                    <Table2 size={13} />
-                    <span>Table</span>
+                  <button className={`query-view-btn ${viewMode === 'table' ? 'active' : ''}`} onClick={() => setViewMode('table')} title="Table view">
+                    <Table2 size={13} /><span>Table</span>
                   </button>
-                  <button
-                    className={`query-view-btn ${viewMode === 'raw' ? 'active' : ''}`}
-                    onClick={() => setViewMode('raw')}
-                    title="Raw JSON view"
-                  >
-                    <Braces size={13} />
-                    <span>Raw</span>
+                  <button className={`query-view-btn ${viewMode === 'raw' ? 'active' : ''}`} onClick={() => setViewMode('raw')} title="Raw JSON view">
+                    <Braces size={13} /><span>Raw</span>
                   </button>
                 </div>
-
                 <span className="query-meta-sep" />
-
-                <button
-                  className="query-btn query-btn-ghost"
-                  onClick={handleCopyResult}
-                  title="Copy result as JSON"
-                >
+                <button className="query-btn query-btn-ghost" onClick={handleCopyResult} title="Copy result as JSON">
                   {copied ? <Check size={13} /> : <Copy size={13} />}
                 </button>
-                <button
-                  className="query-btn query-btn-ghost"
-                  onClick={handleDownloadResult}
-                  title="Download result as JSON"
-                >
+                <button className="query-btn query-btn-ghost" onClick={handleDownloadResult} title="Download result as JSON">
                   <Download size={13} />
                 </button>
               </div>
@@ -416,9 +398,7 @@ export function JsonQuery({ data }: JsonQueryProps) {
           <div className="query-result-content">
             {result.error ? (
               <div className="query-error-panel">
-                <div className="query-error-icon">
-                  <AlertCircle size={18} />
-                </div>
+                <div className="query-error-icon"><AlertCircle size={18} /></div>
                 <div className="query-error-body">
                   <div className="query-error-title">Query Failed</div>
                   <pre className="query-error-message">{result.error}</pre>
@@ -430,10 +410,33 @@ export function JsonQuery({ data }: JsonQueryProps) {
             ) : viewMode === 'table' ? (
               <ResultTable data={result.data} columns={result.columns} />
             ) : (
-              <div className="query-raw-wrapper">
-                <pre className="query-raw-output">
-                  {JSON.stringify(result.data, null, 2)}
-                </pre>
+              /* Monaco read-only JSON viewer — same look as the main editor */
+              <div className="query-raw-monaco-wrapper">
+                <Editor
+                  height="100%"
+                  language="json"
+                  value={rawJson}
+                  theme={monacoThemeName}
+                  options={{
+                    readOnly: true,
+                    fontSize: 13,
+                    fontFamily: "'Geist Mono', 'Fira Code', 'Consolas', monospace",
+                    fontLigatures: true,
+                    lineNumbers: 'on',
+                    minimap: { enabled: false },
+                    scrollBeyondLastLine: false,
+                    automaticLayout: true,
+                    wordWrap: 'off',
+                    padding: { top: 12, bottom: 12 },
+                    renderLineHighlight: 'line',
+                    smoothScrolling: true,
+                    folding: true,
+                    cursorStyle: 'line',
+                    domReadOnly: true,
+                    contextmenu: false,
+                  }}
+                  loading={null}
+                />
               </div>
             )}
           </div>
@@ -443,9 +446,7 @@ export function JsonQuery({ data }: JsonQueryProps) {
       {/* Empty State */}
       {!result && canRun && (
         <div className="query-empty-state">
-          <div className="query-empty-icon">
-            <Database size={32} />
-          </div>
+          <div className="query-empty-icon"><Database size={32} /></div>
           <div className="query-empty-title">Ready to Query</div>
           <div className="query-empty-desc">
             Write a SQL query above and press <kbd>Run</kbd> or <kbd>Ctrl+Enter</kbd>

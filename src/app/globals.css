@@ -1765,49 +1765,24 @@ body {
   gap: 6px;
 }
 
-/* ---- SQL Input Area ---- */
-.query-input-wrapper {
-  display: flex;
-  position: relative;
-  min-height: 72px;
+/* ---- Monaco SQL Editor wrapper ---- */
+.query-monaco-editor-wrapper {
+  border-top: 1px solid var(--border);
+  /* Monaco itself sets the background via its theme */
+  overflow: hidden;
 }
 
-.query-line-numbers {
-  display: flex;
-  flex-direction: column;
-  padding: 10px 8px;
-  background: var(--bg-tertiary);
-  border-right: 1px solid var(--border);
-  min-width: 36px;
-  align-items: flex-end;
-  flex-shrink: 0;
-  user-select: none;
-}
-
-.query-line-num {
-  font-family: var(--font-geist-mono), 'Cascadia Code', 'Fira Code', monospace;
-  font-size: 12px;
-  line-height: 22px;
-  color: var(--text-muted);
-}
-
-.query-textarea {
+/* ---- Monaco Raw Result viewer ---- */
+.query-raw-monaco-wrapper {
   flex: 1;
-  padding: 10px 12px;
-  background: transparent;
-  border: none;
-  outline: none;
-  resize: none;
-  font-family: var(--font-geist-mono), 'Cascadia Code', 'Fira Code', monospace;
-  font-size: 13px;
-  line-height: 22px;
-  color: var(--text-primary);
-  caret-color: var(--accent);
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
 }
 
-.query-textarea::placeholder {
-  color: var(--text-muted);
-}
+/* Legacy textarea (unused, kept for safety) */
+.query-textarea { display: none; }
+.query-line-numbers { display: none; }
 
 /* ---- Hint bar ---- */
 .query-hint {
