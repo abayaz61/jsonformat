@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Copy, Check } from 'lucide-react';
 import { useLanguage } from '@/contexts';
+import { useIsClient } from '@/hooks/useIsClient';
 
 interface ExportModalProps {
     isOpen: boolean;
@@ -277,11 +278,7 @@ export function ExportModal({ isOpen, onClose, jsonData }: ExportModalProps) {
     const { t } = useLanguage();
     const [selectedLang, setSelectedLang] = useState<ExportLanguage>('typescript');
     const [copied, setCopied] = useState(false);
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
+    const mounted = useIsClient();
 
     const parsedData = useMemo(() => {
         if (!jsonData.trim()) return null;

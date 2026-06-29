@@ -34,7 +34,7 @@ export function EditorSkeleton() {
                             <div
                                 className="skeleton-pulse"
                                 style={{
-                                    width: `${30 + Math.random() * 50}%`,
+                                    width: `${30 + ((i * 17) % 50)}%`,
                                     marginLeft: `${(i % 4) * 20}px`
                                 }}
                             />

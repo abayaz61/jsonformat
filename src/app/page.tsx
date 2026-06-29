@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { Header, JsonEditor, JsonTree, JsonQuery, ToastContainer, ExportModal } from '@/components';
 import type { ToastType } from '@/components';
 import { useSettings } from '@/contexts';
@@ -10,6 +10,7 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { copyToClipboard, pasteFromClipboard } from '@/utils/clipboard';
 import { downloadJson, readFile } from '@/utils/fileOperations';
 import { useLanguage } from '@/contexts';
+import { useIsClient } from '@/hooks/useIsClient';
 import { Code, GitBranch, ChevronsUpDown, ChevronsDownUp, ZoomIn, Terminal } from 'lucide-react';
 
 interface Toast {
@@ -26,7 +27,7 @@ export default function Home() {
   const { content, setContent, validation, format, minify, clear } = useJsonFormatter(savedContent);
   const { isFullscreen, toggleFullscreen, fullscreenRef } = useFullscreen();
   const [toasts, setToasts] = useState<Toast[]>([]);
-  const [isHydrated, setIsHydrated] = useState(false);
+  const isHydrated = useIsClient();
   const [activeTab, setActiveTab] = useState<ViewTab>('editor');
   const [treeExpandKey, setTreeExpandKey] = useState<{ key: number; expand: boolean | null }>({ key: 0, expand: null });
   const [zoomLevel, setZoomLevel] = useLocalStorage('json-formatter-zoom', 100);
@@ -41,12 +42,10 @@ export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
   const prevContentRef = useRef<string>(content);
 
-  const filterOptions = { ignoreNull, ignoreDefaultDates, ignoreZeros, ignoreEmptyArrays, convertDotNetDates };
-
-  // Hydration
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);
+  const filterOptions = useMemo(
+    () => ({ ignoreNull, ignoreDefaultDates, ignoreZeros, ignoreEmptyArrays, convertDotNetDates }),
+    [ignoreNull, ignoreDefaultDates, ignoreZeros, ignoreEmptyArrays, convertDotNetDates],
+  );
 
   // Load saved content on mount
   useEffect(() => {
@@ -69,7 +68,7 @@ export default function Home() {
       }
     }
     prevContentRef.current = content;
-  }, [content, autoFormat, isHydrated, format]);
+  }, [content, autoFormat, isHydrated, format, filterOptions]);
 
   // Save content on change
   useEffect(() => {
