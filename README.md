@@ -37,7 +37,7 @@ Modern JSON formatter, validator ve tree viewer uygulaması. **Tauri 2.0** ile W
 
 1. **Node.js** 20.x veya üzeri
 2. **pnpm** veya **npm**
-3. **Rust** 1.77.2 veya üzeri (masaüstü derlemesi için)
+3. **Rust** 1.85.0 veya üzeri (masaüstü derlemesi için)
 4. **Tauri CLI** (`cargo install tauri-cli`)
 
 ### Geliştirme Modu
