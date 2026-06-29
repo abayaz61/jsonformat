@@ -1,44 +1,42 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 import { isTauri } from '@/utils/tauri';
+
+function subscribeToWindowLoad(onLoad: () => void): () => void {
+    if (document.readyState === 'complete') {
+        onLoad();
+        return () => {};
+    }
+
+    window.addEventListener('load', onLoad);
+    return () => window.removeEventListener('load', onLoad);
+}
 
 /**
  * TauriWindowManager
- * 
+ *
  * Tauri uygulamasında loading durumunu yönetir.
  * Pencere hemen görünür, içerik yüklenene kadar loading ekranı gösterilir.
  */
 export default function TauriWindowManager() {
+    const isTauriEnv = useSyncExternalStore(
+        () => () => {},
+        () => isTauri(),
+        () => false,
+    );
     const [isReady, setIsReady] = useState(false);
-    const [isTauriEnv, setIsTauriEnv] = useState(false);
 
     useEffect(() => {
-        // Client-side'da Tauri ortamı kontrol et
-        const checkTauri = isTauri();
-        setIsTauriEnv(checkTauri);
-
-        // Tauri değilse hemen hazır
-        if (!checkTauri) {
-            setIsReady(true);
+        if (!isTauriEnv) {
             return;
         }
 
-        // DOM tamamen yüklendikten sonra loading'i kapat
-        const handleReady = () => {
-            // Kısa bir gecikme - smooth transition için
+        return subscribeToWindowLoad(() => {
             setTimeout(() => setIsReady(true), 100);
-        };
+        });
+    }, [isTauriEnv]);
 
-        if (document.readyState === 'complete') {
-            handleReady();
-        } else {
-            window.addEventListener('load', handleReady);
-            return () => window.removeEventListener('load', handleReady);
-        }
-    }, []);
-
-    // Web ortamında veya hazırsa hiçbir şey gösterme
     if (!isTauriEnv || isReady) {
         return null;
     }

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { useIsClient } from "@/hooks/useIsClient";
 import {
     Sparkles,
     Code,
@@ -49,15 +50,18 @@ export default function WelcomePopup() {
     const { t } = useLanguage();
     const [showPopup, setShowPopup] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
-    const [mounted, setMounted] = useState(false);
+    const mounted = useIsClient();
 
     useEffect(() => {
-        setMounted(true);
+        if (!mounted) {
+            return;
+        }
+
         const shown = localStorage.getItem(WELCOME_SHOWN_KEY);
         if (!shown) {
             setTimeout(() => setShowPopup(true), 800);
         }
-    }, []);
+    }, [mounted]);
 
     const handleClose = () => {
         setIsClosing(true);

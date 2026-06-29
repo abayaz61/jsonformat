@@ -90,10 +90,6 @@ export function ColorPaletteCarousel({ isOpen, onClose }: ColorPaletteCarouselPr
         }
     }, [goToPrev, goToNext, onClose]);
 
-    const handleSelect = () => {
-        setColor(colorThemes[currentIndex].id);
-    };
-
     const getVisibleThemes = () => {
         const total = colorThemes.length;
         const items = [];
