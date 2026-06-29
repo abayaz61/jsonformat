@@ -374,6 +374,16 @@ body {
   white-space: nowrap;
 }
 
+.header-version {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0.85;
+  transform: translateY(1px);
+}
+
 /* Header Toolbar Actions */
 .header-actions {
   display: flex;

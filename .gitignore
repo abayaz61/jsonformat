@@ -45,8 +45,7 @@ next-env.d.ts
 # ===========================================
 
 # Deployment scripts and configs (contains server credentials)
-/deploy/
-deploy/
+ 
 
 # SSH keys and credentials
 *.pem

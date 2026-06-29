@@ -87,6 +87,9 @@ export function Header({
             <div className="header-logo">
                 <span className="header-logo-icon">{'{ }'}</span>
                 <h1 className="header-title">{t.header.title}</h1>
+                {process.env.NEXT_PUBLIC_APP_VERSION ? (
+                    <span className="header-version">v{process.env.NEXT_PUBLIC_APP_VERSION}</span>
+                ) : null}
             </div>
 
             {/* Toolbar Actions */}
