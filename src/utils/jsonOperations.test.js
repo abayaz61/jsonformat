@@ -25,3 +25,16 @@ test('json string icindeki escape edilmis log kayitlarini da formatlar', () => {
     { Date: '2026-07-14 17:59:49,999', Level: 'Error', RequestID: '(null)' },
   ], null, 2));
 });
+
+test('trim secenegi acikken tum string degerlerin bosluklarini temizler', () => {
+  const input = '{"name":"  Alice  ","nested":{"value":"  test  "},"items":["  a  ","b  "],"count":5}';
+
+  const result = formatJson(input, 2, { trim: true });
+
+  assert.equal(result, JSON.stringify({
+    name: 'Alice',
+    nested: { value: 'test' },
+    items: ['a', 'b'],
+    count: 5,
+  }, null, 2));
+});

@@ -44,12 +44,13 @@ export default function Home() {
   const [ignoreZeros, setIgnoreZeros] = useLocalStorage('json-formatter-ignore-zeros', false);
   const [convertDotNetDates, setConvertDotNetDates] = useLocalStorage('json-formatter-convert-dotnet-dates', false);
   const [ignoreEmptyArrays, setIgnoreEmptyArrays] = useLocalStorage('json-formatter-ignore-empty-arrays', false);
+  const [trim, setTrim] = useLocalStorage('json-formatter-trim', false);
   const [showZoomPopup, setShowZoomPopup] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const prevContentRef = useRef<string>(content);
 
-  const filterOptions = { ignoreNull, ignoreDefaultDates, ignoreZeros, ignoreEmptyArrays, convertDotNetDates };
+  const filterOptions = { ignoreNull, ignoreDefaultDates, ignoreZeros, ignoreEmptyArrays, convertDotNetDates, trim };
 
   // Hydration
   useEffect(() => {
@@ -265,6 +266,7 @@ export default function Home() {
             case 'ignoreZeros': setIgnoreZeros(!ignoreZeros); break;
             case 'ignoreEmptyArrays': setIgnoreEmptyArrays(!ignoreEmptyArrays); break;
             case 'convertDotNetDates': setConvertDotNetDates(!convertDotNetDates); break;
+            case 'trim': setTrim(!trim); break;
           }
         }}
         disabled={!content.trim()}

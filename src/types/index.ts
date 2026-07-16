@@ -79,6 +79,7 @@ export interface TranslationStrings {
     ignoreZeros: string;
     ignoreEmptyArrays: string;
     convertDotNetDates: string;
+    trim: string;
     formatOptions: string;
   };
   settings: {

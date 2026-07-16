@@ -30,6 +30,7 @@
     "ignoreZeros": "Ignore Zero Values",
     "ignoreEmptyArrays": "Ignore Empty Arrays",
     "convertDotNetDates": "Convert .NET Dates",
+    "trim": "Trim String Values",
     "formatOptions": "Format Options"
   },
   "settings": {

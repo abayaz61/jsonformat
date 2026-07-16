@@ -6,6 +6,7 @@ export interface FormatOptions {
     ignoreZeros?: boolean;
     ignoreEmptyArrays?: boolean;
     convertDotNetDates?: boolean;
+    trim?: boolean;
 }
 
 /**
@@ -494,6 +495,29 @@ export function removeEmptyArrays(value: unknown): unknown {
 }
 
 /**
+ * Recursively trims leading and trailing whitespace from string values.
+ */
+export function trimStrings(value: unknown): unknown {
+    if (typeof value === 'string') {
+        return value.trim();
+    }
+
+    if (Array.isArray(value)) {
+        return value.map(item => trimStrings(item));
+    }
+
+    if (value !== null && typeof value === 'object') {
+        const result: Record<string, unknown> = {};
+        for (const [key, val] of Object.entries(value as Record<string, unknown>)) {
+            result[key] = trimStrings(val);
+        }
+        return result;
+    }
+
+    return value;
+}
+
+/**
  * Apply all enabled filters to a parsed JSON value.
  */
 /**
@@ -533,6 +557,7 @@ function applyFilters(value: unknown, options: FormatOptions): unknown {
     if (options.ignoreZeros) result = removeZeros(result);
     if (options.ignoreEmptyArrays) result = removeEmptyArrays(result);
     if (options.convertDotNetDates) result = convertDotNetDates(result);
+    if (options.trim) result = trimStrings(result);
     return result;
 }
 

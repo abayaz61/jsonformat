@@ -30,6 +30,7 @@
         "ignoreZeros": "忽略零值",
         "ignoreEmptyArrays": "忽略空数组",
         "convertDotNetDates": "转换.NET日期",
+        "trim": "去除字符串首尾空格",
         "formatOptions": "格式选项"
     },
     "settings": {

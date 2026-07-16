@@ -30,6 +30,7 @@
         "ignoreZeros": "Nullwerte ignorieren",
         "ignoreEmptyArrays": "Leere Arrays ignorieren",
         "convertDotNetDates": ".NET-Daten konvertieren",
+        "trim": "Zeichenketten trimmen",
         "formatOptions": "Formatoptionen"
     },
     "settings": {

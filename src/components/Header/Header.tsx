@@ -70,7 +70,7 @@ export function Header({
         }
     };
 
-    const hasActiveFilters = formatOptions.ignoreNull || formatOptions.ignoreDefaultDates || formatOptions.ignoreZeros || formatOptions.ignoreEmptyArrays || formatOptions.convertDotNetDates || formatOptions.autoFormat;
+    const hasActiveFilters = formatOptions.ignoreNull || formatOptions.ignoreDefaultDates || formatOptions.ignoreZeros || formatOptions.ignoreEmptyArrays || formatOptions.convertDotNetDates || formatOptions.trim || formatOptions.autoFormat;
 
     const formatOptionItems = [
         { key: 'autoFormat', label: t.toolbar.autoFormat, active: formatOptions.autoFormat },
@@ -79,6 +79,7 @@ export function Header({
         { key: 'ignoreZeros', label: t.toolbar.ignoreZeros, active: !!formatOptions.ignoreZeros },
         { key: 'ignoreEmptyArrays', label: t.toolbar.ignoreEmptyArrays, active: !!formatOptions.ignoreEmptyArrays },
         { key: 'convertDotNetDates', label: t.toolbar.convertDotNetDates, active: !!formatOptions.convertDotNetDates },
+        { key: 'trim', label: t.toolbar.trim, active: !!formatOptions.trim },
     ];
 
     return (

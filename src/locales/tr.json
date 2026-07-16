@@ -30,6 +30,7 @@
         "ignoreZeros": "Sıfır Değerleri Kaldır",
         "ignoreEmptyArrays": "Boş Dizileri Yoksay",
         "convertDotNetDates": ".NET Tarihlerini Dönüştür",
+        "trim": "Metin Değerlerini Kırp",
         "formatOptions": "Format Seçenekleri"
     },
     "settings": {
