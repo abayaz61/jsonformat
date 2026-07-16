@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Download, X, Zap, WifiOff, Maximize } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { isPopupSuppressed, suppressPopupForOneMonth } from "@/utils/popupState";
 
 interface BeforeInstallPromptEvent extends Event {
     prompt: () => Promise<void>;
@@ -18,14 +19,8 @@ export default function InstallPrompt() {
     const [isClosing, setIsClosing] = useState(false);
 
     useEffect(() => {
-        const postponedUntil = localStorage.getItem(POSTPONE_KEY);
-        if (postponedUntil) {
-            const postponeDate = new Date(postponedUntil);
-            if (new Date() < postponeDate) {
-                return;
-            } else {
-                localStorage.removeItem(POSTPONE_KEY);
-            }
+        if (isPopupSuppressed(localStorage, POSTPONE_KEY)) {
+            return;
         }
 
         const handleBeforeInstallPrompt = (e: Event) => {
@@ -70,9 +65,7 @@ export default function InstallPrompt() {
     const handlePostpone = () => {
         closePrompt();
         setTimeout(() => {
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            localStorage.setItem(POSTPONE_KEY, tomorrow.toISOString());
+            suppressPopupForOneMonth(localStorage, POSTPONE_KEY);
         }, 300);
     };
 

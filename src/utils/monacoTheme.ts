@@ -10,9 +10,56 @@ export interface ThemeColors {
   bracket: string;
 }
 
+export interface SyntaxColors {
+  accent: string;
+  property: string;
+  string: string;
+  number: string;
+  keyword: string;
+  boolean: string;
+  nullValue: string;
+  object: string;
+  array: string;
+  bracket: string;
+  preview: string;
+}
+
 interface ColorPalette {
   dark: ThemeColors;
   light: ThemeColors;
+}
+
+function hexToRgb(hex: string) {
+  const normalized = hex.replace('#', '');
+  const value = normalized.length === 3
+    ? normalized.split('').map((char) => `${char}${char}`).join('')
+    : normalized;
+
+  const int = Number.parseInt(value, 16);
+
+  return {
+    r: (int >> 16) & 255,
+    g: (int >> 8) & 255,
+    b: int & 255,
+  };
+}
+
+function rgbToHex(r: number, g: number, b: number) {
+  return `#${[r, g, b]
+    .map((channel) => Math.max(0, Math.min(255, Math.round(channel))).toString(16).padStart(2, '0'))
+    .join('')}`;
+}
+
+function mixHexColors(primary: string, secondary: string, secondaryWeight: number) {
+  const base = hexToRgb(primary);
+  const mix = hexToRgb(secondary);
+  const weight = Math.max(0, Math.min(1, secondaryWeight));
+
+  return rgbToHex(
+    base.r * (1 - weight) + mix.r * weight,
+    base.g * (1 - weight) + mix.g * weight,
+    base.b * (1 - weight) + mix.b * weight,
+  );
 }
 
 // All 20 color themes — shared between JsonEditor, SqlEditor, and RawViewer
@@ -99,6 +146,29 @@ export const colorThemeTokens: Record<ColorTheme, ColorPalette> = {
   },
 };
 
+export function getSyntaxColors(
+  colorTheme: ColorTheme,
+  mode: 'light' | 'dark'
+): SyntaxColors {
+  const palette = colorThemeTokens[colorTheme];
+  const base = mode === 'dark' ? palette.dark : palette.light;
+  const neutralPreview = mode === 'dark' ? '#cbd5e1' : '#64748b';
+
+  return {
+    accent: base.accent,
+    property: base.property,
+    string: base.string,
+    number: base.number,
+    keyword: base.keyword,
+    boolean: mixHexColors(base.keyword, base.accent, mode === 'dark' ? 0.12 : 0.08),
+    nullValue: mixHexColors(base.bracket, base.keyword, mode === 'dark' ? 0.3 : 0.18),
+    object: mixHexColors(base.property, base.accent, 0.35),
+    array: mixHexColors(base.number, base.accent, 0.4),
+    bracket: mixHexColors(base.bracket, base.accent, mode === 'dark' ? 0.18 : 0.1),
+    preview: mixHexColors(base.bracket, neutralPreview, 0.45),
+  };
+}
+
 // Global counter — incremented on every define call so Monaco always picks up fresh rules
 let _themeVersion = 0;
 
@@ -115,8 +185,7 @@ export function defineMonacoTheme(
   colorTheme: ColorTheme,
   mode: 'light' | 'dark'
 ): string {
-  const palette = colorThemeTokens[colorTheme];
-  const tokens  = mode === 'dark' ? palette.dark : palette.light;
+  const tokens = getSyntaxColors(colorTheme, mode);
 
   // Always a unique name → Monaco never serves a stale cached version
   const themeName = `custom-${colorTheme}-${mode}-v${++_themeVersion}`;
@@ -138,11 +207,15 @@ export function defineMonacoTheme(
       { token: 'string.value.json',    foreground: tokens.string.replace('#', '') },
       { token: 'number',               foreground: tokens.number.replace('#', '') },
       { token: 'number.json',          foreground: tokens.number.replace('#', '') },
-      { token: 'keyword',              foreground: tokens.keyword.replace('#', '') },
-      { token: 'keyword.json',         foreground: tokens.keyword.replace('#', '') },
+      { token: 'keyword',              foreground: tokens.boolean.replace('#', '') },
+      { token: 'keyword.json',         foreground: tokens.boolean.replace('#', '') },
+      { token: 'keyword.true.json',    foreground: tokens.boolean.replace('#', '') },
+      { token: 'keyword.false.json',   foreground: tokens.boolean.replace('#', '') },
+      { token: 'keyword.null.json',    foreground: tokens.nullValue.replace('#', ''), fontStyle: 'italic' },
       { token: 'delimiter',            foreground: tokens.bracket.replace('#', '') },
-      { token: 'delimiter.bracket',    foreground: tokens.accent.replace('#', '') },
-      { token: 'delimiter.array.json', foreground: tokens.accent.replace('#', '') },
+      { token: 'delimiter.bracket',    foreground: tokens.object.replace('#', '') },
+      { token: 'delimiter.bracket.json', foreground: tokens.object.replace('#', '') },
+      { token: 'delimiter.array.json', foreground: tokens.array.replace('#', '') },
       { token: 'delimiter.colon.json', foreground: tokens.bracket.replace('#', '') },
       { token: 'delimiter.comma.json', foreground: tokens.bracket.replace('#', '') },
 

@@ -3,7 +3,8 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { ChevronRight, ChevronDown, Copy } from 'lucide-react';
-import { useLanguage } from '@/contexts';
+import { useLanguage, useTheme } from '@/contexts';
+import { getSyntaxColors, type SyntaxColors } from '@/utils/monacoTheme';
 
 interface JsonTreeProps {
     data: string;
@@ -18,6 +19,7 @@ interface TreeNodeProps {
     forceExpand: boolean | null;
     onContextMenu: (e: React.MouseEvent, value: unknown) => void;
     items: string;
+    colors: SyntaxColors;
 }
 
 interface ContextMenuState {
@@ -51,11 +53,31 @@ function getValuePreview(value: unknown, type: string): string {
     }
 }
 
-function TreeNode({ name, value, level, forceExpand, onContextMenu, items }: TreeNodeProps) {
+function getTypeColor(type: string, colors: SyntaxColors): string {
+    switch (type) {
+        case 'string':
+            return colors.string;
+        case 'number':
+            return colors.number;
+        case 'boolean':
+            return colors.boolean;
+        case 'null':
+            return colors.nullValue;
+        case 'object':
+            return colors.object;
+        case 'array':
+            return colors.array;
+        default:
+            return colors.accent;
+    }
+}
+
+function TreeNode({ name, value, level, forceExpand, onContextMenu, items, colors }: TreeNodeProps) {
     const [manualExpanded, setManualExpanded] = useState(level < 2);
     const type = getValueType(value);
     const isExpandable = type === 'object' || type === 'array';
     const isExpanded = forceExpand ?? manualExpanded;
+    const typeColor = getTypeColor(type, colors);
 
     const children = useMemo(() => {
         if (!isExpandable) return [];
@@ -92,19 +114,24 @@ function TreeNode({ name, value, level, forceExpand, onContextMenu, items }: Tre
                     <span className="tree-toggle-spacer" />
                 )}
 
-                <span className="tree-key">{name}</span>
-                <span className="tree-colon">:</span>
+                <span className="tree-key" style={{ color: colors.property }}>{name}</span>
+                <span className="tree-colon" style={{ color: colors.bracket }}>:</span>
 
                 {!isExpandable ? (
-                    <span className={`tree-value tree-value-${type}`}>
+                    <span
+                        className={`tree-value tree-value-${type}`}
+                        style={{ color: typeColor, fontStyle: type === 'null' ? 'italic' : undefined }}
+                    >
                         {getValuePreview(value, type)}
                     </span>
                 ) : (
-                    <span className="tree-bracket">
+                    <span className="tree-bracket" style={{ color: typeColor }}>
                         {type === 'array' ? '[' : '{'}
                         {!isExpanded && (
                             <>
-                                <span className="tree-preview">{children.length} {items}</span>
+                                <span className="tree-preview" style={{ color: colors.preview }}>
+                                    {children.length} {items}
+                                </span>
                                 {type === 'array' ? ']' : '}'}
                             </>
                         )}
@@ -123,9 +150,10 @@ function TreeNode({ name, value, level, forceExpand, onContextMenu, items }: Tre
                             forceExpand={forceExpand}
                             onContextMenu={onContextMenu}
                             items={items}
+                            colors={colors}
                         />
                     ))}
-                    <div className="tree-bracket-close">
+                    <div className="tree-bracket-close" style={{ color: typeColor }}>
                         {type === 'array' ? ']' : '}'}
                     </div>
                 </div>
@@ -136,6 +164,7 @@ function TreeNode({ name, value, level, forceExpand, onContextMenu, items }: Tre
 
 export function JsonTree({ data, expandAll = null, treeKey = 0 }: JsonTreeProps) {
     const { t } = useLanguage();
+    const { theme } = useTheme();
     const [contextMenu, setContextMenu] = useState<ContextMenuState>({
         visible: false,
         x: 0,
@@ -143,6 +172,10 @@ export function JsonTree({ data, expandAll = null, treeKey = 0 }: JsonTreeProps)
         value: null
     });
     const canUsePortal = typeof document !== 'undefined';
+    const syntaxColors = useMemo(
+        () => getSyntaxColors(theme.color, theme.mode),
+        [theme.color, theme.mode]
+    );
     const parsedData = useMemo(() => {
         if (!data.trim()) return null;
         try {
@@ -220,15 +253,22 @@ export function JsonTree({ data, expandAll = null, treeKey = 0 }: JsonTreeProps)
                         forceExpand={expandAll}
                         onContextMenu={handleContextMenu}
                         items={t.editor.items}
+                        colors={syntaxColors}
                     />
                 ) : (
                     <div className="tree-node" onContextMenu={(e) => {
                         e.preventDefault();
                         handleContextMenu(e, parsedData);
                     }}>
-                        <span className="tree-key">value</span>
-                        <span className="tree-colon">:</span>
-                        <span className={`tree-value tree-value-${rootType}`}>
+                        <span className="tree-key" style={{ color: syntaxColors.property }}>value</span>
+                        <span className="tree-colon" style={{ color: syntaxColors.bracket }}>:</span>
+                        <span
+                            className={`tree-value tree-value-${rootType}`}
+                            style={{
+                                color: getTypeColor(rootType, syntaxColors),
+                                fontStyle: rootType === 'null' ? 'italic' : undefined
+                            }}
+                        >
                             {getValuePreview(parsedData, rootType)}
                         </span>
                     </div>

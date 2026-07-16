@@ -18,6 +18,7 @@ import {
     Database,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { isPopupSuppressed, suppressPopupForOneMonth } from "@/utils/popupState";
 
 const WELCOME_SHOWN_KEY = "json-formatter-welcome-shown";
 
@@ -52,8 +53,7 @@ export default function WelcomePopup() {
     const isMounted = useSyncExternalStore(() => () => {}, () => true, () => false);
 
     useEffect(() => {
-        const shown = localStorage.getItem(WELCOME_SHOWN_KEY);
-        if (!shown) {
+        if (!isPopupSuppressed(localStorage, WELCOME_SHOWN_KEY)) {
             setTimeout(() => setShowPopup(true), 800);
         }
     }, []);
@@ -61,7 +61,7 @@ export default function WelcomePopup() {
     const handleClose = () => {
         setIsClosing(true);
         setTimeout(() => {
-            localStorage.setItem(WELCOME_SHOWN_KEY, "true");
+            suppressPopupForOneMonth(localStorage, WELCOME_SHOWN_KEY);
             setShowPopup(false);
         }, 400);
     };

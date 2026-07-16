@@ -803,6 +803,36 @@ body {
   position: relative;
 }
 
+.monaco-editor .json-editor-key {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.monaco-editor .json-editor-key-string {
+  color: var(--json-key-string) !important;
+}
+
+.monaco-editor .json-editor-key-number {
+  color: var(--json-key-number) !important;
+}
+
+.monaco-editor .json-editor-key-boolean {
+  color: var(--json-key-boolean) !important;
+}
+
+.monaco-editor .json-editor-key-null {
+  color: var(--json-key-null) !important;
+  font-style: italic;
+}
+
+.monaco-editor .json-editor-key-object {
+  color: var(--json-key-object) !important;
+}
+
+.monaco-editor .json-editor-key-array {
+  color: var(--json-key-array) !important;
+}
+
 .editor-loading {
   position: absolute;
   inset: 0;

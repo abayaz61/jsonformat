@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Shield, Lock, Eye, Check } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { isPopupSuppressed, suppressPopupForOneMonth } from "@/utils/popupState";
 
 const PRIVACY_ACKNOWLEDGED_KEY = "json-formatter-privacy-acknowledged";
 
@@ -12,9 +13,7 @@ export default function PrivacyNotice() {
     const [isClosing, setIsClosing] = useState(false);
 
     useEffect(() => {
-        // Check if user has already acknowledged the privacy notice
-        const acknowledged = localStorage.getItem(PRIVACY_ACKNOWLEDGED_KEY);
-        if (!acknowledged) {
+        if (!isPopupSuppressed(localStorage, PRIVACY_ACKNOWLEDGED_KEY)) {
             // Small delay to let the page load first
             setTimeout(() => setShowNotice(true), 500);
         }
@@ -23,7 +22,7 @@ export default function PrivacyNotice() {
     const handleAcknowledge = () => {
         setIsClosing(true);
         setTimeout(() => {
-            localStorage.setItem(PRIVACY_ACKNOWLEDGED_KEY, "true");
+            suppressPopupForOneMonth(localStorage, PRIVACY_ACKNOWLEDGED_KEY);
             setShowNotice(false);
         }, 300);
     };
