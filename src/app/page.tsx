@@ -22,6 +22,7 @@ interface Toast {
 type ViewTab = 'editor' | 'tree' | 'query';
 
 export default function Home() {
+  const isHydrated = React.useSyncExternalStore(() => () => {}, () => true, () => false);
   const initialContent = React.useMemo(() => {
     if (typeof window === 'undefined') {
       return '';
@@ -34,7 +35,6 @@ export default function Home() {
   const { content, setContent, validation, format, minify, clear } = useJsonFormatter(initialContent);
   const { isFullscreen, toggleFullscreen, fullscreenRef } = useFullscreen();
   const [toasts, setToasts] = useState<Toast[]>([]);
-  const [isHydrated, setIsHydrated] = useState(false);
   const [activeTab, setActiveTab] = useState<ViewTab>('editor');
   const [treeExpandKey, setTreeExpandKey] = useState<{ key: number; expand: boolean | null }>({ key: 0, expand: null });
   const [zoomLevel, setZoomLevel] = useLocalStorage('json-formatter-zoom', 100);
@@ -50,12 +50,10 @@ export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
   const prevContentRef = useRef<string>(content);
 
-  const filterOptions = { ignoreNull, ignoreDefaultDates, ignoreZeros, ignoreEmptyArrays, convertDotNetDates, trim };
-
-  // Hydration
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);
+  const filterOptions = React.useMemo(
+    () => ({ ignoreNull, ignoreDefaultDates, ignoreZeros, ignoreEmptyArrays, convertDotNetDates, trim }),
+    [ignoreNull, ignoreDefaultDates, ignoreZeros, ignoreEmptyArrays, convertDotNetDates, trim]
+  );
 
   // Auto-format on paste: detect large content changes (paste event)
   useEffect(() => {
@@ -71,7 +69,7 @@ export default function Home() {
       }
     }
     prevContentRef.current = content;
-  }, [content, autoFormat, isHydrated, format]);
+  }, [content, autoFormat, isHydrated, format, filterOptions]);
 
   // Save content on change
   useEffect(() => {

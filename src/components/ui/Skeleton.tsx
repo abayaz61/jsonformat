@@ -2,6 +2,8 @@
 
 import React from 'react';
 
+const SKELETON_LINE_WIDTHS = [42, 68, 55, 74, 38, 63, 47, 71, 52, 66, 44, 59, 76, 49, 61];
+
 /**
  * EditorSkeleton
  * 
@@ -34,7 +36,7 @@ export function EditorSkeleton() {
                             <div
                                 className="skeleton-pulse"
                                 style={{
-                                    width: `${30 + Math.random() * 50}%`,
+                                    width: `${SKELETON_LINE_WIDTHS[i]}%`,
                                     marginLeft: `${(i % 4) * 20}px`
                                 }}
                             />

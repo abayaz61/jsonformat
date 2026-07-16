@@ -15,7 +15,6 @@ interface TreeNodeProps {
     name: string;
     value: unknown;
     level: number;
-    isLast: boolean;
     forceExpand: boolean | null;
     onContextMenu: (e: React.MouseEvent, value: unknown) => void;
     items: string;
@@ -52,17 +51,11 @@ function getValuePreview(value: unknown, type: string): string {
     }
 }
 
-function TreeNode({ name, value, level, isLast, forceExpand, onContextMenu, items }: TreeNodeProps) {
-    const [isExpanded, setIsExpanded] = useState(level < 2);
+function TreeNode({ name, value, level, forceExpand, onContextMenu, items }: TreeNodeProps) {
+    const [manualExpanded, setManualExpanded] = useState(level < 2);
     const type = getValueType(value);
     const isExpandable = type === 'object' || type === 'array';
-
-    // React to forceExpand changes
-    useEffect(() => {
-        if (forceExpand !== null) {
-            setIsExpanded(forceExpand);
-        }
-    }, [forceExpand]);
+    const isExpanded = forceExpand ?? manualExpanded;
 
     const children = useMemo(() => {
         if (!isExpandable) return [];
@@ -88,7 +81,7 @@ function TreeNode({ name, value, level, isLast, forceExpand, onContextMenu, item
         <div className="tree-node">
             <div
                 className={`tree-node-content ${isExpandable ? 'expandable' : ''}`}
-                onClick={() => isExpandable && setIsExpanded(!isExpanded)}
+                onClick={() => isExpandable && setManualExpanded(!isExpanded)}
                 onContextMenu={handleContextMenu}
             >
                 {isExpandable ? (
@@ -121,13 +114,12 @@ function TreeNode({ name, value, level, isLast, forceExpand, onContextMenu, item
 
             {isExpandable && isExpanded && (
                 <div className="tree-children">
-                    {children.map((child, index) => (
+                    {children.map((child) => (
                         <TreeNode
                             key={child.key}
                             name={child.key}
                             value={child.value}
                             level={level + 1}
-                            isLast={index === children.length - 1}
                             forceExpand={forceExpand}
                             onContextMenu={onContextMenu}
                             items={items}
@@ -144,17 +136,13 @@ function TreeNode({ name, value, level, isLast, forceExpand, onContextMenu, item
 
 export function JsonTree({ data, expandAll = null, treeKey = 0 }: JsonTreeProps) {
     const { t } = useLanguage();
-    const [mounted, setMounted] = useState(false);
     const [contextMenu, setContextMenu] = useState<ContextMenuState>({
         visible: false,
         x: 0,
         y: 0,
         value: null
     });
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
+    const canUsePortal = typeof document !== 'undefined';
     const parsedData = useMemo(() => {
         if (!data.trim()) return null;
         try {
@@ -229,7 +217,6 @@ export function JsonTree({ data, expandAll = null, treeKey = 0 }: JsonTreeProps)
                         name="root"
                         value={parsedData}
                         level={0}
-                        isLast={true}
                         forceExpand={expandAll}
                         onContextMenu={handleContextMenu}
                         items={t.editor.items}
@@ -250,7 +237,7 @@ export function JsonTree({ data, expandAll = null, treeKey = 0 }: JsonTreeProps)
 
             {/* Context Menu */}
             {/* Context Menu */}
-            {mounted && contextMenu.visible && createPortal(
+            {canUsePortal && contextMenu.visible && createPortal(
                 (() => {
                     const menuHeight = 44;
                     const menuWidth = 130;

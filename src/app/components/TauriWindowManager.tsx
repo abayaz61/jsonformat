@@ -11,16 +11,10 @@ import { isTauri } from '@/utils/tauri';
  */
 export default function TauriWindowManager() {
     const [isReady, setIsReady] = useState(false);
-    const [isTauriEnv, setIsTauriEnv] = useState(false);
+    const isTauriEnv = isTauri();
 
     useEffect(() => {
-        // Client-side'da Tauri ortamı kontrol et
-        const checkTauri = isTauri();
-        setIsTauriEnv(checkTauri);
-
-        // Tauri değilse hemen hazır
-        if (!checkTauri) {
-            setIsReady(true);
+        if (!isTauriEnv) {
             return;
         }
 
@@ -36,7 +30,7 @@ export default function TauriWindowManager() {
             window.addEventListener('load', handleReady);
             return () => window.removeEventListener('load', handleReady);
         }
-    }, []);
+    }, [isTauriEnv]);
 
     // Web ortamında veya hazırsa hiçbir şey gösterme
     if (!isTauriEnv || isReady) {

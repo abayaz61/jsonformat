@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import {
     Sparkles,
@@ -49,10 +49,9 @@ export default function WelcomePopup() {
     const { t } = useLanguage();
     const [showPopup, setShowPopup] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
-    const [mounted, setMounted] = useState(false);
+    const isMounted = useSyncExternalStore(() => () => {}, () => true, () => false);
 
     useEffect(() => {
-        setMounted(true);
         const shown = localStorage.getItem(WELCOME_SHOWN_KEY);
         if (!shown) {
             setTimeout(() => setShowPopup(true), 800);
@@ -67,7 +66,7 @@ export default function WelcomePopup() {
         }, 400);
     };
 
-    if (!showPopup || !mounted) return null;
+    if (!showPopup || !isMounted) return null;
 
     const features = Array.from({ length: 9 }, (_, i) => {
         const n = i + 1;

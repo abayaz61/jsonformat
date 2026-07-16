@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useRef, useSyncExternalStore } from 'react';
 
 /**
  * Generic localStorage hook with SSR safety
@@ -9,22 +9,62 @@ export function useLocalStorage<T>(
     key: string,
     initialValue: T
 ): [T, (value: T | ((prev: T) => T)) => void] {
-    // State to store our value
-    const [storedValue, setStoredValue] = useState<T>(initialValue);
-    const [isHydrated, setIsHydrated] = useState(false);
+    const cachedRawValueRef = useRef<string | null>(null);
+    const cachedParsedValueRef = useRef<T>(initialValue);
 
-    // Hydrate from localStorage on mount
-    useEffect(() => {
+    const getSnapshot = useCallback((): T => {
+        if (typeof window === 'undefined') {
+            return cachedParsedValueRef.current;
+        }
+
         try {
-            const item = window.localStorage.getItem(key);
-            if (item) {
-                setStoredValue(JSON.parse(item));
+            const rawValue = window.localStorage.getItem(key);
+            if (rawValue === null) {
+                cachedRawValueRef.current = null;
+                cachedParsedValueRef.current = initialValue;
+                return cachedParsedValueRef.current;
             }
+
+            if (cachedRawValueRef.current === rawValue) {
+                return cachedParsedValueRef.current;
+            }
+
+            cachedRawValueRef.current = rawValue;
+            cachedParsedValueRef.current = JSON.parse(rawValue) as T;
+            return cachedParsedValueRef.current;
         } catch (error) {
             console.warn(`Error reading localStorage key "${key}":`, error);
         }
-        setIsHydrated(true);
+
+        cachedRawValueRef.current = null;
+        cachedParsedValueRef.current = initialValue;
+        return cachedParsedValueRef.current;
+    }, [initialValue, key]);
+
+    const subscribe = useCallback((onStoreChange: () => void) => {
+        if (typeof window === 'undefined') {
+            return () => {};
+        }
+
+        const customEventName = `local-storage:${key}`;
+        const handleStorage = (event: Event) => {
+            if (event instanceof StorageEvent && event.key !== key) {
+                return;
+            }
+
+            onStoreChange();
+        };
+
+        window.addEventListener('storage', handleStorage);
+        window.addEventListener(customEventName, handleStorage);
+
+        return () => {
+            window.removeEventListener('storage', handleStorage);
+            window.removeEventListener(customEventName, handleStorage);
+        };
     }, [key]);
+
+    const storedValue = useSyncExternalStore(subscribe, getSnapshot, () => initialValue);
 
     // Return a wrapped version of useState's setter function that
     // persists the new value to localStorage.
@@ -33,19 +73,23 @@ export function useLocalStorage<T>(
             try {
                 // Allow value to be a function so we have same API as useState
                 const valueToStore =
-                    value instanceof Function ? value(storedValue) : value;
-                setStoredValue(valueToStore);
+                    value instanceof Function ? value(getSnapshot()) : value;
 
                 if (typeof window !== 'undefined') {
-                    window.localStorage.setItem(key, JSON.stringify(valueToStore));
+                    const serializedValue = JSON.stringify(valueToStore);
+
+                    cachedRawValueRef.current = serializedValue;
+                    cachedParsedValueRef.current = valueToStore;
+
+                    window.localStorage.setItem(key, serializedValue);
+                    window.dispatchEvent(new Event(`local-storage:${key}`));
                 }
             } catch (error) {
                 console.warn(`Error setting localStorage key "${key}":`, error);
             }
         },
-        [key, storedValue]
+        [getSnapshot, key]
     );
 
-    // Return initial value during SSR, actual value after hydration
-    return [isHydrated ? storedValue : initialValue, setValue];
+    return [storedValue, setValue];
 }

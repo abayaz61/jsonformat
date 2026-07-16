@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Copy, Check } from 'lucide-react';
 import { useLanguage } from '@/contexts';
@@ -277,11 +277,7 @@ export function ExportModal({ isOpen, onClose, jsonData }: ExportModalProps) {
     const { t } = useLanguage();
     const [selectedLang, setSelectedLang] = useState<ExportLanguage>('typescript');
     const [copied, setCopied] = useState(false);
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
+    const isMounted = useSyncExternalStore(() => () => {}, () => true, () => false);
 
     const parsedData = useMemo(() => {
         if (!jsonData.trim()) return null;
@@ -303,7 +299,7 @@ export function ExportModal({ isOpen, onClose, jsonData }: ExportModalProps) {
         setTimeout(() => setCopied(false), 2000);
     };
 
-    if (!isOpen || !mounted) return null;
+    if (!isOpen || !isMounted) return null;
 
     const backdropStyle: React.CSSProperties = {
         position: 'fixed',
