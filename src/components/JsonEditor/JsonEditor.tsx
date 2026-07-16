@@ -222,7 +222,10 @@ export function JsonEditor({ value, onChange, validation }: JsonEditorProps) {
 
         hoverProviderRef.current?.dispose();
         hoverProviderRef.current = monacoRef.current.languages.registerHoverProvider('json', {
-            provideHover(model, position) {
+            provideHover(
+                model: editor.ITextModel,
+                position: { readonly lineNumber: number; readonly column: number }
+            ) {
                 const match = findJwtAtOffset(model.getValue(), model.getOffsetAt(position));
                 if (!match) {
                     return null;
