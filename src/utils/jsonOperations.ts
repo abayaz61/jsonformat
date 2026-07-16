@@ -14,8 +14,7 @@ export interface FormatOptions {
  * Tolerates trailing invalid characters (commas, semicolons, etc.) after valid JSON.
  */
 export function formatJson(input: string, indent: number = 2, options: FormatOptions = {}): string {
-    const stripped = stripTrailingJunk(input);
-    const candidates = [input, stripped, wrapAsArray(stripped)];
+    const candidates = buildParseCandidates(input);
     for (const candidate of candidates) {
         try {
             const parsed = JSON.parse(candidate);
@@ -35,6 +34,197 @@ export function formatJson(input: string, indent: number = 2, options: FormatOpt
  */
 function stripTrailingJunk(input: string): string {
     return input.replace(/[\s,;]+$/, '');
+}
+
+function buildParseCandidates(input: string): string[] {
+    const stripped = stripTrailingJunk(input);
+    const repaired = repairJsonLikeInput(stripped);
+    return [input, stripped, repaired, wrapAsArray(stripped), wrapAsArray(repaired)];
+}
+
+function tryParseJsonLikeString(input: string): unknown | null {
+    for (const candidate of buildParseCandidates(input)) {
+        try {
+            return JSON.parse(candidate);
+        } catch {
+            // try next candidate
+        }
+    }
+
+    return null;
+}
+
+type RepairContext =
+    | { type: 'object'; expect: 'keyOrEnd' | 'colon' | 'value' | 'commaOrEnd' }
+    | { type: 'array'; expect: 'valueOrEnd' | 'commaOrEnd' };
+
+/**
+ * Repairs common JSON-like defects before parsing.
+ * Currently focuses on bareword values such as `Error` that should be strings.
+ */
+function repairJsonLikeInput(input: string): string {
+    const result: string[] = [];
+    const stack: RepairContext[] = [];
+    let rootExpect: 'value' | 'commaOrEnd' = 'value';
+    let i = 0;
+
+    const markValueComplete = () => {
+        const current = stack[stack.length - 1];
+        if (!current) {
+            rootExpect = 'commaOrEnd';
+            return;
+        }
+
+        if (current.type === 'object' && current.expect === 'value') {
+            current.expect = 'commaOrEnd';
+        }
+
+        if (current.type === 'array' && current.expect === 'valueOrEnd') {
+            current.expect = 'commaOrEnd';
+        }
+    };
+
+    const isValueExpected = () => {
+        const current = stack[stack.length - 1];
+        if (!current) return rootExpect === 'value';
+        if (current.type === 'object') return current.expect === 'value';
+        return current.expect === 'valueOrEnd';
+    };
+
+    while (i < input.length) {
+        const ch = input[i];
+
+        if (ch === '"') {
+            const end = findStringEnd(input, i);
+            if (end === -1) {
+                result.push(input.slice(i));
+                break;
+            }
+
+            result.push(input.slice(i, end + 1));
+
+            const current = stack[stack.length - 1];
+            if (current?.type === 'object' && current.expect === 'keyOrEnd') {
+                current.expect = 'colon';
+            } else if (isValueExpected()) {
+                markValueComplete();
+            }
+
+            i = end + 1;
+            continue;
+        }
+
+        if (/\s/.test(ch)) {
+            result.push(ch);
+            i++;
+            continue;
+        }
+
+        if (ch === '{') {
+            result.push(ch);
+            stack.push({ type: 'object', expect: 'keyOrEnd' });
+            i++;
+            continue;
+        }
+
+        if (ch === '[') {
+            result.push(ch);
+            stack.push({ type: 'array', expect: 'valueOrEnd' });
+            i++;
+            continue;
+        }
+
+        if (ch === '}') {
+            result.push(ch);
+            stack.pop();
+            markValueComplete();
+            i++;
+            continue;
+        }
+
+        if (ch === ']') {
+            result.push(ch);
+            stack.pop();
+            markValueComplete();
+            i++;
+            continue;
+        }
+
+        if (ch === ':') {
+            result.push(ch);
+            const current = stack[stack.length - 1];
+            if (current?.type === 'object' && current.expect === 'colon') {
+                current.expect = 'value';
+            }
+            i++;
+            continue;
+        }
+
+        if (ch === ',') {
+            result.push(ch);
+            const current = stack[stack.length - 1];
+            if (!current) {
+                rootExpect = 'value';
+            } else if (current.type === 'object') {
+                current.expect = 'keyOrEnd';
+            } else {
+                current.expect = 'valueOrEnd';
+            }
+            i++;
+            continue;
+        }
+
+        if (!isValueExpected()) {
+            result.push(ch);
+            i++;
+            continue;
+        }
+
+        if (ch === '-' || (ch >= '0' && ch <= '9')) {
+            const end = findNumberEnd(input, i);
+            if (end === -1) {
+                result.push(ch);
+                i++;
+                continue;
+            }
+
+            result.push(input.slice(i, end + 1));
+            markValueComplete();
+            i = end + 1;
+            continue;
+        }
+
+        const literal = readBareToken(input, i);
+        if (!literal) {
+            result.push(ch);
+            i++;
+            continue;
+        }
+
+        if (literal === 'true' || literal === 'false' || literal === 'null') {
+            result.push(literal);
+        } else {
+            result.push(JSON.stringify(literal));
+        }
+
+        markValueComplete();
+        i += literal.length;
+    }
+
+    return result.join('');
+}
+
+function readBareToken(input: string, start: number): string | null {
+    if (!/[A-Za-z_]/.test(input[start])) {
+        return null;
+    }
+
+    let end = start + 1;
+    while (end < input.length && /[A-Za-z0-9_.-]/.test(input[end])) {
+        end++;
+    }
+
+    return input.slice(start, end);
 }
 
 /**
@@ -164,17 +354,10 @@ function extractEmbeddedJson(str: string): { prefix: string; json: unknown } | n
  */
 export function expandJsonStrings(value: unknown): unknown {
     if (typeof value === 'string') {
-        // Try to parse the string as JSON
         const trimmed = value.trim();
-        if ((trimmed.startsWith('{') && trimmed.endsWith('}')) ||
-            (trimmed.startsWith('[') && trimmed.endsWith(']'))) {
-            try {
-                const parsed = JSON.parse(trimmed);
-                // Recursively expand in case of nested-nested JSON
-                return expandJsonStrings(parsed);
-            } catch {
-                // Fall through to embedded extraction
-            }
+        const parsed = tryParseJsonLikeString(trimmed);
+        if (parsed !== null && parsed !== value) {
+            return expandJsonStrings(parsed);
         }
 
         // Try to extract embedded JSON from a string with prefix text
