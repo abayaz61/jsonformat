@@ -209,12 +209,12 @@ export function JsonEditor({ value, onChange, validation }: JsonEditorProps) {
         [theme.color, theme.mode]
     );
     const syntaxColorVars = useMemo<React.CSSProperties>(() => ({
-        ['--json-key-string' as string]: syntaxColors.string,
-        ['--json-key-number' as string]: syntaxColors.number,
-        ['--json-key-boolean' as string]: syntaxColors.boolean,
-        ['--json-key-null' as string]: syntaxColors.nullValue,
-        ['--json-key-object' as string]: syntaxColors.object,
-        ['--json-key-array' as string]: syntaxColors.array,
+        ['--json-key-string' as string]: syntaxColors.keyString,
+        ['--json-key-number' as string]: syntaxColors.keyNumber,
+        ['--json-key-boolean' as string]: syntaxColors.keyBoolean,
+        ['--json-key-null' as string]: syntaxColors.keyNull,
+        ['--json-key-object' as string]: syntaxColors.keyObject,
+        ['--json-key-array' as string]: syntaxColors.keyArray,
     }), [syntaxColors]);
 
     const registerJwtHoverProvider = useCallback(() => {

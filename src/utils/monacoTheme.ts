@@ -20,6 +20,12 @@ export interface SyntaxColors {
   nullValue: string;
   object: string;
   array: string;
+  keyString: string;
+  keyNumber: string;
+  keyBoolean: string;
+  keyNull: string;
+  keyObject: string;
+  keyArray: string;
   bracket: string;
   preview: string;
 }
@@ -164,6 +170,12 @@ export function getSyntaxColors(
     nullValue: mixHexColors(base.bracket, base.keyword, mode === 'dark' ? 0.3 : 0.18),
     object: mixHexColors(base.property, base.accent, 0.35),
     array: mixHexColors(base.number, base.accent, 0.4),
+    keyString: mixHexColors(base.property, base.string, mode === 'dark' ? 0.42 : 0.28),
+    keyNumber: mixHexColors(base.property, base.number, mode === 'dark' ? 0.38 : 0.24),
+    keyBoolean: mixHexColors(base.property, base.keyword, mode === 'dark' ? 0.34 : 0.22),
+    keyNull: mixHexColors(base.property, base.bracket, mode === 'dark' ? 0.48 : 0.3),
+    keyObject: mixHexColors(base.property, base.accent, mode === 'dark' ? 0.22 : 0.16),
+    keyArray: mixHexColors(base.property, base.number, mode === 'dark' ? 0.22 : 0.16),
     bracket: mixHexColors(base.bracket, base.accent, mode === 'dark' ? 0.18 : 0.1),
     preview: mixHexColors(base.bracket, neutralPreview, 0.45),
   };
@@ -203,7 +215,7 @@ export function defineMonacoTheme(
     rules: [
       // ── JSON ──────────────────────────────────────────────
       { token: 'string',               foreground: tokens.string.replace('#', '') },
-      { token: 'string.key.json',      foreground: tokens.property.replace('#', '') },
+      { token: 'string.key.json',      foreground: tokens.keyObject.replace('#', '') },
       { token: 'string.value.json',    foreground: tokens.string.replace('#', '') },
       { token: 'number',               foreground: tokens.number.replace('#', '') },
       { token: 'number.json',          foreground: tokens.number.replace('#', '') },
