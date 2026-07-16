@@ -140,9 +140,9 @@
         "title": "Willkommen beim JSON-Formatierer",
         "subtitle": "Entdecken Sie die Möglichkeiten",
         "newFeatureBadge": "Neue Funktion",
-        "newFeatureTitle": "SQL-Abfragen auf JSON-Daten",
-        "newFeatureDesc": "Schreiben Sie SQL-Abfragen (SELECT, WHERE, ORDER BY, GROUP BY) direkt auf Ihrem JSON. Ergebnisse als Tabelle oder rohem JSON anzeigen. Auto-Format und Abfrageverlauf inklusive.",
-        "newFeatureTry": "Ausprobieren → Abfrage-Tab",
+        "newFeatureTitle": "JWT Hover Intelligence",
+        "newFeatureDesc": "Erkennt JWT-Tokens in Ihrem JSON automatisch. Beim Hover wird der decodierte Payload sofort in einem Tooltip angezeigt, ohne Kopieren oder externes Decoding.",
+        "newFeatureTry": "Ausprobieren → Editor- oder Baum-Tab",
         "feature1Title": "Formatieren & Verschönern",
         "feature1Desc": "Formatieren und verschönern Sie Ihre JSON-Daten sofort mit einem Klick",
         "feature2Title": "Minimieren",
@@ -161,6 +161,8 @@
         "feature8Desc": "Strg+Umschalt+F zum Formatieren, Strg+S zum Herunterladen und mehr",
         "feature9Title": "Plattformübergreifend",
         "feature9Desc": "Verfügbar als Web-, Windows- und Linux-Desktop-App mit Offline-Unterstützung",
+        "feature10Title": "JWT Tooltip Decode",
+        "feature10Desc": "JWTs im JSON sofort erkennen und den Payload per Hover-Tooltip sichtbar machen",
         "button": "Loslegen"
     }
 }

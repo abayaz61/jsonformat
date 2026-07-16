@@ -13,6 +13,7 @@ import {
     Palette,
     Keyboard,
     Monitor,
+    Key,
     X,
     ArrowRight,
     Database,
@@ -32,6 +33,7 @@ const featureIcons = [
     Palette,
     Keyboard,
     Monitor,
+    Key,
 ];
 
 const featureColors = [
@@ -44,6 +46,7 @@ const featureColors = [
     "#b794f4",
     "#63b3ed",
     "#fbd38d",
+    "#f56565",
 ];
 
 export default function WelcomePopup() {
@@ -68,7 +71,7 @@ export default function WelcomePopup() {
 
     if (!showPopup || !isMounted) return null;
 
-    const features = Array.from({ length: 9 }, (_, i) => {
+    const features = Array.from({ length: featureIcons.length }, (_, i) => {
         const n = i + 1;
         const wp = t.welcomePopup;
         return {

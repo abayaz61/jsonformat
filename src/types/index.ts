@@ -186,6 +186,8 @@ export interface TranslationStrings {
     feature8Desc: string;
     feature9Title: string;
     feature9Desc: string;
+    feature10Title: string;
+    feature10Desc: string;
     button: string;
   };
   themes: Record<string, string>;

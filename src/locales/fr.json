@@ -140,9 +140,9 @@
         "title": "Bienvenue dans JSON Formateur",
         "subtitle": "Découvrez ce que vous pouvez faire",
         "newFeatureBadge": "Nouvelle Fonctionnalité",
-        "newFeatureTitle": "Requête SQL sur données JSON",
-        "newFeatureDesc": "Écrivez des requêtes SQL (SELECT, WHERE, ORDER BY, GROUP BY) directement sur votre JSON. Visualisez les résultats en tableau ou JSON brut. Formatage auto et historique inclus.",
-        "newFeatureTry": "Essayez → Onglet Requête",
+        "newFeatureTitle": "JWT Hover Intelligence",
+        "newFeatureDesc": "Détecte automatiquement les jetons JWT dans votre JSON. Au survol, le payload décodé apparaît instantanément dans une infobulle, sans copier le token.",
+        "newFeatureTry": "Essayer → Onglet Éditeur ou Arborescence",
         "feature1Title": "Formater & Embellir",
         "feature1Desc": "Formatez et embellissez instantanément vos données JSON en un clic",
         "feature2Title": "Minifier",
@@ -161,6 +161,8 @@
         "feature8Desc": "Ctrl+Maj+F pour formater, Ctrl+S pour télécharger, et plus encore",
         "feature9Title": "Multiplateforme",
         "feature9Desc": "Disponible en Web, application de bureau Windows et Linux avec support hors ligne",
+        "feature10Title": "Décodage JWT au survol",
+        "feature10Desc": "Repérez les JWT dans votre JSON et affichez instantanément leur payload avec une infobulle élégante",
         "button": "Commencer"
     }
 }

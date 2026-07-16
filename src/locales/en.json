@@ -140,9 +140,9 @@
     "title": "Welcome to JSON Formatter",
     "subtitle": "Discover what you can do",
     "newFeatureBadge": "New Feature",
-    "newFeatureTitle": "SQL Query on JSON Data",
-    "newFeatureDesc": "Write SQL queries (SELECT, WHERE, ORDER BY, GROUP BY) directly on your JSON. View results as a table or raw JSON. Auto-formatting and query history included.",
-    "newFeatureTry": "Try it out → Query Tab",
+    "newFeatureTitle": "JWT Hover Intelligence",
+    "newFeatureDesc": "Automatically detects JWT tokens inside your JSON. Hover to instantly reveal the decoded payload/body in a tooltip, without copying the token or leaving your flow.",
+    "newFeatureTry": "Try it out → Editor or Tree Tab",
     "feature1Title": "Format & Beautify",
     "feature1Desc": "Instantly format and beautify your JSON data with one click",
     "feature2Title": "Minify",
@@ -161,6 +161,8 @@
     "feature8Desc": "Ctrl+Shift+F to format, Ctrl+S to download, and more",
     "feature9Title": "Cross-Platform",
     "feature9Desc": "Available as Web, Windows and Linux desktop app with offline support",
+    "feature10Title": "JWT Tooltip Decode",
+    "feature10Desc": "Spot JWTs in your JSON and reveal their payload instantly with a slick hover tooltip",
     "button": "Get Started"
   }
 }

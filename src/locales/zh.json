@@ -140,9 +140,9 @@
         "title": "欢迎使用 JSON 格式化工具",
         "subtitle": "探索您可以做什么",
         "newFeatureBadge": "新功能",
-        "newFeatureTitle": "对 JSON 数据进行 SQL 查询",
-        "newFeatureDesc": "直接在 JSON 上编写 SQL 查询 (SELECT, WHERE, ORDER BY, GROUP BY)。将结果作为表格或原始 JSON 查看，包含自动格式化和查询历史功能。",
-        "newFeatureTry": "立即体验 → 查询标签页",
+        "newFeatureTitle": "JWT 悬停解码",
+        "newFeatureDesc": "自动检测 JSON 中的 JWT token。鼠标悬停即可立刻在 tooltip 中看到解码后的 payload，无需复制或跳转到其他工具。",
+        "newFeatureTry": "立即体验 → 编辑器或树形标签页",
         "feature1Title": "格式化与美化",
         "feature1Desc": "一键即时格式化和美化您的 JSON 数据",
         "feature2Title": "压缩",
@@ -161,6 +161,8 @@
         "feature8Desc": "Ctrl+Shift+F 格式化，Ctrl+S 下载，以及更多",
         "feature9Title": "跨平台",
         "feature9Desc": "支持 Web、Windows 和 Linux 桌面应用，并支持离线使用",
+        "feature10Title": "JWT Tooltip 解码",
+        "feature10Desc": "自动识别 JSON 中的 JWT，并通过悬停提示即时查看 payload 内容",
         "button": "开始使用"
     }
 }
