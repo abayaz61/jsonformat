@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import { ChevronRight, ChevronDown, Copy } from 'lucide-react';
 import { useLanguage, useTheme } from '@/contexts';
 import { getSyntaxColors, type SyntaxColors } from '@/utils/monacoTheme';
+import { formatJwtPayloadTooltip } from '@/utils/jwt';
 
 interface JsonTreeProps {
     data: string;
@@ -78,6 +79,9 @@ function TreeNode({ name, value, level, forceExpand, onContextMenu, items, color
     const isExpandable = type === 'object' || type === 'array';
     const isExpanded = forceExpand ?? manualExpanded;
     const typeColor = getTypeColor(type, colors);
+    const jwtTooltip = type === 'string' && typeof value === 'string'
+        ? formatJwtPayloadTooltip(value)
+        : null;
 
     const children = useMemo(() => {
         if (!isExpandable) return [];
@@ -121,6 +125,7 @@ function TreeNode({ name, value, level, forceExpand, onContextMenu, items, color
                     <span
                         className={`tree-value tree-value-${type}`}
                         style={{ color: typeColor, fontStyle: type === 'null' ? 'italic' : undefined }}
+                        title={jwtTooltip ?? undefined}
                     >
                         {getValuePreview(value, type)}
                     </span>
@@ -241,6 +246,9 @@ export function JsonTree({ data, expandAll = null, treeKey = 0 }: JsonTreeProps)
     }
 
     const rootType = getValueType(parsedData);
+    const rootJwtTooltip = rootType === 'string' && typeof parsedData === 'string'
+        ? formatJwtPayloadTooltip(parsedData)
+        : null;
 
     return (
         <div className="tree-container">
@@ -268,6 +276,7 @@ export function JsonTree({ data, expandAll = null, treeKey = 0 }: JsonTreeProps)
                                 color: getTypeColor(rootType, syntaxColors),
                                 fontStyle: rootType === 'null' ? 'italic' : undefined
                             }}
+                            title={rootJwtTooltip ?? undefined}
                         >
                             {getValuePreview(parsedData, rootType)}
                         </span>

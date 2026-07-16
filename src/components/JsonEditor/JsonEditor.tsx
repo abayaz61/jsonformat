@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useEffect, useMemo, useState, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import Editor, { OnMount, OnChange, Monaco } from '@monaco-editor/react';
 import { useTheme, useSettings, useLanguage } from '@/contexts';
 import type { JsonValidationResult } from '@/types';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
 import type { editor } from 'monaco-editor';
 import { defineMonacoTheme, getSyntaxColors } from '@/utils/monacoTheme';
+import { findJwtAtOffset } from '@/utils/jwt';
 
 interface JsonEditorProps {
     value: string;
@@ -202,6 +203,7 @@ export function JsonEditor({ value, onChange, validation }: JsonEditorProps) {
     const monacoRef = useRef<Monaco | null>(null);
     const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
     const keyDecorationsRef = useRef<editor.IEditorDecorationsCollection | null>(null);
+    const hoverProviderRef = useRef<{ dispose: () => void } | null>(null);
     const syntaxColors = useMemo(
         () => getSyntaxColors(theme.color, theme.mode),
         [theme.color, theme.mode]
@@ -214,6 +216,36 @@ export function JsonEditor({ value, onChange, validation }: JsonEditorProps) {
         ['--json-key-object' as string]: syntaxColors.object,
         ['--json-key-array' as string]: syntaxColors.array,
     }), [syntaxColors]);
+
+    const registerJwtHoverProvider = useCallback(() => {
+        if (!monacoRef.current) return;
+
+        hoverProviderRef.current?.dispose();
+        hoverProviderRef.current = monacoRef.current.languages.registerHoverProvider('json', {
+            provideHover(model, position) {
+                const match = findJwtAtOffset(model.getValue(), model.getOffsetAt(position));
+                if (!match) {
+                    return null;
+                }
+
+                const start = model.getPositionAt(match.start);
+                const end = model.getPositionAt(match.end);
+
+                return {
+                    range: new monacoRef.current!.Range(
+                        start.lineNumber,
+                        start.column,
+                        end.lineNumber,
+                        end.column
+                    ),
+                    contents: [
+                        { value: '**JWT Payload**' },
+                        { value: `\`\`\`json\n${JSON.stringify(match.payload, null, 2)}\n\`\`\`` },
+                    ],
+                };
+            },
+        });
+    }, []);
 
     const handleEditorMount: OnMount = (editor, monaco) => {
         setIsLoading(false);
@@ -232,6 +264,7 @@ export function JsonEditor({ value, onChange, validation }: JsonEditorProps) {
         const themeName = defineMonacoTheme(monaco, theme.color, theme.mode);
         monaco.editor.setTheme(themeName);
         setCurrentThemeName(themeName);
+        registerJwtHoverProvider();
     };
 
     // Update theme when color or mode changes
@@ -270,6 +303,7 @@ export function JsonEditor({ value, onChange, validation }: JsonEditorProps) {
     useEffect(() => {
         return () => {
             keyDecorationsRef.current?.clear();
+            hoverProviderRef.current?.dispose();
         };
     }, []);
 
