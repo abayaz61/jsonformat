@@ -6,6 +6,7 @@ export interface JwtMatch {
 }
 
 const JWT_PATTERN = /[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/g;
+const JWT_TIME_CLAIMS = new Set(['exp', 'iat', 'nbf']);
 
 function decodeBase64Url(value: string): string | null {
     try {
@@ -65,7 +66,56 @@ export function findJwtAtOffset(source: string, offset: number): JwtMatch | null
     return null;
 }
 
+function formatUtcDate(seconds: number): string | null {
+    if (!Number.isInteger(seconds)) return null;
+
+    const date = new Date(seconds * 1000);
+    if (Number.isNaN(date.getTime())) return null;
+
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    const hours = String(date.getUTCHours()).padStart(2, '0');
+    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+    const secs = String(date.getUTCSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${secs} UTC`;
+}
+
+function formatTooltipValue(value: unknown, indentLevel: number, key?: string): string {
+    const indent = '  '.repeat(indentLevel);
+    const childIndent = '  '.repeat(indentLevel + 1);
+
+    if (Array.isArray(value)) {
+        if (value.length === 0) return '[]';
+        return `[\n${value.map((item) => `${childIndent}${formatTooltipValue(item, indentLevel + 1)}`).join(',\n')}\n${indent}]`;
+    }
+
+    if (value && typeof value === 'object') {
+        const entries = Object.entries(value);
+        if (entries.length === 0) return '{}';
+
+        return `{\n${entries
+            .map(([entryKey, entryValue]) => (
+                `${childIndent}${JSON.stringify(entryKey)}: ${formatTooltipValue(entryValue, indentLevel + 1, entryKey)}`
+            ))
+            .join(',\n')}\n${indent}}`;
+    }
+
+    if (typeof value === 'number' && key && JWT_TIME_CLAIMS.has(key)) {
+        const utcDate = formatUtcDate(value);
+        return utcDate ? `${value} (${utcDate})` : String(value);
+    }
+
+    return JSON.stringify(value);
+}
+
 export function formatJwtPayloadTooltip(token: string): string | null {
     const payload = decodeJwtPayload(token);
-    return payload ? JSON.stringify(payload, null, 2) : null;
+    return payload ? formatTooltipValue(payload, 0) : null;
+}
+
+export function formatJwtPayloadHoverMarkdown(token: string): string | null {
+    const tooltip = formatJwtPayloadTooltip(token);
+    return tooltip ? `\`\`\`json\n${tooltip}\n\`\`\`` : null;
 }

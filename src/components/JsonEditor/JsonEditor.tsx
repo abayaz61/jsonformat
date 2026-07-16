@@ -7,7 +7,7 @@ import type { JsonValidationResult } from '@/types';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
 import type { editor } from 'monaco-editor';
 import { defineMonacoTheme, getSyntaxColors } from '@/utils/monacoTheme';
-import { findJwtAtOffset } from '@/utils/jwt';
+import { findJwtAtOffset, formatJwtPayloadHoverMarkdown } from '@/utils/jwt';
 
 interface JsonEditorProps {
     value: string;
@@ -230,6 +230,10 @@ export function JsonEditor({ value, onChange, validation }: JsonEditorProps) {
 
                 const start = model.getPositionAt(match.start);
                 const end = model.getPositionAt(match.end);
+                const hoverMarkdown = formatJwtPayloadHoverMarkdown(match.token);
+                if (!hoverMarkdown) {
+                    return null;
+                }
 
                 return {
                     range: new monacoRef.current!.Range(
@@ -240,7 +244,7 @@ export function JsonEditor({ value, onChange, validation }: JsonEditorProps) {
                     ),
                     contents: [
                         { value: '**JWT Payload**' },
-                        { value: `\`\`\`json\n${JSON.stringify(match.payload, null, 2)}\n\`\`\`` },
+                        { value: hoverMarkdown },
                     ],
                 };
             },
