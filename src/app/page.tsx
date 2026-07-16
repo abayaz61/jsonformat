@@ -9,6 +9,7 @@ import { useFullscreen } from '@/hooks/useFullscreen';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { copyToClipboard, pasteFromClipboard } from '@/utils/clipboard';
 import { downloadJson, readFile } from '@/utils/fileOperations';
+import { getInitialSessionContent } from '@/utils/sessionState';
 import { useLanguage } from '@/contexts';
 import { Code, GitBranch, ChevronsUpDown, ChevronsDownUp, ZoomIn, Terminal } from 'lucide-react';
 
@@ -21,9 +22,16 @@ interface Toast {
 type ViewTab = 'editor' | 'tree' | 'query';
 
 export default function Home() {
-  const { savedContent, setSavedContent } = useSettings();
+  const initialContent = React.useMemo(() => {
+    if (typeof window === 'undefined') {
+      return '';
+    }
+
+    return getInitialSessionContent(window.sessionStorage, window.localStorage);
+  }, []);
+  const { setSavedContent } = useSettings();
   const { t } = useLanguage();
-  const { content, setContent, validation, format, minify, clear } = useJsonFormatter(savedContent);
+  const { content, setContent, validation, format, minify, clear } = useJsonFormatter(initialContent);
   const { isFullscreen, toggleFullscreen, fullscreenRef } = useFullscreen();
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [isHydrated, setIsHydrated] = useState(false);
@@ -47,13 +55,6 @@ export default function Home() {
   useEffect(() => {
     setIsHydrated(true);
   }, []);
-
-  // Load saved content on mount
-  useEffect(() => {
-    if (isHydrated && savedContent) {
-      setContent(savedContent);
-    }
-  }, [isHydrated, savedContent, setContent]);
 
   // Auto-format on paste: detect large content changes (paste event)
   useEffect(() => {
@@ -386,4 +387,3 @@ export default function Home() {
     </div>
   );
 }
-

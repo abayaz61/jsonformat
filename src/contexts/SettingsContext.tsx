@@ -3,6 +3,10 @@
 import React, { createContext, useContext, ReactNode, useEffect, useRef, useCallback } from 'react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import type { Settings } from '@/types';
+import {
+    LAST_SESSION_CONTENT_KEY,
+    TAB_SESSION_CONTENT_KEY,
+} from '@/utils/sessionState';
 
 interface SettingsContextType {
     settings: Settings;
@@ -32,7 +36,7 @@ interface SettingsProviderProps {
 
 export function SettingsProvider({ children }: SettingsProviderProps) {
     const [settings, setSettings] = useLocalStorage<Settings>('json-formatter-settings', defaultSettings);
-    const [savedContent, setSavedContentLocal] = useLocalStorage<string>('json-formatter-content', '');
+    const [savedContent, setSavedContentLocal] = useLocalStorage<string>(LAST_SESSION_CONTENT_KEY, '');
 
     // Debounce timer ref
     const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -48,6 +52,9 @@ export function SettingsProvider({ children }: SettingsProviderProps) {
         }
 
         debounceRef.current = setTimeout(() => {
+            if (typeof window !== 'undefined') {
+                window.sessionStorage.setItem(TAB_SESSION_CONTENT_KEY, content);
+            }
             setSavedContentLocal(content);
         }, 500);
     }, [setSavedContentLocal]);
