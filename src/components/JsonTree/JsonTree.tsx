@@ -73,15 +73,31 @@ function getTypeColor(type: string, colors: SyntaxColors): string {
     }
 }
 
-function handleValueClick(e: React.MouseEvent<HTMLSpanElement>) {
+function handleValueSelect(e: React.MouseEvent<HTMLSpanElement>) {
+    e.preventDefault();
     e.stopPropagation();
+
+    const target = e.currentTarget;
     const selection = window.getSelection();
-    if (selection && e.currentTarget) {
-        const range = document.createRange();
-        range.selectNodeContents(e.currentTarget);
-        selection.removeAllRanges();
-        selection.addRange(range);
+    if (!selection || !target) return;
+
+    selection.removeAllRanges();
+    const range = document.createRange();
+    const text = target.textContent || '';
+
+    // If text is wrapped in quotes (e.g. "15708555:00045FC3"), select inner string value excluding quotes
+    if (text.startsWith('"') && text.endsWith('"') && text.length >= 2 && target.firstChild) {
+        try {
+            range.setStart(target.firstChild, 1);
+            range.setEnd(target.firstChild, text.length - 1);
+        } catch {
+            range.selectNodeContents(target);
+        }
+    } else {
+        range.selectNodeContents(target);
     }
+
+    selection.addRange(range);
 }
 
 function TreeNode({ name, value, level, forceExpand, onContextMenu, items, colors }: TreeNodeProps) {
@@ -132,21 +148,40 @@ function TreeNode({ name, value, level, forceExpand, onContextMenu, items, color
                 <span
                     className="tree-key"
                     style={{ color: colors.property }}
-                    onClick={handleValueClick}
+                    onClick={handleValueSelect}
+                    onMouseDown={handleValueSelect}
+                    onDoubleClick={handleValueSelect}
                 >
                     {name}
                 </span>
                 <span className="tree-colon" style={{ color: colors.bracket }}>:</span>
 
                 {!isExpandable ? (
-                    <span
-                        className={`tree-value tree-value-${type}`}
-                        style={{ color: typeColor, fontStyle: type === 'null' ? 'italic' : undefined }}
-                        title={jwtTooltip ?? undefined}
-                        onClick={handleValueClick}
-                    >
-                        {getValuePreview(value, type)}
-                    </span>
+                    type === 'string' ? (
+                        <span
+                            className="tree-value tree-value-string"
+                            style={{ color: typeColor }}
+                            title={jwtTooltip ?? undefined}
+                            onClick={handleValueSelect}
+                            onMouseDown={handleValueSelect}
+                            onDoubleClick={handleValueSelect}
+                        >
+                            <span className="tree-quote">"</span>
+                            <span className="tree-val-content">{String(value)}</span>
+                            <span className="tree-quote">"</span>
+                        </span>
+                    ) : (
+                        <span
+                            className={`tree-value tree-value-${type}`}
+                            style={{ color: typeColor, fontStyle: type === 'null' ? 'italic' : undefined }}
+                            title={jwtTooltip ?? undefined}
+                            onClick={handleValueSelect}
+                            onMouseDown={handleValueSelect}
+                            onDoubleClick={handleValueSelect}
+                        >
+                            {getValuePreview(value, type)}
+                        </span>
+                    )
                 ) : (
                     <span className="tree-bracket" style={{ color: typeColor }}>
                         {type === 'array' ? '[' : '{'}
@@ -286,19 +321,44 @@ export function JsonTree({ data, expandAll = null, treeKey = 0 }: JsonTreeProps)
                         e.preventDefault();
                         handleContextMenu(e, parsedData);
                     }}>
-                        <span className="tree-key" style={{ color: syntaxColors.property }} onClick={handleValueClick}>value</span>
-                        <span className="tree-colon" style={{ color: syntaxColors.bracket }}>:</span>
                         <span
-                            className={`tree-value tree-value-${rootType}`}
-                            style={{
-                                color: getTypeColor(rootType, syntaxColors),
-                                fontStyle: rootType === 'null' ? 'italic' : undefined
-                            }}
-                            title={rootJwtTooltip ?? undefined}
-                            onClick={handleValueClick}
+                            className="tree-key"
+                            style={{ color: syntaxColors.property }}
+                            onClick={handleValueSelect}
+                            onMouseDown={handleValueSelect}
+                            onDoubleClick={handleValueSelect}
                         >
-                            {getValuePreview(parsedData, rootType)}
+                            value
                         </span>
+                        <span className="tree-colon" style={{ color: syntaxColors.bracket }}>:</span>
+                        {rootType === 'string' ? (
+                            <span
+                                className="tree-value tree-value-string"
+                                style={{ color: getTypeColor(rootType, syntaxColors) }}
+                                title={rootJwtTooltip ?? undefined}
+                                onClick={handleValueSelect}
+                                onMouseDown={handleValueSelect}
+                                onDoubleClick={handleValueSelect}
+                            >
+                                <span className="tree-quote">"</span>
+                                <span className="tree-val-content">{String(parsedData)}</span>
+                                <span className="tree-quote">"</span>
+                            </span>
+                        ) : (
+                            <span
+                                className={`tree-value tree-value-${rootType}`}
+                                style={{
+                                    color: getTypeColor(rootType, syntaxColors),
+                                    fontStyle: rootType === 'null' ? 'italic' : undefined
+                                }}
+                                title={rootJwtTooltip ?? undefined}
+                                onClick={handleValueSelect}
+                                onMouseDown={handleValueSelect}
+                                onDoubleClick={handleValueSelect}
+                            >
+                                {getValuePreview(parsedData, rootType)}
+                            </span>
+                        )}
                     </div>
                 )}
             </div>

@@ -2614,3 +2614,22 @@ body {
   background: rgba(239, 68, 68, 0.1);
   color: var(--error);
 }
+
+/* ===== ATOMIC ONE-CLICK VALUE SELECTION ===== */
+.tree-key,
+.tree-val-content,
+.tree-value-number,
+.tree-value-boolean,
+.tree-value-null,
+.query-table-td {
+  user-select: all !important;
+  -webkit-user-select: all !important;
+  -moz-user-select: all !important;
+}
+
+.tree-quote {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  opacity: 0.6;
+}

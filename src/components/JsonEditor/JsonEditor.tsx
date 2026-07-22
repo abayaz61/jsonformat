@@ -267,6 +267,59 @@ export function JsonEditor({ value, onChange, validation }: JsonEditorProps) {
             trailingCommas: 'error'
         });
 
+        // Auto-select 100% of string values inside quotes when clicked or selected in Monaco
+        let isAutoSelecting = false;
+        editor.onDidChangeCursorSelection((e) => {
+            if (isAutoSelecting) return;
+
+            const selection = e.selection;
+            if (selection.startLineNumber !== selection.endLineNumber) return;
+
+            const model = editor.getModel();
+            if (!model) return;
+
+            const lineNumber = selection.startLineNumber;
+            const lineText = model.getLineContent(lineNumber);
+            const selStartCol = selection.startColumn - 1; // 0-based
+            const selEndCol = selection.endColumn - 1;     // 0-based
+
+            // Find all unescaped quote positions on this line
+            const quoteIndices: number[] = [];
+            for (let i = 0; i < lineText.length; i++) {
+                if (lineText[i] === '"' && (i === 0 || lineText[i - 1] !== '\\')) {
+                    quoteIndices.push(i);
+                }
+            }
+
+            // Pair up quotes: [q0, q1], [q2, q3]...
+            for (let i = 0; i < quoteIndices.length - 1; i += 2) {
+                const qStart = quoteIndices[i];
+                const qEnd = quoteIndices[i + 1];
+
+                // Check if user's click or selection touches inside this quoted string
+                const isClickInside = (selStartCol >= qStart && selStartCol <= qEnd + 1) ||
+                                     (selEndCol >= qStart && selEndCol <= qEnd + 1);
+
+                if (isClickInside && qEnd > qStart) {
+                    const targetStartCol = qStart + 2; // 1-based start inside quotes
+                    const targetEndCol = qEnd + 1;     // 1-based end inside quotes
+
+                    // Only update if not already full selection
+                    if (selection.startColumn !== targetStartCol || selection.endColumn !== targetEndCol) {
+                        isAutoSelecting = true;
+                        editor.setSelection({
+                            startLineNumber: lineNumber,
+                            startColumn: targetStartCol,
+                            endLineNumber: lineNumber,
+                            endColumn: targetEndCol
+                        });
+                        isAutoSelecting = false;
+                        return;
+                    }
+                }
+            }
+        });
+
         // Define and apply initial custom theme
         const themeName = defineMonacoTheme(monaco, theme.color, theme.mode);
         monaco.editor.setTheme(themeName);
@@ -368,8 +421,8 @@ export function JsonEditor({ value, onChange, validation }: JsonEditorProps) {
                         cursorBlinking: 'smooth',
                         smoothScrolling: true,
                         padding: { top: 16, bottom: 16 },
-                        fontFamily: "'Geist Mono', 'Fira Code', 'Consolas', monospace",
                         fontLigatures: true,
+                        wordSeparators: ' \t\r\n',
                         bracketPairColorization: { enabled: true },
                         guides: {
                             bracketPairs: true,

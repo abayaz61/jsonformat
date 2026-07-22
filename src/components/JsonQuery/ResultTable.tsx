@@ -40,11 +40,14 @@ function compareCells(a: unknown, b: unknown): number {
   return String(a).localeCompare(String(b));
 }
 
-function handleCellClick(e: React.MouseEvent<HTMLTableCellElement>) {
+function handleCellSelect(e: React.MouseEvent<HTMLTableCellElement>) {
+  e.preventDefault();
+  e.stopPropagation();
+  const target = e.currentTarget;
   const selection = window.getSelection();
-  if (selection && e.currentTarget) {
+  if (selection && target) {
     const range = document.createRange();
-    range.selectNodeContents(e.currentTarget);
+    range.selectNodeContents(target);
     selection.removeAllRanges();
     selection.addRange(range);
   }
@@ -120,7 +123,9 @@ export function ResultTable({ data, columns }: ResultTableProps) {
                     key={col}
                     className={`query-table-td query-cell-${type}`}
                     title={display}
-                    onClick={handleCellClick}
+                    onClick={handleCellSelect}
+                    onMouseDown={handleCellSelect}
+                    onDoubleClick={handleCellSelect}
                   >
                     {display}
                   </td>
