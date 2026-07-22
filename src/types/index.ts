@@ -58,7 +58,15 @@ export interface TranslationStrings {
     tabEditor: string;
     tabTree: string;
     tabDiff?: string;
+    tabConverter?: string;
     zoom: string;
+  };
+  converter?: {
+    targetFormat: string;
+    swap: string;
+    loadSample: string;
+    inputTitle: string;
+    outputTitle: string;
   };
   diff?: {
     swap: string;

@@ -8,7 +8,15 @@
         "tabEditor": "Editör",
         "tabTree": "Ağaç",
         "tabDiff": "Diff / Karşılaştır",
+        "tabConverter": "Dönüştürücü / Converter",
         "zoom": "Yakınlaştırma"
+    },
+    "converter": {
+        "targetFormat": "Hedef Format:",
+        "swap": "Sonucu Giriş Yap (Swap)",
+        "loadSample": "Örnek Veri Yükle",
+        "inputTitle": "Giriş (JSON / Kaynak)",
+        "outputTitle": "Çıkış (Dönüştürülen Veri/Kod)"
     },
     "diff": {
         "swap": "Sol ve Sağı Yer Değiştir",

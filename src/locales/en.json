@@ -8,7 +8,15 @@
     "tabEditor": "Editor",
     "tabTree": "Tree",
     "tabDiff": "Diff / Compare",
+    "tabConverter": "Converter",
     "zoom": "Zoom"
+  },
+  "converter": {
+    "targetFormat": "Target Format:",
+    "swap": "Swap Result to Input",
+    "loadSample": "Load Sample Data",
+    "inputTitle": "Input (JSON / Source)",
+    "outputTitle": "Output (Converted Data/Code)"
   },
   "diff": {
     "swap": "Swap Left / Right",

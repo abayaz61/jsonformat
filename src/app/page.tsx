@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Header, JsonEditor, JsonTree, JsonQuery, JsonDiff, ToastContainer, ExportModal } from '@/components';
+import { Header, JsonEditor, JsonTree, JsonQuery, JsonDiff, JsonConverter, ToastContainer, ExportModal } from '@/components';
 import type { ToastType } from '@/components';
 import { useSettings } from '@/contexts';
 import { useJsonFormatter } from '@/hooks/useJsonFormatter';
@@ -11,7 +11,7 @@ import { copyToClipboard, pasteFromClipboard } from '@/utils/clipboard';
 import { downloadJson, readFile } from '@/utils/fileOperations';
 import { getInitialSessionContent } from '@/utils/sessionState';
 import { useLanguage } from '@/contexts';
-import { Code, GitBranch, ChevronsUpDown, ChevronsDownUp, ZoomIn, Terminal, GitCompare } from 'lucide-react';
+import { Code, GitBranch, ChevronsUpDown, ChevronsDownUp, ZoomIn, Terminal, GitCompare, RefreshCw } from 'lucide-react';
 
 interface Toast {
   id: string;
@@ -19,7 +19,7 @@ interface Toast {
   type: ToastType;
 }
 
-type ViewTab = 'editor' | 'tree' | 'query' | 'diff';
+type ViewTab = 'editor' | 'tree' | 'query' | 'diff' | 'converter';
 
 export default function Home() {
   const isHydrated = React.useSyncExternalStore(() => () => {}, () => true, () => false);
@@ -230,6 +230,11 @@ export default function Home() {
         setActiveTab('diff');
         return;
       }
+      if (e.ctrlKey && !e.shiftKey && e.key === '5') {
+        e.preventDefault();
+        setActiveTab('converter');
+        return;
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -306,6 +311,13 @@ export default function Home() {
           >
             <GitCompare size={14} />
             <span>{t.editor.tabDiff ?? 'Diff'}</span>
+          </button>
+          <button
+            className={`tab-button ${activeTab === 'converter' ? 'active' : ''}`}
+            onClick={() => setActiveTab('converter')}
+          >
+            <RefreshCw size={14} />
+            <span>{t.editor.tabConverter ?? 'Dönüştürücü'}</span>
           </button>
 
           {/* Right side controls */}
@@ -385,8 +397,10 @@ export default function Home() {
             />
           ) : activeTab === 'query' ? (
             <JsonQuery data={content} />
-          ) : (
+          ) : activeTab === 'diff' ? (
             <JsonDiff initialContent={content} />
+          ) : (
+            <JsonConverter initialContent={content} />
           )}
         </div>
       </main>
