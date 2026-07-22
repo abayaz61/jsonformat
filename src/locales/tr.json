@@ -7,7 +7,18 @@
         "items": "öğe",
         "tabEditor": "Editör",
         "tabTree": "Ağaç",
+        "tabDiff": "Diff / Karşılaştır",
         "zoom": "Yakınlaştırma"
+    },
+    "diff": {
+        "swap": "Sol ve Sağı Yer Değiştir",
+        "formatBoth": "İki Tarafı da Biçimlendir",
+        "sample": "Örnek Yükle",
+        "loadSample": "Örnek Karşılaştırma JSON Verileri Yükle",
+        "original": "Sol (Orijinal / Aktif JSON)",
+        "modified": "Sağ (Karşılaştırılan / Yeni)",
+        "copyOriginal": "Sol Kopyala",
+        "copyModified": "Sağ Kopyala"
     },
     "header": {
         "title": "JSON Biçimlendirici",

@@ -57,7 +57,18 @@ export interface TranslationStrings {
     items: string;
     tabEditor: string;
     tabTree: string;
+    tabDiff?: string;
     zoom: string;
+  };
+  diff?: {
+    swap: string;
+    formatBoth: string;
+    sample: string;
+    loadSample: string;
+    original: string;
+    modified: string;
+    copyOriginal: string;
+    copyModified: string;
   };
   header: {
     title: string;

@@ -7,7 +7,18 @@
     "items": "items",
     "tabEditor": "Editor",
     "tabTree": "Tree",
+    "tabDiff": "Diff / Compare",
     "zoom": "Zoom"
+  },
+  "diff": {
+    "swap": "Swap Left / Right",
+    "formatBoth": "Format Both Sides",
+    "sample": "Load Sample",
+    "loadSample": "Load Sample JSON Diff Data",
+    "original": "Left (Original / Active JSON)",
+    "modified": "Right (Modified / New)",
+    "copyOriginal": "Copy Left",
+    "copyModified": "Copy Right"
   },
   "header": {
     "title": "JSON Formatter",

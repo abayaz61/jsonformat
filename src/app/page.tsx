@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Header, JsonEditor, JsonTree, JsonQuery, ToastContainer, ExportModal } from '@/components';
+import { Header, JsonEditor, JsonTree, JsonQuery, JsonDiff, ToastContainer, ExportModal } from '@/components';
 import type { ToastType } from '@/components';
 import { useSettings } from '@/contexts';
 import { useJsonFormatter } from '@/hooks/useJsonFormatter';
@@ -11,7 +11,7 @@ import { copyToClipboard, pasteFromClipboard } from '@/utils/clipboard';
 import { downloadJson, readFile } from '@/utils/fileOperations';
 import { getInitialSessionContent } from '@/utils/sessionState';
 import { useLanguage } from '@/contexts';
-import { Code, GitBranch, ChevronsUpDown, ChevronsDownUp, ZoomIn, Terminal } from 'lucide-react';
+import { Code, GitBranch, ChevronsUpDown, ChevronsDownUp, ZoomIn, Terminal, GitCompare } from 'lucide-react';
 
 interface Toast {
   id: string;
@@ -19,7 +19,7 @@ interface Toast {
   type: ToastType;
 }
 
-type ViewTab = 'editor' | 'tree' | 'query';
+type ViewTab = 'editor' | 'tree' | 'query' | 'diff';
 
 export default function Home() {
   const isHydrated = React.useSyncExternalStore(() => () => {}, () => true, () => false);
@@ -225,6 +225,11 @@ export default function Home() {
         setActiveTab('query');
         return;
       }
+      if (e.ctrlKey && !e.shiftKey && e.key === '4') {
+        e.preventDefault();
+        setActiveTab('diff');
+        return;
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -294,6 +299,13 @@ export default function Home() {
           >
             <Terminal size={14} />
             <span>{t.query.tabQuery}</span>
+          </button>
+          <button
+            className={`tab-button ${activeTab === 'diff' ? 'active' : ''}`}
+            onClick={() => setActiveTab('diff')}
+          >
+            <GitCompare size={14} />
+            <span>{t.editor.tabDiff ?? 'Diff'}</span>
           </button>
 
           {/* Right side controls */}
@@ -371,8 +383,10 @@ export default function Home() {
               expandAll={treeExpandKey.expand}
               treeKey={treeExpandKey.key}
             />
-          ) : (
+          ) : activeTab === 'query' ? (
             <JsonQuery data={content} />
+          ) : (
+            <JsonDiff initialContent={content} />
           )}
         </div>
       </main>
