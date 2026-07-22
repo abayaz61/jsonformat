@@ -40,6 +40,16 @@ function compareCells(a: unknown, b: unknown): number {
   return String(a).localeCompare(String(b));
 }
 
+function handleCellClick(e: React.MouseEvent<HTMLTableCellElement>) {
+  const selection = window.getSelection();
+  if (selection && e.currentTarget) {
+    const range = document.createRange();
+    range.selectNodeContents(e.currentTarget);
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+}
+
 export function ResultTable({ data, columns }: ResultTableProps) {
   const [sort, setSort] = useState<SortState>({ column: null, direction: null });
 
@@ -106,7 +116,12 @@ export function ResultTable({ data, columns }: ResultTableProps) {
               {columns.map((col) => {
                 const { display, type } = formatCellValue(getCellValue(row, col));
                 return (
-                  <td key={col} className={`query-table-td query-cell-${type}`} title={display}>
+                  <td
+                    key={col}
+                    className={`query-table-td query-cell-${type}`}
+                    title={display}
+                    onClick={handleCellClick}
+                  >
                     {display}
                   </td>
                 );

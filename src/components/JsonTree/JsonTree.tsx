@@ -73,6 +73,17 @@ function getTypeColor(type: string, colors: SyntaxColors): string {
     }
 }
 
+function handleValueClick(e: React.MouseEvent<HTMLSpanElement>) {
+    e.stopPropagation();
+    const selection = window.getSelection();
+    if (selection && e.currentTarget) {
+        const range = document.createRange();
+        range.selectNodeContents(e.currentTarget);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+}
+
 function TreeNode({ name, value, level, forceExpand, onContextMenu, items, colors }: TreeNodeProps) {
     const [manualExpanded, setManualExpanded] = useState(level < 2);
     const type = getValueType(value);
@@ -118,7 +129,13 @@ function TreeNode({ name, value, level, forceExpand, onContextMenu, items, color
                     <span className="tree-toggle-spacer" />
                 )}
 
-                <span className="tree-key" style={{ color: colors.property }}>{name}</span>
+                <span
+                    className="tree-key"
+                    style={{ color: colors.property }}
+                    onClick={handleValueClick}
+                >
+                    {name}
+                </span>
                 <span className="tree-colon" style={{ color: colors.bracket }}>:</span>
 
                 {!isExpandable ? (
@@ -126,6 +143,7 @@ function TreeNode({ name, value, level, forceExpand, onContextMenu, items, color
                         className={`tree-value tree-value-${type}`}
                         style={{ color: typeColor, fontStyle: type === 'null' ? 'italic' : undefined }}
                         title={jwtTooltip ?? undefined}
+                        onClick={handleValueClick}
                     >
                         {getValuePreview(value, type)}
                     </span>
@@ -268,7 +286,7 @@ export function JsonTree({ data, expandAll = null, treeKey = 0 }: JsonTreeProps)
                         e.preventDefault();
                         handleContextMenu(e, parsedData);
                     }}>
-                        <span className="tree-key" style={{ color: syntaxColors.property }}>value</span>
+                        <span className="tree-key" style={{ color: syntaxColors.property }} onClick={handleValueClick}>value</span>
                         <span className="tree-colon" style={{ color: syntaxColors.bracket }}>:</span>
                         <span
                             className={`tree-value tree-value-${rootType}`}
@@ -277,6 +295,7 @@ export function JsonTree({ data, expandAll = null, treeKey = 0 }: JsonTreeProps)
                                 fontStyle: rootType === 'null' ? 'italic' : undefined
                             }}
                             title={rootJwtTooltip ?? undefined}
+                            onClick={handleValueClick}
                         >
                             {getValuePreview(parsedData, rootType)}
                         </span>
@@ -284,7 +303,6 @@ export function JsonTree({ data, expandAll = null, treeKey = 0 }: JsonTreeProps)
                 )}
             </div>
 
-            {/* Context Menu */}
             {/* Context Menu */}
             {canUsePortal && contextMenu.visible && createPortal(
                 (() => {
