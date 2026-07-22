@@ -101,14 +101,19 @@ function handleValueSelect(e: React.MouseEvent<HTMLSpanElement>) {
 }
 
 function TreeNode({ name, value, level, forceExpand, onContextMenu, items, colors }: TreeNodeProps) {
-    const [manualExpanded, setManualExpanded] = useState(level < 2);
+    const [isExpanded, setIsExpanded] = useState(forceExpand ?? level < 2);
     const type = getValueType(value);
     const isExpandable = type === 'object' || type === 'array';
-    const isExpanded = forceExpand ?? manualExpanded;
     const typeColor = getTypeColor(type, colors);
     const jwtTooltip = type === 'string' && typeof value === 'string'
         ? formatJwtPayloadTooltip(value)
         : null;
+
+    useEffect(() => {
+        if (forceExpand !== null && forceExpand !== undefined) {
+            setIsExpanded(forceExpand);
+        }
+    }, [forceExpand]);
 
     const children = useMemo(() => {
         if (!isExpandable) return [];
@@ -134,7 +139,7 @@ function TreeNode({ name, value, level, forceExpand, onContextMenu, items, color
         <div className="tree-node">
             <div
                 className={`tree-node-content ${isExpandable ? 'expandable' : ''}`}
-                onClick={() => isExpandable && setManualExpanded(!isExpanded)}
+                onClick={() => isExpandable && setIsExpanded((prev) => !prev)}
                 onContextMenu={handleContextMenu}
             >
                 {isExpandable ? (
