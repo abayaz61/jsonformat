@@ -188,6 +188,30 @@ export function getSyntaxColors(
 // Global counter — incremented on every define call so Monaco always picks up fresh rules
 let _themeVersion = 0;
 
+export const themeBackgroundMap: Record<ColorTheme, { dark: { primary: string; secondary: string }; light: { primary: string; secondary: string } }> = {
+  posthog:  { dark: { primary: '#0d0e15', secondary: '#151622' }, light: { primary: '#fffbf9', secondary: '#f8f1ed' } },
+  ocean:    { dark: { primary: '#0b0e17', secondary: '#111726' }, light: { primary: '#f5f7ff', secondary: '#ebf0ff' } },
+  forest:   { dark: { primary: '#09120d', secondary: '#101f17' }, light: { primary: '#f3faf5', secondary: '#e5f5ea' } },
+  sunset:   { dark: { primary: '#140e0a', secondary: '#211710' }, light: { primary: '#fff9f5', secondary: '#fff0e5' } },
+  purple:   { dark: { primary: '#100c1a', secondary: '#191329' }, light: { primary: '#f9f5ff', secondary: '#f0e6ff' } },
+  rose:     { dark: { primary: '#140b12', secondary: '#21121e' }, light: { primary: '#fff5f9', secondary: '#ffe6f1' } },
+  midnight: { dark: { primary: '#091414', secondary: '#102121' }, light: { primary: '#f2fbfb', secondary: '#e1f7f6' } },
+  crimson:  { dark: { primary: '#140b0b', secondary: '#221212' }, light: { primary: '#fff5f5', secondary: '#ffe5e5' } },
+  gold:     { dark: { primary: '#141209', secondary: '#211e0e' }, light: { primary: '#fffcf2', secondary: '#fff8dc' } },
+  emerald:  { dark: { primary: '#091310', secondary: '#10211b' }, light: { primary: '#f2fbf7', secondary: '#e1f7ec' } },
+  sapphire: { dark: { primary: '#0a0f1a', secondary: '#11192c' }, light: { primary: '#f4f8ff', secondary: '#e5efff' } },
+  amber:    { dark: { primary: '#141009', secondary: '#211a0e' }, light: { primary: '#fffbf2', secondary: '#fff3dc' } },
+  indigo:   { dark: { primary: '#0d0c1a', secondary: '#15132b' }, light: { primary: '#f6f5ff', secondary: '#ece9ff' } },
+  coral:    { dark: { primary: '#140e0a', secondary: '#221710' }, light: { primary: '#fff8f5', secondary: '#ffede5' } },
+  slate:    { dark: { primary: '#0e1015', secondary: '#161a22' }, light: { primary: '#f8fafc', secondary: '#f1f5f9' } },
+  lime:     { dark: { primary: '#101309', secondary: '#1b210f' }, light: { primary: '#f9fcf2', secondary: '#f0f9dc' } },
+  violet:   { dark: { primary: '#110c1a', secondary: '#1c132b' }, light: { primary: '#f9f5ff', secondary: '#f1e6ff' } },
+  bronze:   { dark: { primary: '#120e0a', secondary: '#1f1710' }, light: { primary: '#faf7f2', secondary: '#f3ece0' } },
+  cyan:     { dark: { primary: '#081215', secondary: '#0e1f23' }, light: { primary: '#f0fcfd', secondary: '#dff7fa' } },
+  magenta:  { dark: { primary: '#140c18', secondary: '#211328' }, light: { primary: '#fcf5fd', secondary: '#f8e6fa' } },
+  olive:    { dark: { primary: '#0f1209', secondary: '#191e0e' }, light: { primary: '#f8fcf2', secondary: '#eff9e1' } },
+};
+
 /**
  * Defines (or re-defines) a Monaco editor theme for both JSON and SQL modes,
  * consistent with the app's color theme system.
@@ -203,10 +227,11 @@ export function defineMonacoTheme(
   const themeName = `custom-${colorTheme}-${mode}-v${++_themeVersion}`;
   const baseTheme = mode === 'dark' ? 'vs-dark' : 'vs';
 
-  const bgPrimary     = colorTheme === 'posthog' ? (mode === 'dark' ? '#0d0e15' : '#f8fafc') : (mode === 'dark' ? '#0a0a0f' : '#ffffff');
-  const bgSecondary   = colorTheme === 'posthog' ? (mode === 'dark' ? '#151622' : '#f1f5f9') : (mode === 'dark' ? '#111118' : '#f8fafc');
+  const bgConfig = (themeBackgroundMap[colorTheme] || themeBackgroundMap.posthog)[mode];
+  const bgPrimary     = bgConfig.primary;
+  const bgSecondary   = bgConfig.secondary;
   const textPrimary   = mode === 'dark' ? '#e2e8f0' : '#1a202c';
-  const lineHighlight = colorTheme === 'posthog' ? (mode === 'dark' ? '#1d1f2e' : '#e2e8f0') : (mode === 'dark' ? '#1a1a24' : '#f1f5f9');
+  const lineHighlight = mode === 'dark' ? mixHexColors(bgPrimary, tokens.accent, 0.08) : mixHexColors(bgPrimary, tokens.accent, 0.05);
   const selection     = mode === 'dark' ? `${tokens.accent}40` : `${tokens.accent}30`;
 
   monaco.editor.defineTheme(themeName, {
