@@ -8,6 +8,7 @@ export type TargetFormat =
   | 'xml'
   | 'csv'
   | 'toml'
+  | 'env'
   | 'typescript'
   | 'csharp'
   | 'go'
@@ -655,6 +656,45 @@ export function jsonToDart(jsonObj: unknown, name = 'Root'): string {
 
 // ── MAIN CONVERT FUNCTION ───────────────────────────────────
 
+export function jsonToEnv(jsonObj: unknown): string {
+  if (typeof jsonObj !== 'object' || jsonObj === null) {
+    return `# Value\nKEY=${JSON.stringify(jsonObj)}`;
+  }
+  const lines: string[] = [];
+
+  function flatten(obj: Record<string, unknown>, currentPrefix = '') {
+    for (const [key, value] of Object.entries(obj)) {
+      const envKey = (currentPrefix ? `${currentPrefix}_${key}` : key)
+        .replace(/([a-z])([A-Z])/g, '$1_$2')
+        .replace(/[^a-zA-Z0-9_]/g, '_')
+        .toUpperCase();
+
+      if (value === null || value === undefined) {
+        lines.push(`${envKey}=`);
+      } else if (typeof value === 'boolean' || typeof value === 'number') {
+        lines.push(`${envKey}=${value}`);
+      } else if (typeof value === 'string') {
+        if (value.includes(' ') || value.includes('\n') || value.includes('#') || value.includes('=')) {
+          lines.push(`${envKey}="${value.replace(/"/g, '\\"')}"`);
+        } else {
+          lines.push(`${envKey}=${value}`);
+        }
+      } else if (Array.isArray(value)) {
+        lines.push(`${envKey}='${JSON.stringify(value)}'`);
+      } else if (typeof value === 'object') {
+        flatten(value as Record<string, unknown>, envKey);
+      }
+    }
+  }
+
+  if (Array.isArray(jsonObj)) {
+    return `# Array root\nITEMS='${JSON.stringify(jsonObj)}'`;
+  }
+
+  flatten(jsonObj as Record<string, unknown>);
+  return lines.join('\n');
+}
+
 export function convertFormat(
   input: string,
   targetFormat: TargetFormat
@@ -688,6 +728,9 @@ export function convertFormat(
 
     case 'toml':
       return { output: jsonToToml(parsed), monacoLanguage: 'ini', extension: 'toml' };
+
+    case 'env':
+      return { output: jsonToEnv(parsed), monacoLanguage: 'ini', extension: 'env' };
 
     case 'typescript':
       return { output: jsonToTypescript(parsed), monacoLanguage: 'typescript', extension: 'ts' };

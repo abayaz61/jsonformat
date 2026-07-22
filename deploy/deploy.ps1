@@ -1,4 +1,4 @@
-# ============================================
+﻿# ============================================
 # JSON Formatter Deployment Script (PowerShell)
 # ============================================
 # Bu script Next.js projesini build edip sunucuya deploy eder
@@ -214,31 +214,31 @@ if ($buildExitCode -ne 0) {
 
 $buildDuration = ((Get-Date) - $buildStart).TotalSeconds
 $buildDurationRounded = [math]::Round($buildDuration, 1)
-Write-Success "Build tamamlandı ($buildDurationRounded saniye)"
+Write-Success ("Build tamamlandi (" + $buildDurationRounded + " saniye)")
 
-# Build çıktısı kontrolü
+# Build ciktisi kontrolu
 if (-not (Test-Path $BUILD_OUTPUT)) {
-    Write-Failure "Build çıktısı bulunamadı: $BUILD_OUTPUT"
-    Write-SubStep "next.config dosyasında 'output: export' ayarı yapıldığından emin olun."
+    Write-Failure "Build ciktisi bulunamadi: $BUILD_OUTPUT"
+    Write-SubStep "next.config dosyasinda 'output: export' ayari yapildigindan emin olun."
     exit 1
 }
 
-# index.html kontrolü (static export)
+# index.html kontrolu (static export)
 if (-not (Test-Path "$BUILD_OUTPUT/index.html")) {
-    Write-Failure "Static export başarısız - index.html bulunamadı!"
-    Write-SubStep "next.config dosyasında 'output: export' ayarı yapıldığından emin olun."
+    Write-Failure "Static export basarisiz - index.html bulunamadi!"
+    Write-SubStep "next.config dosyasinda 'output: export' ayari yapildigindan emin olun."
     exit 1
 }
 
 $fileCount = (Get-ChildItem -Recurse $BUILD_OUTPUT -File).Count
 $totalSize = (Get-ChildItem -Recurse $BUILD_OUTPUT -File | Measure-Object -Property Length -Sum).Sum / 1MB
 $totalSizeRounded = [math]::Round($totalSize, 2)
-Write-Success "Build çıktısı hazır ($fileCount dosya, $totalSizeRounded MB)"
+Write-Success ("Build ciktisi hazir (" + $fileCount + " dosya, " + $totalSizeRounded + " MB)")
 
 # ═══════════════════════════════════════════════════════════
-# ADIM 4: ARŞİVLEME
+# ADIM 4: ARSIVLEME
 # ═══════════════════════════════════════════════════════════
-Write-Step "4-10" "Dosyalar Arşivleniyor"
+Write-Step "4-10" "Dosyalar Arsivleniyor"
 
 $ARCHIVE_PATH = "$PSScriptRoot\$BUILD_ARCHIVE"
 
@@ -346,8 +346,10 @@ $sslCheck = ssh -o StrictHostKeyChecking=no $SERVER "test -f /etc/letsencrypt/li
 $NGINX_INITIAL_FILE = "$PSScriptRoot\nginx-initial.conf"
 $NGINX_SSL_FILE = "$PSScriptRoot\nginx-ssl.conf"
 
+$utf8NoBom = New-Object System.Text.UTF8Encoding $false
+
 # Initial config (HTTP only)
-@"
+$initialConfig = @"
 server {
     listen 80;
     listen [::]:80;
@@ -364,10 +366,11 @@ server {
         add_header Cache-Control "public, immutable";
     }
 }
-"@ | Set-Content -Path $NGINX_INITIAL_FILE -Encoding UTF8
+"@
+[System.IO.File]::WriteAllText($NGINX_INITIAL_FILE, $initialConfig, $utf8NoBom)
 
 # SSL config
-@"
+$sslConfig = @"
 server {
     listen 80;
     listen [::]:80;
@@ -403,7 +406,8 @@ server {
         add_header Cache-Control "public, immutable";
     }
 }
-"@ | Set-Content -Path $NGINX_SSL_FILE -Encoding UTF8
+"@
+[System.IO.File]::WriteAllText($NGINX_SSL_FILE, $sslConfig, $utf8NoBom)
 
 if ($sslCheck -eq "SSL_NOT_EXISTS") {
     Write-Warning "SSL sertifikasi bulunamadi, once HTTP config ile baslayacagiz..."

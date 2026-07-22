@@ -7,6 +7,7 @@ import {
   jsonToCsv,
   csvToJson,
   jsonToToml,
+  jsonToEnv,
   jsonToTypescript,
   jsonToCSharp,
   jsonToGo,
@@ -83,6 +84,13 @@ test('Code generators produce valid structure', () => {
   const py = jsonToPython(parsed, 'User');
   assert.ok(py.includes('class User:'));
   assert.ok(py.includes('name: str'));
+});
+
+test('jsonToEnv creates valid UPPER_SNAKE_CASE env variables', () => {
+  const env = jsonToEnv({ dbHost: 'localhost', dbPort: 5432, app: { name: 'my-app' } });
+  assert.ok(env.includes('DB_HOST=localhost'));
+  assert.ok(env.includes('DB_PORT=5432'));
+  assert.ok(env.includes('APP_NAME=my-app'));
 });
 
 test('convertFormat returns correct monacoLanguage and extension', () => {

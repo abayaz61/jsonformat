@@ -19,6 +19,7 @@ const FORMAT_OPTIONS: { id: TargetFormat; label: string; badge: string }[] = [
   { id: 'xml', label: 'XML', badge: 'Data' },
   { id: 'csv', label: 'CSV (Excel)', badge: 'Data' },
   { id: 'toml', label: 'TOML', badge: 'Data' },
+  { id: 'env', label: '.ENV File', badge: 'Data' },
   { id: 'typescript', label: 'TypeScript', badge: 'Code' },
   { id: 'csharp', label: 'C# Class', badge: 'Code' },
   { id: 'go', label: 'Go Struct', badge: 'Code' },
