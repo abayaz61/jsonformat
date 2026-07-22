@@ -30,15 +30,17 @@ export function useLocalStorage<T>(
             }
 
             cachedRawValueRef.current = rawValue;
-            cachedParsedValueRef.current = JSON.parse(rawValue) as T;
+            try {
+                cachedParsedValueRef.current = JSON.parse(rawValue) as T;
+            } catch {
+                cachedParsedValueRef.current = (rawValue as unknown) as T;
+            }
             return cachedParsedValueRef.current;
-        } catch (error) {
-            console.warn(`Error reading localStorage key "${key}":`, error);
+        } catch {
+            cachedRawValueRef.current = null;
+            cachedParsedValueRef.current = initialValue;
+            return cachedParsedValueRef.current;
         }
-
-        cachedRawValueRef.current = null;
-        cachedParsedValueRef.current = initialValue;
-        return cachedParsedValueRef.current;
     }, [initialValue, key]);
 
     const subscribe = useCallback((onStoreChange: () => void) => {

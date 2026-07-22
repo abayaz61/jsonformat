@@ -5,7 +5,8 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import type { Settings } from '@/types';
 import {
     LAST_SESSION_CONTENT_KEY,
-    TAB_SESSION_CONTENT_KEY,
+    getOrCreateTabId,
+    saveTabSessionContent,
 } from '@/utils/sessionState';
 
 interface SettingsContextType {
@@ -36,35 +37,37 @@ interface SettingsProviderProps {
 
 export function SettingsProvider({ children }: SettingsProviderProps) {
     const [settings, setSettings] = useLocalStorage<Settings>('json-formatter-settings', defaultSettings);
-    const [savedContent, setSavedContentLocal] = useLocalStorage<string>(LAST_SESSION_CONTENT_KEY, '');
+    const [savedContent, setSavedContentState] = React.useState<string>('');
 
-    // Debounce timer ref
-    const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const latestContentRef = useRef<string>('');
 
     const updateSettings = (partial: Partial<Settings>) => {
         setSettings((prev) => ({ ...prev, ...partial }));
     };
 
-    // Debounced content save
+    // Synchronous immediate content save so new tabs get the latest state without delay
     const setSavedContent = useCallback((content: string) => {
-        if (debounceRef.current) {
-            clearTimeout(debounceRef.current);
+        latestContentRef.current = content;
+        setSavedContentState(content);
+
+        if (typeof window !== 'undefined') {
+            const tabId = getOrCreateTabId(window.sessionStorage);
+            saveTabSessionContent(tabId, content, window.sessionStorage, window.localStorage);
         }
+    }, []);
 
-        debounceRef.current = setTimeout(() => {
-            if (typeof window !== 'undefined') {
-                window.sessionStorage.setItem(TAB_SESSION_CONTENT_KEY, content);
-            }
-            setSavedContentLocal(content);
-        }, 500);
-    }, [setSavedContentLocal]);
-
-    // Cleanup on unmount
+    // Flush on unmount or beforeunload
     useEffect(() => {
-        return () => {
-            if (debounceRef.current) {
-                clearTimeout(debounceRef.current);
+        const handleBeforeUnload = () => {
+            if (typeof window !== 'undefined' && latestContentRef.current !== undefined) {
+                const tabId = getOrCreateTabId(window.sessionStorage);
+                saveTabSessionContent(tabId, latestContentRef.current, window.sessionStorage, window.localStorage);
             }
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
         };
     }, []);
 
