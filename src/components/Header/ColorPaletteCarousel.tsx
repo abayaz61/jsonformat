@@ -5,8 +5,9 @@ import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { useTheme, useLanguage } from '@/contexts';
 import type { ColorTheme } from '@/types';
 
-// 20 color themes with display colors
+// Color themes with display colors
 const colorThemes: { id: ColorTheme; label: string; color: string }[] = [
+    { id: 'posthog', label: 'PostHog', color: '#F54E00' },
     { id: 'ocean', label: 'Ocean', color: '#667eea' },
     { id: 'forest', label: 'Forest', color: '#48bb78' },
     { id: 'sunset', label: 'Sunset', color: '#ed8936' },

@@ -5,8 +5,9 @@ export interface Theme {
   color: ColorTheme;
 }
 
-// 20 Color Themes
+// Color Themes (including PostHog special theme)
 export type ColorTheme =
+  | 'posthog'    // PostHog Vibrant Special Theme
   | 'ocean'      // Blue
   | 'forest'     // Green
   | 'sunset'     // Orange

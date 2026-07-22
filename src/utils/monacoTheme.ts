@@ -68,87 +68,91 @@ function mixHexColors(primary: string, secondary: string, secondaryWeight: numbe
   );
 }
 
-// All 20 color themes — shared between JsonEditor, SqlEditor, and RawViewer
+// All color themes — shared between JsonEditor, SqlEditor, and RawViewer
 export const colorThemeTokens: Record<ColorTheme, ColorPalette> = {
+  posthog: {
+    dark:  { accent: '#F54E00', string: '#10B981', number: '#C084FC', keyword: '#FBBF24', property: '#FF7A00', bracket: '#94A3B8' },
+    light: { accent: '#F54E00', string: '#059669', number: '#9333EA', keyword: '#D97706', property: '#E65100', bracket: '#64748B' },
+  },
   ocean: {
-    dark:  { accent: '#667eea', string: '#a5d6ff', number: '#79c0ff', keyword: '#ff7b72', property: '#7ee787', bracket: '#8b949e' },
-    light: { accent: '#4f46e5', string: '#0550ae', number: '#0969da', keyword: '#cf222e', property: '#116329', bracket: '#57606a' },
+    dark:  { accent: '#667eea', string: '#34d399', number: '#f43f5e', keyword: '#fbbf24', property: '#38bdf8', bracket: '#94a3b8' },
+    light: { accent: '#4f46e5', string: '#059669', number: '#dc2626', keyword: '#d97706', property: '#0284c7', bracket: '#64748b' },
   },
   forest: {
-    dark:  { accent: '#48bb78', string: '#9ae6b4', number: '#68d391', keyword: '#f6ad55', property: '#90cdf4', bracket: '#a0aec0' },
-    light: { accent: '#059669', string: '#047857', number: '#0d9488', keyword: '#c2410c', property: '#1d4ed8', bracket: '#4b5563' },
+    dark:  { accent: '#48bb78', string: '#4ade80', number: '#f472b6', keyword: '#facc15', property: '#38bdf8', bracket: '#9ca3af' },
+    light: { accent: '#059669', string: '#16a34a', number: '#db2777', keyword: '#ca8a04', property: '#0284c7', bracket: '#4b5563' },
   },
   sunset: {
-    dark:  { accent: '#ed8936', string: '#fbd38d', number: '#f6ad55', keyword: '#fc8181', property: '#90cdf4', bracket: '#a0aec0' },
-    light: { accent: '#ea580c', string: '#c2410c', number: '#d97706', keyword: '#dc2626', property: '#2563eb', bracket: '#4b5563' },
+    dark:  { accent: '#ed8936', string: '#34d399', number: '#c084fc', keyword: '#facc15', property: '#ff7a00', bracket: '#9ca3af' },
+    light: { accent: '#ea580c', string: '#059669', number: '#9333ea', keyword: '#d97706', property: '#d97706', bracket: '#4b5563' },
   },
   purple: {
-    dark:  { accent: '#9f7aea', string: '#d6bcfa', number: '#b794f4', keyword: '#f687b3', property: '#90cdf4', bracket: '#a0aec0' },
-    light: { accent: '#7c3aed', string: '#6d28d9', number: '#7c3aed', keyword: '#db2777', property: '#2563eb', bracket: '#4b5563' },
+    dark:  { accent: '#9f7aea', string: '#34d399', number: '#fbbf24', keyword: '#f43f5e', property: '#c084fc', bracket: '#9ca3af' },
+    light: { accent: '#7c3aed', string: '#059669', number: '#ca8a04', keyword: '#dc2626', property: '#7c3aed', bracket: '#4b5563' },
   },
   rose: {
-    dark:  { accent: '#ed64a6', string: '#fbb6ce', number: '#f687b3', keyword: '#9f7aea', property: '#90cdf4', bracket: '#a0aec0' },
-    light: { accent: '#e11d48', string: '#be185d', number: '#db2777', keyword: '#7c3aed', property: '#2563eb', bracket: '#4b5563' },
+    dark:  { accent: '#ed64a6', string: '#34d399', number: '#38bdf8', keyword: '#facc15', property: '#f472b6', bracket: '#9ca3af' },
+    light: { accent: '#e11d48', string: '#059669', number: '#0284c7', keyword: '#ca8a04', property: '#e11d48', bracket: '#4b5563' },
   },
   midnight: {
-    dark:  { accent: '#4fd1c5', string: '#81e6d9', number: '#76e4f7', keyword: '#f687b3', property: '#90cdf4', bracket: '#a0aec0' },
-    light: { accent: '#0d9488', string: '#0f766e', number: '#0891b2', keyword: '#db2777', property: '#2563eb', bracket: '#4b5563' },
+    dark:  { accent: '#4fd1c5', string: '#2dd4bf', number: '#f472b6', keyword: '#facc15', property: '#38bdf8', bracket: '#9ca3af' },
+    light: { accent: '#0d9488', string: '#0D9488', number: '#db2777', keyword: '#ca8a04', property: '#0284c7', bracket: '#4b5563' },
   },
   crimson: {
-    dark:  { accent: '#ef4444', string: '#fca5a5', number: '#f87171', keyword: '#fbbf24', property: '#6ee7b7', bracket: '#9ca3af' },
-    light: { accent: '#dc2626', string: '#b91c1c', number: '#dc2626', keyword: '#b45309', property: '#047857', bracket: '#4b5563' },
+    dark:  { accent: '#ef4444', string: '#34d399', number: '#38bdf8', keyword: '#fbbf24', property: '#f87171', bracket: '#9ca3af' },
+    light: { accent: '#dc2626', string: '#059669', number: '#0284c7', keyword: '#d97706', property: '#dc2626', bracket: '#4b5563' },
   },
   gold: {
-    dark:  { accent: '#eab308', string: '#fde047', number: '#facc15', keyword: '#f97316', property: '#a78bfa', bracket: '#9ca3af' },
-    light: { accent: '#ca8a04', string: '#a16207', number: '#ca8a04', keyword: '#c2410c', property: '#6d28d9', bracket: '#4b5563' },
+    dark:  { accent: '#eab308', string: '#34d399', number: '#c084fc', keyword: '#fb923c', property: '#facc15', bracket: '#9ca3af' },
+    light: { accent: '#ca8a04', string: '#059669', number: '#7c3aed', keyword: '#ea580c', property: '#ca8a04', bracket: '#4b5563' },
   },
   emerald: {
-    dark:  { accent: '#10b981', string: '#6ee7b7', number: '#34d399', keyword: '#f472b6', property: '#93c5fd', bracket: '#9ca3af' },
-    light: { accent: '#047857', string: '#065f46', number: '#059669', keyword: '#be185d', property: '#1d4ed8', bracket: '#4b5563' },
+    dark:  { accent: '#10b981', string: '#34d399', number: '#c084fc', keyword: '#fbbf24', property: '#38bdf8', bracket: '#9ca3af' },
+    light: { accent: '#047857', string: '#059669', number: '#7c3aed', keyword: '#d97706', property: '#0284c7', bracket: '#4b5563' },
   },
   sapphire: {
-    dark:  { accent: '#3b82f6', string: '#93c5fd', number: '#60a5fa', keyword: '#fb923c', property: '#a5b4fc', bracket: '#9ca3af' },
-    light: { accent: '#1d4ed8', string: '#1e40af', number: '#2563eb', keyword: '#c2410c', property: '#4338ca', bracket: '#4b5563' },
+    dark:  { accent: '#3b82f6', string: '#34d399', number: '#fb923c', keyword: '#facc15', property: '#60a5fa', bracket: '#9ca3af' },
+    light: { accent: '#1d4ed8', string: '#059669', number: '#ea580c', keyword: '#ca8a04', property: '#2563eb', bracket: '#4b5563' },
   },
   amber: {
-    dark:  { accent: '#f59e0b', string: '#fcd34d', number: '#fbbf24', keyword: '#f43f5e', property: '#67e8f9', bracket: '#9ca3af' },
-    light: { accent: '#d97706', string: '#b45309', number: '#d97706', keyword: '#be123c', property: '#0e7490', bracket: '#4b5563' },
+    dark:  { accent: '#f59e0b', string: '#34d399', number: '#c084fc', keyword: '#f43f5e', property: '#fbbf24', bracket: '#9ca3af' },
+    light: { accent: '#d97706', string: '#059669', number: '#7c3aed', keyword: '#dc2626', property: '#d97706', bracket: '#4b5563' },
   },
   indigo: {
-    dark:  { accent: '#6366f1', string: '#a5b4fc', number: '#818cf8', keyword: '#fb7185', property: '#86efac', bracket: '#9ca3af' },
-    light: { accent: '#4338ca', string: '#3730a3', number: '#4f46e5', keyword: '#be123c', property: '#15803d', bracket: '#4b5563' },
+    dark:  { accent: '#6366f1', string: '#34d399', number: '#f472b6', keyword: '#facc15', property: '#818cf8', bracket: '#9ca3af' },
+    light: { accent: '#4338ca', string: '#059669', number: '#db2777', keyword: '#ca8a04', property: '#4f46e5', bracket: '#4b5563' },
   },
   coral: {
-    dark:  { accent: '#f97316', string: '#fdba74', number: '#fb923c', keyword: '#e879f9', property: '#5eead4', bracket: '#9ca3af' },
-    light: { accent: '#ea580c', string: '#c2410c', number: '#ea580c', keyword: '#a21caf', property: '#0f766e', bracket: '#4b5563' },
+    dark:  { accent: '#f97316', string: '#34d399', number: '#c084fc', keyword: '#facc15', property: '#ff7a00', bracket: '#9ca3af' },
+    light: { accent: '#ea580c', string: '#059669', number: '#7c3aed', keyword: '#ca8a04', property: '#ea580c', bracket: '#4b5563' },
   },
   slate: {
-    dark:  { accent: '#64748b', string: '#cbd5e1', number: '#94a3b8', keyword: '#f472b6', property: '#7dd3fc', bracket: '#9ca3af' },
-    light: { accent: '#475569', string: '#334155', number: '#475569', keyword: '#be185d', property: '#0284c7', bracket: '#4b5563' },
+    dark:  { accent: '#64748b', string: '#34d399', number: '#c084fc', keyword: '#fbbf24', property: '#38bdf8', bracket: '#9ca3af' },
+    light: { accent: '#475569', string: '#059669', number: '#7c3aed', keyword: '#d97706', property: '#0284c7', bracket: '#4b5563' },
   },
   lime: {
-    dark:  { accent: '#84cc16', string: '#bef264', number: '#a3e635', keyword: '#f472b6', property: '#93c5fd', bracket: '#9ca3af' },
-    light: { accent: '#65a30d', string: '#4d7c0f', number: '#65a30d', keyword: '#be185d', property: '#1d4ed8', bracket: '#4b5563' },
+    dark:  { accent: '#84cc16', string: '#a3e635', number: '#c084fc', keyword: '#fbbf24', property: '#38bdf8', bracket: '#9ca3af' },
+    light: { accent: '#65a30d', string: '#65a30d', number: '#7c3aed', keyword: '#d97706', property: '#0284c7', bracket: '#4b5563' },
   },
   violet: {
-    dark:  { accent: '#8b5cf6', string: '#c4b5fd', number: '#a78bfa', keyword: '#38bdf8', property: '#4ade80', bracket: '#9ca3af' },
-    light: { accent: '#7c3aed', string: '#5b21b6', number: '#7c3aed', keyword: '#0284c7', property: '#16a34a', bracket: '#4b5563' },
+    dark:  { accent: '#8b5cf6', string: '#34d399', number: '#f472b6', keyword: '#facc15', property: '#a78bfa', bracket: '#9ca3af' },
+    light: { accent: '#7c3aed', string: '#059669', number: '#db2777', keyword: '#ca8a04', property: '#7c3aed', bracket: '#4b5563' },
   },
   bronze: {
-    dark:  { accent: '#a16207', string: '#fcd34d', number: '#d97706', keyword: '#f87171', property: '#5eead4', bracket: '#9ca3af' },
-    light: { accent: '#92400e', string: '#78350f', number: '#a16207', keyword: '#dc2626', property: '#0f766e', bracket: '#4b5563' },
+    dark:  { accent: '#a16207', string: '#34d399', number: '#c084fc', keyword: '#fbbf24', property: '#f59e0b', bracket: '#9ca3af' },
+    light: { accent: '#92400e', string: '#059669', number: '#7c3aed', keyword: '#d97706', property: '#b45309', bracket: '#4b5563' },
   },
   cyan: {
-    dark:  { accent: '#06b6d4', string: '#67e8f9', number: '#22d3ee', keyword: '#f472b6', property: '#a5b4fc', bracket: '#9ca3af' },
-    light: { accent: '#0891b2', string: '#0e7490', number: '#0891b2', keyword: '#be185d', property: '#4338ca', bracket: '#4b5563' },
+    dark:  { accent: '#06b6d4', string: '#34d399', number: '#c084fc', keyword: '#fbbf24', property: '#22d3ee', bracket: '#9ca3af' },
+    light: { accent: '#0891b2', string: '#059669', number: '#7c3aed', keyword: '#d97706', property: '#0891b2', bracket: '#4b5563' },
   },
   magenta: {
-    dark:  { accent: '#d946ef', string: '#f0abfc', number: '#e879f9', keyword: '#38bdf8', property: '#86efac', bracket: '#9ca3af' },
-    light: { accent: '#a21caf', string: '#86198f', number: '#c026d3', keyword: '#0284c7', property: '#15803d', bracket: '#4b5563' },
+    dark:  { accent: '#d946ef', string: '#34d399', number: '#38bdf8', keyword: '#facc15', property: '#e879f9', bracket: '#9ca3af' },
+    light: { accent: '#a21caf', string: '#059669', number: '#0284c7', keyword: '#ca8a04', property: '#c026d3', bracket: '#4b5563' },
   },
   olive: {
-    dark:  { accent: '#65a30d', string: '#bef264', number: '#84cc16', keyword: '#c084fc', property: '#7dd3fc', bracket: '#9ca3af' },
-    light: { accent: '#4d7c0f', string: '#3f6212', number: '#4d7c0f', keyword: '#7c3aed', property: '#0284c7', bracket: '#4b5563' },
+    dark:  { accent: '#65a30d', string: '#a3e635', number: '#c084fc', keyword: '#fbbf24', property: '#38bdf8', bracket: '#9ca3af' },
+    light: { accent: '#4d7c0f', string: '#4d7c0f', number: '#7c3aed', keyword: '#d97706', property: '#0284c7', bracket: '#4b5563' },
   },
 };
 
@@ -156,7 +160,7 @@ export function getSyntaxColors(
   colorTheme: ColorTheme,
   mode: 'light' | 'dark'
 ): SyntaxColors {
-  const palette = colorThemeTokens[colorTheme];
+  const palette = colorThemeTokens[colorTheme] || colorThemeTokens.posthog;
   const base = mode === 'dark' ? palette.dark : palette.light;
   const neutralPreview = mode === 'dark' ? '#cbd5e1' : '#64748b';
 
@@ -166,17 +170,17 @@ export function getSyntaxColors(
     string: base.string,
     number: base.number,
     keyword: base.keyword,
-    boolean: mixHexColors(base.keyword, base.accent, mode === 'dark' ? 0.12 : 0.08),
-    nullValue: mixHexColors(base.bracket, base.keyword, mode === 'dark' ? 0.3 : 0.18),
-    object: mixHexColors(base.property, base.accent, 0.35),
-    array: mixHexColors(base.number, base.accent, 0.4),
-    keyString: mixHexColors(base.property, base.string, mode === 'dark' ? 0.42 : 0.28),
-    keyNumber: mixHexColors(base.property, base.number, mode === 'dark' ? 0.38 : 0.24),
-    keyBoolean: mixHexColors(base.property, base.keyword, mode === 'dark' ? 0.34 : 0.22),
-    keyNull: mixHexColors(base.property, base.bracket, mode === 'dark' ? 0.48 : 0.3),
-    keyObject: mixHexColors(base.property, base.accent, mode === 'dark' ? 0.22 : 0.16),
-    keyArray: mixHexColors(base.property, base.number, mode === 'dark' ? 0.22 : 0.16),
-    bracket: mixHexColors(base.bracket, base.accent, mode === 'dark' ? 0.18 : 0.1),
+    boolean: base.keyword,
+    nullValue: mixHexColors(base.bracket, base.keyword, 0.4),
+    object: base.bracket,
+    array: base.bracket,
+    keyString: base.property,
+    keyNumber: base.property,
+    keyBoolean: base.property,
+    keyNull: base.property,
+    keyObject: base.property,
+    keyArray: base.property,
+    bracket: base.bracket,
     preview: mixHexColors(base.bracket, neutralPreview, 0.45),
   };
 }
@@ -187,10 +191,6 @@ let _themeVersion = 0;
 /**
  * Defines (or re-defines) a Monaco editor theme for both JSON and SQL modes,
  * consistent with the app's color theme system.
- *
- * Monaco caches themes by name. To force a re-apply when the color theme changes
- * (e.g. ocean → forest) we append an ever-incrementing version suffix so every
- * call always registers a brand-new theme object.
  */
 export function defineMonacoTheme(
   monaco: Monaco,
@@ -203,10 +203,10 @@ export function defineMonacoTheme(
   const themeName = `custom-${colorTheme}-${mode}-v${++_themeVersion}`;
   const baseTheme = mode === 'dark' ? 'vs-dark' : 'vs';
 
-  const bgPrimary     = mode === 'dark' ? '#0a0a0f' : '#ffffff';
-  const bgSecondary   = mode === 'dark' ? '#111118' : '#f8fafc';
+  const bgPrimary     = colorTheme === 'posthog' ? (mode === 'dark' ? '#0d0e15' : '#f8fafc') : (mode === 'dark' ? '#0a0a0f' : '#ffffff');
+  const bgSecondary   = colorTheme === 'posthog' ? (mode === 'dark' ? '#151622' : '#f1f5f9') : (mode === 'dark' ? '#111118' : '#f8fafc');
   const textPrimary   = mode === 'dark' ? '#e2e8f0' : '#1a202c';
-  const lineHighlight = mode === 'dark' ? '#1a1a24' : '#f1f5f9';
+  const lineHighlight = colorTheme === 'posthog' ? (mode === 'dark' ? '#1d1f2e' : '#e2e8f0') : (mode === 'dark' ? '#1a1a24' : '#f1f5f9');
   const selection     = mode === 'dark' ? `${tokens.accent}40` : `${tokens.accent}30`;
 
   monaco.editor.defineTheme(themeName, {
@@ -215,19 +215,19 @@ export function defineMonacoTheme(
     rules: [
       // ── JSON ──────────────────────────────────────────────
       { token: 'string',               foreground: tokens.string.replace('#', '') },
-      { token: 'string.key.json',      foreground: tokens.keyObject.replace('#', '') },
+      { token: 'string.key.json',      foreground: tokens.property.replace('#', ''), fontStyle: 'bold' },
       { token: 'string.value.json',    foreground: tokens.string.replace('#', '') },
       { token: 'number',               foreground: tokens.number.replace('#', '') },
       { token: 'number.json',          foreground: tokens.number.replace('#', '') },
-      { token: 'keyword',              foreground: tokens.boolean.replace('#', '') },
-      { token: 'keyword.json',         foreground: tokens.boolean.replace('#', '') },
-      { token: 'keyword.true.json',    foreground: tokens.boolean.replace('#', '') },
-      { token: 'keyword.false.json',   foreground: tokens.boolean.replace('#', '') },
+      { token: 'keyword',              foreground: tokens.boolean.replace('#', ''), fontStyle: 'bold' },
+      { token: 'keyword.json',         foreground: tokens.boolean.replace('#', ''), fontStyle: 'bold' },
+      { token: 'keyword.true.json',    foreground: tokens.boolean.replace('#', ''), fontStyle: 'bold' },
+      { token: 'keyword.false.json',   foreground: tokens.boolean.replace('#', ''), fontStyle: 'bold' },
       { token: 'keyword.null.json',    foreground: tokens.nullValue.replace('#', ''), fontStyle: 'italic' },
       { token: 'delimiter',            foreground: tokens.bracket.replace('#', '') },
-      { token: 'delimiter.bracket',    foreground: tokens.object.replace('#', '') },
-      { token: 'delimiter.bracket.json', foreground: tokens.object.replace('#', '') },
-      { token: 'delimiter.array.json', foreground: tokens.array.replace('#', '') },
+      { token: 'delimiter.bracket',    foreground: tokens.bracket.replace('#', '') },
+      { token: 'delimiter.bracket.json', foreground: tokens.bracket.replace('#', '') },
+      { token: 'delimiter.array.json', foreground: tokens.bracket.replace('#', '') },
       { token: 'delimiter.colon.json', foreground: tokens.bracket.replace('#', '') },
       { token: 'delimiter.comma.json', foreground: tokens.bracket.replace('#', '') },
 

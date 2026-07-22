@@ -91,6 +91,7 @@
     "themes": {
         "light": "Açık",
         "dark": "Koyu",
+        "posthog": "PostHog (Özel 🦔)",
         "ocean": "Okyanus Mavisi",
         "forest": "Orman Yeşili",
         "sunset": "Gün Batımı",

@@ -176,6 +176,12 @@
   --accent-light: rgba(162, 28, 175, 0.12);
 }
 
+[data-color="posthog"] {
+  --accent: #f54e00;
+  --accent-hover: #d84300;
+  --accent-light: rgba(245, 78, 0, 0.12);
+}
+
 [data-color="olive"] {
   --accent: #4d7c0f;
   --accent-hover: #3f6212;
@@ -183,6 +189,14 @@
 }
 
 /* Dark mode theme colors - brighter for visibility */
+[data-theme="dark"][data-color="posthog"] {
+  --bg-primary: #0d0e15;
+  --bg-secondary: #151622;
+  --bg-tertiary: #1d1f2e;
+  --accent: #f54e00;
+  --accent-hover: #ff6b1a;
+  --accent-light: rgba(245, 78, 0, 0.2);
+}
 [data-theme="dark"][data-color="ocean"] {
   --accent: #667eea;
   --accent-hover: #5a67d8;

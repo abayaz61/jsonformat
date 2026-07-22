@@ -91,6 +91,7 @@
   "themes": {
     "light": "Light",
     "dark": "Dark",
+    "posthog": "PostHog (Special 🦔)",
     "ocean": "Ocean Blue",
     "forest": "Forest Green",
     "sunset": "Sunset Orange",
