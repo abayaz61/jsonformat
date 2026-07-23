@@ -1,5 +1,5 @@
 import type { JsonValidationResult } from '@/types';
-import { extractJwt } from './jwt';
+import { extractJwt, parseJwt } from './jwt';
 
 export interface FormatOptions {
     ignoreNull?: boolean;
@@ -362,6 +362,10 @@ function extractEmbeddedJson(str: string): { prefix: string; json: unknown } | n
 export function expandJsonStrings(value: unknown): unknown {
     if (typeof value === 'string') {
         const trimmed = value.trim();
+        if (parseJwt(trimmed)) {
+            return value;
+        }
+
         const parsed = tryParseJsonLikeString(trimmed);
         if (parsed !== null && parsed !== value) {
             return expandJsonStrings(parsed);

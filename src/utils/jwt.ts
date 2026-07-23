@@ -9,6 +9,7 @@ export interface DecodedJwt {
     header: Record<string, unknown>;
     payload: Record<string, unknown>;
     signature?: string;
+    raw?: string;
 }
 
 const JWT_PATTERN = /[A-Za-z0-9\-_+/=]+\.[A-Za-z0-9\-_+/=]+\.?[A-Za-z0-9\-_+/=]*/g;
@@ -95,6 +96,8 @@ export function parseJwt(token: string): DecodedJwt | null {
         if (seg2) {
             result.signature = seg2;
         }
+
+        result.raw = cleanToken;
 
         return result;
     } catch {

@@ -50,5 +50,6 @@ test('gecerli jwt token yapistirildiginda formatJson header, payload ve signatur
   assert.ok(formatted.includes('"kid": "5RFOSiNIUm"'));
   assert.ok(formatted.includes('"email": "abayaz61@gmail.com"'));
   assert.ok(formatted.includes('"signature": "YaDEHPlo'));
+  assert.ok(formatted.includes('"raw": "eyJraWQi'));
   assert.ok(minified.includes('{"header":{"kid":"5RFOSiNIUm"'));
 });
