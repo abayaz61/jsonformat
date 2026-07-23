@@ -5,6 +5,7 @@ import { useTheme, useLanguage } from '@/contexts';
 import { ColorPaletteCarousel } from './ColorPaletteCarousel';
 import type { FormatOptions } from '@/utils/jsonOperations';
 import {
+    Sparkles,
     Moon,
     Sun,
     Globe,
@@ -36,7 +37,6 @@ interface HeaderProps {
     onToggleFormatOption: (key: string) => void;
     disabled?: boolean;
 }
-
 
 export function Header({
     isFullscreen,
@@ -207,6 +207,15 @@ export function Header({
 
             {/* Settings */}
             <div className="header-settings">
+                {/* Features Popup Button */}
+                <button
+                    className="header-button"
+                    onClick={() => window.dispatchEvent(new CustomEvent('open-welcome-popup'))}
+                    title={t.toolbar.features || 'Özellikler'}
+                >
+                    <Sparkles size={18} color="var(--accent)" />
+                </button>
+
                 {/* Color Theme */}
                 <button
                     className="header-button"

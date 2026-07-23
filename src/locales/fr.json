@@ -24,6 +24,7 @@
         "fullscreen": "Plein écran",
         "exitFullscreen": "Quitter le plein écran",
         "export": "Exporter en modèle",
+        "features": "Fonctionnalités",
         "autoFormat": "Formater automatiquement au collage",
         "ignoreNull": "Ignorer les valeurs null",
         "ignoreDefaultDates": "Ignorer les dates par défaut",

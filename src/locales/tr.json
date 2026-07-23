@@ -43,6 +43,7 @@
         "fullscreen": "Tam Ekran",
         "exitFullscreen": "Tam Ekrandan Çık",
         "export": "Model Olarak Dışa Aktar",
+        "features": "Özellikler",
         "autoFormat": "Yapıştırınca Otomatik Formatla",
         "ignoreNull": "Null Değerleri Yoksay",
         "ignoreDefaultDates": "Varsayılan Tarihleri Yoksay",

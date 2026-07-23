@@ -93,6 +93,7 @@ export interface TranslationStrings {
     fullscreen: string;
     exitFullscreen: string;
     export: string;
+    features?: string;
     autoFormat: string;
     ignoreNull: string;
     ignoreDefaultDates: string;
@@ -208,6 +209,10 @@ export interface TranslationStrings {
     feature9Desc: string;
     feature10Title: string;
     feature10Desc: string;
+    feature11Title?: string;
+    feature11Desc?: string;
+    feature12Title?: string;
+    feature12Desc?: string;
     button: string;
   };
   themes: Record<string, string>;

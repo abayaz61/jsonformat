@@ -64,6 +64,14 @@ export default function WelcomePopup() {
         if (!isPopupSuppressed(localStorage, WELCOME_SHOWN_KEY)) {
             setTimeout(() => setShowPopup(true), 800);
         }
+
+        const handleOpen = () => {
+            setIsClosing(false);
+            setShowPopup(true);
+        };
+
+        window.addEventListener('open-welcome-popup', handleOpen);
+        return () => window.removeEventListener('open-welcome-popup', handleOpen);
     }, []);
 
     const handleClose = () => {

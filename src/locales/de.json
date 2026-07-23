@@ -24,6 +24,7 @@
         "fullscreen": "Vollbild",
         "exitFullscreen": "Vollbild beenden",
         "export": "Als Modell exportieren",
+        "features": "Funktionen",
         "autoFormat": "Automatisch beim Einfügen formatieren",
         "ignoreNull": "Null-Werte ignorieren",
         "ignoreDefaultDates": "Standarddaten ignorieren",
