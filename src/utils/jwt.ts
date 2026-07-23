@@ -13,12 +13,71 @@ export interface DecodedJwt {
 }
 
 const JWT_PATTERN = /[A-Za-z0-9\-_+/=]+\.[A-Za-z0-9\-_+/=]+\.?[A-Za-z0-9\-_+/=]*/g;
-const JWT_TIME_CLAIMS = new Set(['exp', 'iat', 'nbf', 'auth_time', 'updated_at']);
+const JWT_TIME_CLAIMS = new Set([
+    'exp', 'iat', 'nbf', 'auth_time', 'updated_at', 'created_at',
+    'expires_at', 'issued_at', 'login_time', 'time', 'timestamp'
+]);
+
+function isPossibleUnixTimestamp(key: string, value: number): boolean {
+    if (typeof value !== 'number' || !Number.isFinite(value)) return false;
+
+    const lowerKey = key.toLowerCase();
+    const isKnownTimeKey =
+        JWT_TIME_CLAIMS.has(lowerKey) ||
+        lowerKey.endsWith('_at') ||
+        lowerKey.endsWith('time') ||
+        lowerKey.endsWith('date') ||
+        lowerKey.endsWith('timestamp') ||
+        lowerKey.includes('time') ||
+        lowerKey.includes('date') ||
+        lowerKey.includes('expire') ||
+        lowerKey.includes('created') ||
+        lowerKey.includes('updated') ||
+        lowerKey.includes('issued');
+
+    const isSecondsRange = value >= 1000000000 && value <= 4102444800;
+    const isMillisRange = value >= 1000000000000 && value <= 4102444800000;
+
+    if (isKnownTimeKey && (isSecondsRange || isMillisRange)) {
+        return true;
+    }
+
+    if (isSecondsRange && Number.isInteger(value)) {
+        return true;
+    }
+
+    return false;
+}
+
+function formatUtcDate(val: number): string | null {
+    if (!Number.isFinite(val)) return null;
+
+    let ms = val;
+    if (val >= 1000000000 && val <= 4102444800) {
+        ms = val * 1000;
+    } else if (val >= 1000000000000 && val <= 4102444800000) {
+        ms = val;
+    } else {
+        return null;
+    }
+
+    const date = new Date(ms);
+    if (Number.isNaN(date.getTime())) return null;
+
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    const hours = String(date.getUTCHours()).padStart(2, '0');
+    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+    const secs = String(date.getUTCSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${secs} UTC`;
+}
 
 export function formatJwtTimeClaims(payload: Record<string, unknown>): Record<string, unknown> {
     const result: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(payload)) {
-        if (typeof value === 'number' && JWT_TIME_CLAIMS.has(key)) {
+        if (typeof value === 'number' && isPossibleUnixTimestamp(key, value)) {
             const utcDate = formatUtcDate(value);
             result[key] = utcDate ? `${value} (${utcDate})` : value;
         } else if (value && typeof value === 'object' && value !== null && !Array.isArray(value)) {
@@ -142,21 +201,7 @@ export function findJwtAtOffset(source: string, offset: number): JwtMatch | null
     return null;
 }
 
-function formatUtcDate(seconds: number): string | null {
-    if (!Number.isInteger(seconds)) return null;
 
-    const date = new Date(seconds * 1000);
-    if (Number.isNaN(date.getTime())) return null;
-
-    const year = date.getUTCFullYear();
-    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(date.getUTCDate()).padStart(2, '0');
-    const hours = String(date.getUTCHours()).padStart(2, '0');
-    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-    const secs = String(date.getUTCSeconds()).padStart(2, '0');
-
-    return `${year}-${month}-${day} ${hours}:${minutes}:${secs} UTC`;
-}
 
 function formatTooltipValue(value: unknown, indentLevel: number, key?: string): string {
     const indent = '  '.repeat(indentLevel);
@@ -178,7 +223,7 @@ function formatTooltipValue(value: unknown, indentLevel: number, key?: string): 
             .join(',\n')}\n${indent}}`;
     }
 
-    if (typeof value === 'number' && key && JWT_TIME_CLAIMS.has(key)) {
+    if (typeof value === 'number' && key && isPossibleUnixTimestamp(key, value)) {
         const utcDate = formatUtcDate(value);
         return utcDate ? `${value} (${utcDate})` : String(value);
     }

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { decodeJwtPayload, findJwtAtOffset, formatJwtPayloadHoverMarkdown, formatJwtPayloadTooltip, parseJwt, extractJwt } from './jwt.ts';
+import { decodeJwtPayload, findJwtAtOffset, formatJwtPayloadHoverMarkdown, formatJwtPayloadTooltip, parseJwt, extractJwt, formatJwtTimeClaims } from './jwt.ts';
 
 const sampleToken = [
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
@@ -116,4 +116,17 @@ test('parseJwt tirnakli, noktalivirgullu ve arti/bolu karakterli jwt tokenlari c
   assert.equal(parsed.payload.email, 'user@example.com');
   assert.ok(extracted);
   assert.equal(extracted.payload.email, 'user@example.com');
+});
+
+test('formatJwtTimeClaims akilli unix zaman damgasi (milisaniye, saniye ve ozel key) tespiti yapar', () => {
+  const payload = {
+    custom_time: 1784820249,
+    login_date: 1784820249000,
+    normal_id: 12345,
+  };
+  const formatted = formatJwtTimeClaims(payload);
+  assert.ok(typeof formatted.custom_time === 'string');
+  assert.ok(String(formatted.custom_time).includes('UTC'));
+  assert.ok(String(formatted.login_date).includes('UTC'));
+  assert.equal(formatted.normal_id, 12345);
 });
