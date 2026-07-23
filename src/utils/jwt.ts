@@ -75,18 +75,7 @@ function formatUtcDate(val: number): string | null {
 }
 
 export function formatJwtTimeClaims(payload: Record<string, unknown>): Record<string, unknown> {
-    const result: Record<string, unknown> = {};
-    for (const [key, value] of Object.entries(payload)) {
-        if (typeof value === 'number' && isPossibleUnixTimestamp(key, value)) {
-            const utcDate = formatUtcDate(value);
-            result[key] = utcDate ? `${value} (${utcDate})` : value;
-        } else if (value && typeof value === 'object' && value !== null && !Array.isArray(value)) {
-            result[key] = formatJwtTimeClaims(value as Record<string, unknown>);
-        } else {
-            result[key] = value;
-        }
-    }
-    return result;
+    return payload;
 }
 
 function decodeBase64Url(value: string): string | null {

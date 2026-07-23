@@ -8,6 +8,7 @@ import { AlertCircle, CheckCircle2 } from 'lucide-react';
 import type { editor } from 'monaco-editor';
 import { defineMonacoTheme, getSyntaxColors } from '@/utils/monacoTheme';
 import { findJwtAtOffset, formatJwtPayloadHoverMarkdown, extractJwt } from '@/utils/jwt';
+import { findEpochHoverAtPosition } from '@/utils/epochHover';
 
 interface JsonEditorProps {
     value: string;
@@ -226,30 +227,35 @@ export function JsonEditor({ value, onChange, validation }: JsonEditorProps) {
                 model: editor.ITextModel,
                 position: { readonly lineNumber: number; readonly column: number }
             ) {
+                // 1. Check if hovering over raw JWT Token
                 const match = findJwtAtOffset(model.getValue(), model.getOffsetAt(position));
-                if (!match) {
-                    return null;
+                if (match) {
+                    const start = model.getPositionAt(match.start);
+                    const end = model.getPositionAt(match.end);
+                    const hoverMarkdown = formatJwtPayloadHoverMarkdown(match.token);
+                    if (hoverMarkdown) {
+                        return {
+                            range: new monacoRef.current!.Range(
+                                start.lineNumber,
+                                start.column,
+                                end.lineNumber,
+                                end.column
+                            ),
+                            contents: [
+                                { value: '**JWT Payload**' },
+                                { value: hoverMarkdown },
+                            ],
+                        };
+                    }
                 }
 
-                const start = model.getPositionAt(match.start);
-                const end = model.getPositionAt(match.end);
-                const hoverMarkdown = formatJwtPayloadHoverMarkdown(match.token);
-                if (!hoverMarkdown) {
-                    return null;
+                // 2. Check if hovering over a Unix Epoch Timestamp
+                const epochHover = findEpochHoverAtPosition(model, position, monacoRef.current!);
+                if (epochHover) {
+                    return epochHover;
                 }
 
-                return {
-                    range: new monacoRef.current!.Range(
-                        start.lineNumber,
-                        start.column,
-                        end.lineNumber,
-                        end.column
-                    ),
-                    contents: [
-                        { value: '**JWT Payload**' },
-                        { value: hoverMarkdown },
-                    ],
-                };
+                return null;
             },
         });
     }, []);

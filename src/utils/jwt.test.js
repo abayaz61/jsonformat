@@ -58,10 +58,10 @@ test('tooltip icinde epoch jwt alanlarini utc zamanla birlikte gosterir', () => 
 
   const tooltip = formatJwtPayloadTooltip(token);
 
-  assert.match(tooltip ?? '', /"exp": "1700000000 \(2023-11-14 22:13:20 UTC\)"/);
-  assert.match(tooltip ?? '', /"iat": "1699996400 \(2023-11-14 21:13:20 UTC\)"/);
-  assert.match(tooltip ?? '', /"nbf": "1699992800 \(2023-11-14 20:13:20 UTC\)"/);
-  assert.match(tooltip ?? '', /"auth_time": "1699992800 \(2023-11-14 20:13:20 UTC\)"/);
+  assert.match(tooltip ?? '', /"exp": 1700000000 \(2023-11-14 22:13:20 UTC\)/);
+  assert.match(tooltip ?? '', /"iat": 1699996400 \(2023-11-14 21:13:20 UTC\)/);
+  assert.match(tooltip ?? '', /"nbf": 1699992800 \(2023-11-14 20:13:20 UTC\)/);
+  assert.match(tooltip ?? '', /"auth_time": 1699992800 \(2023-11-14 20:13:20 UTC\)/);
 });
 
 test('editor hover markdown ciktisi utc aciklamali jwt payload kullanir', () => {
@@ -77,7 +77,7 @@ test('editor hover markdown ciktisi utc aciklamali jwt payload kullanir', () => 
   const markdown = formatJwtPayloadHoverMarkdown(token);
 
   assert.match(markdown ?? '', /```json/);
-  assert.match(markdown ?? '', /"exp": "1700000000 \(2023-11-14 22:13:20 UTC\)"/);
+  assert.match(markdown ?? '', /"exp": 1700000000 \(2023-11-14 22:13:20 UTC\)/);
 });
 
 test('parseJwt tum jwt yapisini (header, payload, signature) cozmektedir', () => {
@@ -118,15 +118,14 @@ test('parseJwt tirnakli, noktalivirgullu ve arti/bolu karakterli jwt tokenlari c
   assert.equal(extracted.payload.email, 'user@example.com');
 });
 
-test('formatJwtTimeClaims akilli unix zaman damgasi (milisaniye, saniye ve ozel key) tespiti yapar', () => {
+test('formatJwtTimeClaims payload uzerinde ham veri tiplerini korur', () => {
   const payload = {
     custom_time: 1784820249,
     login_date: 1784820249000,
     normal_id: 12345,
   };
   const formatted = formatJwtTimeClaims(payload);
-  assert.ok(typeof formatted.custom_time === 'string');
-  assert.ok(String(formatted.custom_time).includes('UTC'));
-  assert.ok(String(formatted.login_date).includes('UTC'));
+  assert.equal(formatted.custom_time, 1784820249);
+  assert.equal(formatted.login_date, 1784820249000);
   assert.equal(formatted.normal_id, 12345);
 });
