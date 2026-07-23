@@ -7,16 +7,17 @@ import {
     Code,
     Minimize2,
     GitBranch,
+    GitCompare,
+    Repeat,
     FileCode2,
     Wrench,
+    Database,
     Filter,
     Palette,
     Keyboard,
-    Monitor,
     Key,
     X,
     ArrowRight,
-    Database,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { isPopupSuppressed, suppressPopupForOneMonth } from "@/utils/popupState";
@@ -27,12 +28,14 @@ const featureIcons = [
     Code,
     Minimize2,
     GitBranch,
+    GitCompare,
+    Repeat,
     FileCode2,
     Wrench,
+    Database,
     Filter,
     Palette,
     Keyboard,
-    Monitor,
     Key,
 ];
 
@@ -47,6 +50,8 @@ const featureColors = [
     "#63b3ed",
     "#fbd38d",
     "#f56565",
+    "#38bdf8",
+    "#a855f7",
 ];
 
 export default function WelcomePopup() {
