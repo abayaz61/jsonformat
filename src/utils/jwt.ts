@@ -5,12 +5,34 @@ export interface JwtMatch {
     payload: Record<string, unknown>;
 }
 
-const JWT_PATTERN = /[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/g;
-const JWT_TIME_CLAIMS = new Set(['exp', 'iat', 'nbf']);
+export interface DecodedJwt {
+    header: Record<string, unknown>;
+    payload: Record<string, unknown>;
+    signature?: string;
+}
+
+const JWT_PATTERN = /[A-Za-z0-9\-_+/=]+\.[A-Za-z0-9\-_+/=]+\.?[A-Za-z0-9\-_+/=]*/g;
+const JWT_TIME_CLAIMS = new Set(['exp', 'iat', 'nbf', 'auth_time', 'updated_at']);
+
+export function formatJwtTimeClaims(payload: Record<string, unknown>): Record<string, unknown> {
+    const result: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(payload)) {
+        if (typeof value === 'number' && JWT_TIME_CLAIMS.has(key)) {
+            const utcDate = formatUtcDate(value);
+            result[key] = utcDate ? `${value} (${utcDate})` : value;
+        } else if (value && typeof value === 'object' && value !== null && !Array.isArray(value)) {
+            result[key] = formatJwtTimeClaims(value as Record<string, unknown>);
+        } else {
+            result[key] = value;
+        }
+    }
+    return result;
+}
 
 function decodeBase64Url(value: string): string | null {
     try {
-        const normalized = value.replace(/-/g, '+').replace(/_/g, '/');
+        const clean = value.replace(/\s+/g, '');
+        const normalized = clean.replace(/-/g, '+').replace(/_/g, '/');
         const padding = (4 - (normalized.length % 4)) % 4;
         const padded = normalized + '='.repeat(padding);
 
@@ -32,18 +54,69 @@ function decodeBase64Url(value: string): string | null {
 }
 
 export function decodeJwtPayload(token: string): Record<string, unknown> | null {
-    const segments = token.split('.');
-    if (segments.length !== 3) return null;
+    const parsed = parseJwt(token);
+    return parsed ? parsed.payload : null;
+}
 
-    const payloadText = decodeBase64Url(segments[1]);
-    if (!payloadText) return null;
+export function parseJwt(token: string): DecodedJwt | null {
+    if (!token || typeof token !== 'string') return null;
+
+    let cleanToken = token.trim();
+    cleanToken = cleanToken.replace(/^[\s"';,]+|[\s"';,]+$/g, '');
+
+    if (cleanToken.toLowerCase().startsWith('bearer ')) {
+        cleanToken = cleanToken.slice(7).trim();
+    }
+    cleanToken = cleanToken.replace(/^[\s"';,]+|[\s"';,]+$/g, '');
+
+    const segments = cleanToken.split('.');
+    if (segments.length < 2 || segments.length > 3) return null;
+
+    const seg0 = segments[0].replace(/\s+/g, '');
+    const seg1 = segments[1].replace(/\s+/g, '');
+    const seg2 = segments[2] ? segments[2].replace(/\s+/g, '') : undefined;
+
+    const headerText = decodeBase64Url(seg0);
+    const payloadText = decodeBase64Url(seg1);
+    if (!headerText || !payloadText) return null;
 
     try {
-        const parsed = JSON.parse(payloadText);
-        return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : null;
+        const header = JSON.parse(headerText);
+        const payload = JSON.parse(payloadText);
+
+        if (!header || typeof header !== 'object' || Array.isArray(header)) return null;
+        if (!payload || typeof payload !== 'object') return null;
+
+        const result: DecodedJwt = {
+            header,
+            payload: formatJwtTimeClaims(payload)
+        };
+
+        if (seg2) {
+            result.signature = seg2;
+        }
+
+        return result;
     } catch {
         return null;
     }
+}
+
+export function extractJwt(source: string): DecodedJwt | null {
+    if (!source || typeof source !== 'string') return null;
+
+    const directParse = parseJwt(source);
+    if (directParse) return directParse;
+
+    for (const match of source.matchAll(JWT_PATTERN)) {
+        const token = match[0];
+        const parsed = parseJwt(token);
+        if (parsed) {
+            return parsed;
+        }
+    }
+
+    return null;
 }
 
 export function findJwtAtOffset(source: string, offset: number): JwtMatch | null {

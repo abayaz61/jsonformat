@@ -1,4 +1,5 @@
 import type { JsonValidationResult } from '@/types';
+import { extractJwt } from './jwt';
 
 export interface FormatOptions {
     ignoreNull?: boolean;
@@ -40,7 +41,12 @@ function stripTrailingJunk(input: string): string {
 function buildParseCandidates(input: string): string[] {
     const stripped = stripTrailingJunk(input);
     const repaired = repairJsonLikeInput(stripped);
-    return [input, stripped, repaired, wrapAsArray(stripped), wrapAsArray(repaired)];
+    const candidates = [input, stripped, repaired, wrapAsArray(stripped), wrapAsArray(repaired)];
+    const jwtParsed = extractJwt(stripped);
+    if (jwtParsed) {
+        candidates.unshift(JSON.stringify(jwtParsed));
+    }
+    return candidates;
 }
 
 function tryParseJsonLikeString(input: string): unknown | null {
@@ -752,12 +758,16 @@ function findNumberEnd(str: string, start: number): number {
  * Minify JSON string (remove all whitespace)
  */
 export function minifyJson(input: string): string {
-    try {
-        const parsed = JSON.parse(input);
-        return JSON.stringify(parsed);
-    } catch {
-        throw new Error('Invalid JSON');
+    const candidates = buildParseCandidates(input);
+    for (const candidate of candidates) {
+        try {
+            const parsed = JSON.parse(candidate);
+            return JSON.stringify(parsed);
+        } catch {
+            // try next candidate
+        }
     }
+    throw new Error('Invalid JSON');
 }
 
 /**
@@ -765,6 +775,10 @@ export function minifyJson(input: string): string {
  */
 export function validateJson(input: string): JsonValidationResult {
     if (!input.trim()) {
+        return { valid: true };
+    }
+
+    if (extractJwt(input)) {
         return { valid: true };
     }
 
@@ -801,6 +815,10 @@ export function parseJson(input: string): object | null {
     try {
         return JSON.parse(input);
     } catch {
+        const jwtParsed = extractJwt(input);
+        if (jwtParsed) {
+            return jwtParsed as unknown as object;
+        }
         return null;
     }
 }

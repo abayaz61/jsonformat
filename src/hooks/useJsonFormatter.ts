@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { formatJson, minifyJson, validateJson, partialFormatJson } from '@/utils/jsonOperations';
+import { extractJwt } from '@/utils/jwt';
 import type { JsonValidationResult } from '@/types';
 import type { FormatOptions } from '@/utils/jsonOperations';
 
@@ -23,6 +24,26 @@ export function useJsonFormatter(initialContent: string = ''): UseJsonFormatterR
 
     // Update content and validate
     const handleSetContent = useCallback((newContent: string) => {
+        let isRealJsonObjectOrArray = false;
+        try {
+            const parsed = JSON.parse(newContent);
+            if (parsed && typeof parsed === 'object') {
+                isRealJsonObjectOrArray = true;
+            }
+        } catch {
+            isRealJsonObjectOrArray = false;
+        }
+
+        if (!isRealJsonObjectOrArray) {
+            const jwtParsed = extractJwt(newContent);
+            if (jwtParsed) {
+                const formatted = JSON.stringify(jwtParsed, null, 2);
+                setContent(formatted);
+                setValidation({ valid: true });
+                return;
+            }
+        }
+
         setContent(newContent);
         setValidation(validateJson(newContent));
     }, []);

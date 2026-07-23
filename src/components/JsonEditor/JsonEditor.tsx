@@ -7,7 +7,7 @@ import type { JsonValidationResult } from '@/types';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
 import type { editor } from 'monaco-editor';
 import { defineMonacoTheme, getSyntaxColors } from '@/utils/monacoTheme';
-import { findJwtAtOffset, formatJwtPayloadHoverMarkdown } from '@/utils/jwt';
+import { findJwtAtOffset, formatJwtPayloadHoverMarkdown, extractJwt } from '@/utils/jwt';
 
 interface JsonEditorProps {
     value: string;
@@ -267,13 +267,14 @@ export function JsonEditor({ value, onChange, validation }: JsonEditorProps) {
             trailingCommas: 'error'
         });
 
-        // Auto-select 100% of string values inside quotes when clicked or selected in Monaco
+        // Auto-select 100% of string values inside quotes when clicked (single point cursor, not range selection)
         let isAutoSelecting = false;
         editor.onDidChangeCursorSelection((e) => {
             if (isAutoSelecting) return;
 
             const selection = e.selection;
-            if (selection.startLineNumber !== selection.endLineNumber) return;
+            // Only auto-select inside quotes on a single-click cursor placement (no text range selected)
+            if (selection.startLineNumber !== selection.endLineNumber || selection.startColumn !== selection.endColumn) return;
 
             const model = editor.getModel();
             if (!model) return;
@@ -296,7 +297,7 @@ export function JsonEditor({ value, onChange, validation }: JsonEditorProps) {
                 const qStart = quoteIndices[i];
                 const qEnd = quoteIndices[i + 1];
 
-                // Check if user's click or selection touches inside this quoted string
+                // Check if user's click touches inside this quoted string
                 const isClickInside = (selStartCol >= qStart && selStartCol <= qEnd + 1) ||
                                      (selEndCol >= qStart && selEndCol <= qEnd + 1);
 
@@ -318,6 +319,34 @@ export function JsonEditor({ value, onChange, validation }: JsonEditorProps) {
                     }
                 }
             }
+        });
+
+        // Native Monaco paste listener for instant JWT parsing on any paste event
+        editor.onDidPaste(() => {
+            setTimeout(() => {
+                const model = editor.getModel();
+                if (!model) return;
+                const currentText = model.getValue();
+
+                const decoded = extractJwt(currentText);
+                if (decoded) {
+                    let isAlreadyDecodedJwtObj = false;
+                    try {
+                        const obj = JSON.parse(currentText);
+                        if (obj && typeof obj === 'object' && 'header' in obj && 'payload' in obj) {
+                            isAlreadyDecodedJwtObj = true;
+                        }
+                    } catch {
+                        isAlreadyDecodedJwtObj = false;
+                    }
+
+                    if (!isAlreadyDecodedJwtObj) {
+                        const formatted = JSON.stringify(decoded, null, 2);
+                        editor.setValue(formatted);
+                        onChange(formatted);
+                    }
+                }
+            }, 20);
         });
 
         // Define and apply initial custom theme
@@ -366,6 +395,16 @@ export function JsonEditor({ value, onChange, validation }: JsonEditorProps) {
             hoverProviderRef.current?.dispose();
         };
     }, []);
+
+    // Keep Monaco Editor internal model in sync when parent transforms value (e.g. JWT parsing)
+    useEffect(() => {
+        if (editorRef.current) {
+            const currentValue = editorRef.current.getValue();
+            if (currentValue !== value) {
+                editorRef.current.setValue(value);
+            }
+        }
+    }, [value]);
 
     const handleChange: OnChange = (newValue) => {
         onChange(newValue || '');

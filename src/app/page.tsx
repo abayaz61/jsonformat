@@ -60,8 +60,8 @@ export default function Home() {
     if (autoFormat && isHydrated && content && content !== prevContentRef.current) {
       const prevLen = prevContentRef.current.length;
       const newLen = content.length;
-      // Detect paste: content grew significantly (more than just typing a char)
-      if (newLen - prevLen > 1) {
+      // Detect paste or content replacement (length changed by more than 1 char)
+      if (Math.abs(newLen - prevLen) > 1) {
         // Delay slightly for state to settle
         const timer = setTimeout(() => format(2, filterOptions), 50);
         prevContentRef.current = content;
