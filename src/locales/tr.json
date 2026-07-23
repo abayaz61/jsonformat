@@ -160,9 +160,9 @@
         "title": "JSON Formatter'a Hoş Geldiniz",
         "subtitle": "Neler yapabileceğinizi keşfedin",
         "newFeatureBadge": "Yeni Özellik",
-        "newFeatureTitle": "JWT Hover Intelligence",
-        "newFeatureDesc": "JSON icindeki JWT tokenlarini otomatik algilar. Uzerine geldiginizde payload/body bilgisini aninda tooltip icinde cozer; token icini kopyalamadan, decode etmeden, akis bozulmadan gorursunuz.",
-        "newFeatureTry": "Deneyin → Editor veya Agac sekmesi",
+        "newFeatureTitle": "Otomatik JWT Parsing & Raw Token",
+        "newFeatureDesc": "Gelişmiş JWT desteği! Yapıştırılan ham veya tırnaklı JWT'leri (Bearer dahil) anında algılar; Header, Payload (UTC zaman damgası dönüşümleriyle), Signature ve en altta ham tokenı (raw) JSON olarak tam çözümler.",
+        "newFeatureTry": "Deneyin → Editöre bir JWT yapıştırın!",
         "feature1Title": "Biçimlendir & Güzelleştir",
         "feature1Desc": "JSON verilerinizi tek tıkla anında biçimlendirin ve güzelleştirin",
         "feature2Title": "Sıkıştır",
@@ -181,8 +181,8 @@
         "feature8Desc": "Ctrl+Shift+F ile biçimlendirin, Ctrl+S ile indirin ve daha fazlası",
         "feature9Title": "Çapraz Platform",
         "feature9Desc": "Web, Windows ve Linux masaüstü uygulaması olarak çevrimdışı destek ile kullanın",
-        "feature10Title": "JWT Tooltip Decode",
-        "feature10Desc": "JSON icindeki JWT'leri otomatik yakalayin; uzerine gelince payload bilgisini havali bir tooltip ile aninda gorun",
+        "feature10Title": "JWT Auto-Parse & Raw Token",
+        "feature10Desc": "Yapıştırılan JWT token'ları anında Header, Payload, Signature ve Raw token alanlarıyla tam JSON objesine dönüştürür",
         "button": "Başla"
     }
 }

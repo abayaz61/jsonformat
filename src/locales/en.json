@@ -160,9 +160,9 @@
     "title": "Welcome to JSON Formatter",
     "subtitle": "Discover what you can do",
     "newFeatureBadge": "New Feature",
-    "newFeatureTitle": "JWT Hover Intelligence",
-    "newFeatureDesc": "Automatically detects JWT tokens inside your JSON. Hover to instantly reveal the decoded payload/body in a tooltip, without copying the token or leaving your flow.",
-    "newFeatureTry": "Try it out → Editor or Tree Tab",
+    "newFeatureTitle": "Auto JWT Parsing & Raw Token",
+    "newFeatureDesc": "Advanced JWT support! Automatically detects pasted raw or quoted JWTs (including Bearer prefix) and decodes Header, Payload (with UTC timestamp conversions), Signature, and the full raw token at the bottom.",
+    "newFeatureTry": "Try it out → Paste any JWT token in the Editor!",
     "feature1Title": "Format & Beautify",
     "feature1Desc": "Instantly format and beautify your JSON data with one click",
     "feature2Title": "Minify",
@@ -181,8 +181,8 @@
     "feature8Desc": "Ctrl+Shift+F to format, Ctrl+S to download, and more",
     "feature9Title": "Cross-Platform",
     "feature9Desc": "Available as Web, Windows and Linux desktop app with offline support",
-    "feature10Title": "JWT Tooltip Decode",
-    "feature10Desc": "Spot JWTs in your JSON and reveal their payload instantly with a slick hover tooltip",
+    "feature10Title": "JWT Auto-Parse & Raw Token",
+    "feature10Desc": "Instantly decodes pasted JWTs into Header, Payload, Signature, and Raw token JSON fields",
     "button": "Get Started"
   }
 }
