@@ -8,7 +8,6 @@ Crawl-delay: 1
 
 # Disallow server-internal paths
 Disallow: /api/
-Disallow: /_next/
 Disallow: /private/
 
 # ─── Specific directives: Googlebot ───────────────────────────────────────
