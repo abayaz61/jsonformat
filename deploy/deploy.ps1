@@ -1,4 +1,4 @@
-﻿# ============================================
+# ============================================
 # JSON Formatter Deployment Script (PowerShell)
 # ============================================
 # Bu script Next.js projesini build edip sunucuya deploy eder
@@ -73,8 +73,8 @@ $REMOTE_PATH = "/var/www/json-formatter"
 $BUILD_ARCHIVE = "json-formatter-build.tar.gz"
 $DOMAIN = "jsonformat.info"
 $APP_URL = "https://$DOMAIN"
-$SOURCE_DIR = "$PSScriptRoot\..\src"  # Next.js proje klasörü
-$BUILD_OUTPUT = "$PSScriptRoot\..\src\out"  # Next.js static export çıktısı
+$SOURCE_DIR = "$PSScriptRoot/../src"  # Next.js proje klasörü
+$BUILD_OUTPUT = "$PSScriptRoot/../src/out"  # Next.js static export çıktısı
 $ADMIN_EMAIL = "admin@$DOMAIN"  # SSL sertifikası için e-posta
 $NGINX_CONFIG_PATH = "/etc/nginx/sites-available/$DOMAIN"
 $NGINX_ENABLED_PATH = "/etc/nginx/sites-enabled/$DOMAIN"
@@ -240,7 +240,7 @@ Write-Success ("Build ciktisi hazir (" + $fileCount + " dosya, " + $totalSizeRou
 # ═══════════════════════════════════════════════════════════
 Write-Step "4-10" "Dosyalar Arsivleniyor"
 
-$ARCHIVE_PATH = "$PSScriptRoot\$BUILD_ARCHIVE"
+$ARCHIVE_PATH = "$PSScriptRoot/$BUILD_ARCHIVE"
 
 # Önceki arşivi temizle
 if (Test-Path $ARCHIVE_PATH) {
@@ -249,7 +249,7 @@ if (Test-Path $ARCHIVE_PATH) {
 
 # Tüm dosyaları arşivle (build output klasöründen)
 Push-Location $BUILD_OUTPUT
-tar -czf $ARCHIVE_PATH *
+tar -czf $ARCHIVE_PATH .
 Pop-Location
 
 if ($LASTEXITCODE -ne 0) {
@@ -343,8 +343,8 @@ Write-Step "8-10" "Nginx Yapilandiriliyor"
 $sslCheck = ssh -o StrictHostKeyChecking=no $SERVER "test -f /etc/letsencrypt/live/$DOMAIN/fullchain.pem && echo SSL_EXISTS || echo SSL_NOT_EXISTS"
 
 # Lokal nginx config dosyalari olustur
-$NGINX_INITIAL_FILE = "$PSScriptRoot\nginx-initial.conf"
-$NGINX_SSL_FILE = "$PSScriptRoot\nginx-ssl.conf"
+$NGINX_INITIAL_FILE = "$PSScriptRoot/nginx-initial.conf"
+$NGINX_SSL_FILE = "$PSScriptRoot/nginx-ssl.conf"
 
 $utf8NoBom = New-Object System.Text.UTF8Encoding $false
 
