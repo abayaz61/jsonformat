@@ -8,7 +8,7 @@
        ══════════════════════════════════════════════════════════ -->
   <url>
     <loc>https://jsonformat.info/</loc>
-    <lastmod>2025-04-02</lastmod>
+    <lastmod>2026-07-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <!-- hreflang: all 6 languages -->
@@ -30,7 +30,7 @@
        ══════════════════════════════════════════════════════════ -->
   <url>
     <loc>https://jsonformat.info/?lang=en</loc>
-    <lastmod>2025-04-02</lastmod>
+    <lastmod>2026-07-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jsonformat.info/"/>
@@ -47,7 +47,7 @@
        ══════════════════════════════════════════════════════════ -->
   <url>
     <loc>https://jsonformat.info/?lang=tr</loc>
-    <lastmod>2025-04-02</lastmod>
+    <lastmod>2026-07-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jsonformat.info/"/>
@@ -64,7 +64,7 @@
        ══════════════════════════════════════════════════════════ -->
   <url>
     <loc>https://jsonformat.info/?lang=de</loc>
-    <lastmod>2025-04-02</lastmod>
+    <lastmod>2026-07-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jsonformat.info/"/>
@@ -81,7 +81,7 @@
        ══════════════════════════════════════════════════════════ -->
   <url>
     <loc>https://jsonformat.info/?lang=fr</loc>
-    <lastmod>2025-04-02</lastmod>
+    <lastmod>2026-07-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jsonformat.info/"/>
@@ -98,7 +98,7 @@
        ══════════════════════════════════════════════════════════ -->
   <url>
     <loc>https://jsonformat.info/?lang=it</loc>
-    <lastmod>2025-04-02</lastmod>
+    <lastmod>2026-07-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jsonformat.info/"/>
@@ -115,7 +115,7 @@
        ══════════════════════════════════════════════════════════ -->
   <url>
     <loc>https://jsonformat.info/?lang=zh</loc>
-    <lastmod>2025-04-02</lastmod>
+    <lastmod>2026-07-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jsonformat.info/"/>

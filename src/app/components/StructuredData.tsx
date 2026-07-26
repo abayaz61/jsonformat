@@ -188,6 +188,38 @@ const softwareAppSchema = {
   },
 };
 
+// ── HowTo Schema — Rich How-To Search Snippets ────────────────────────────
+const howToSchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Format and Query JSON Online",
+  "description": "Step-by-step guide to format, validate, and query JSON data using JSONFormat.info.",
+  "totalTime": "PT1M",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Paste your JSON data",
+      "text": "Paste your unformatted or raw JSON string into the Monaco code editor.",
+      "url": "https://jsonformat.info/#editor"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Click Format or press Ctrl+Shift+F",
+      "text": "Click the Format button in the header toolbar to instantly beautify and indent your JSON code.",
+      "url": "https://jsonformat.info/#format"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Switch to SQL Query tab to filter",
+      "text": "Click on the SQL Query tab, enter SQL expressions like SELECT * FROM ? WHERE age > 20, and execute your query.",
+      "url": "https://jsonformat.info/#query"
+    }
+  ]
+};
+
 export default function StructuredData() {
   return (
     <>
@@ -220,6 +252,12 @@ export default function StructuredData() {
         type="application/ld+json"
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema) }}
+      />
+      <Script
+        id="sd-howto"
+        type="application/ld+json"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
       />
     </>
   );

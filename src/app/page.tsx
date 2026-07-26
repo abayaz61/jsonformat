@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Header, JsonEditor, JsonTree, JsonQuery, JsonDiff, JsonConverter, ToastContainer, ExportModal } from '@/components';
+import { Header, JsonEditor, JsonTree, JsonQuery, JsonDiff, JsonConverter, ToastContainer, ExportModal, SeoContent } from '@/components';
 import type { ToastType } from '@/components';
 import { useSettings } from '@/contexts';
 import { useJsonFormatter } from '@/hooks/useJsonFormatter';
@@ -435,6 +435,8 @@ export default function Home() {
         onClose={() => setShowExportModal(false)}
         jsonData={content}
       />
+
+      <SeoContent />
     </div>
   );
 }

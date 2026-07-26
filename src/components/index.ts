@@ -6,5 +6,6 @@ export { JsonQuery } from './JsonQuery';
 export { JsonDiff } from './JsonDiff';
 export { JsonConverter } from './JsonConverter';
 export { ExportModal } from './ExportModal';
+export { SeoContent } from './SeoContent/SeoContent';
 export { ToastContainer } from './ui';
 export type { ToastType } from './ui';
