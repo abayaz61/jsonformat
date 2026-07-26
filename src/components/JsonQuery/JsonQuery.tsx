@@ -69,6 +69,7 @@ import { ResultTable } from './ResultTable';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useTheme, useLanguage } from '@/contexts';
 import { defineMonacoTheme } from '@/utils/monacoTheme';
+import { trackEvent } from '@/lib/gtag';
 
 interface JsonQueryProps {
   data: string;
@@ -253,6 +254,7 @@ export function JsonQuery({ data }: JsonQueryProps) {
     }
 
     if (!currentSql.trim() || !parsedData) return;
+    trackEvent('run_sql_query', { category: 'query' });
     setIsRunning(true);
     try {
       const res = await runQuery(currentSql.trim(), parsedData);

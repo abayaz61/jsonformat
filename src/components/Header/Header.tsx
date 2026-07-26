@@ -4,6 +4,7 @@ import React, { useRef } from 'react';
 import { useTheme, useLanguage } from '@/contexts';
 import { ColorPaletteCarousel } from './ColorPaletteCarousel';
 import type { FormatOptions } from '@/utils/jsonOperations';
+import { trackEvent } from '@/lib/gtag';
 import {
     Sparkles,
     Moon,
@@ -232,7 +233,10 @@ export function Header({
                 {/* Theme Toggle */}
                 <button
                     className="header-button"
-                    onClick={toggleMode}
+                    onClick={() => {
+                        toggleMode();
+                        trackEvent('toggle_theme', { category: 'preferences', label: theme.mode === 'dark' ? 'light' : 'dark' });
+                    }}
                     title={theme.mode === 'dark' ? t.themes.light : t.themes.dark}
                 >
                     {theme.mode === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
@@ -258,6 +262,7 @@ export function Header({
                                         onClick={() => {
                                             setLanguage(lang.code);
                                             setShowLanguageMenu(false);
+                                            trackEvent('change_language', { category: 'preferences', label: lang.code });
                                         }}
                                     >
                                         {lang.name}

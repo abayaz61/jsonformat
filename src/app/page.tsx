@@ -11,6 +11,7 @@ import { copyToClipboard, pasteFromClipboard } from '@/utils/clipboard';
 import { downloadJson, readFile } from '@/utils/fileOperations';
 import { getInitialSessionContent } from '@/utils/sessionState';
 import { useLanguage } from '@/contexts';
+import { trackEvent } from '@/lib/gtag';
 import { Code, GitBranch, ChevronsUpDown, ChevronsDownUp, ZoomIn, Terminal, GitCompare, RefreshCw } from 'lucide-react';
 
 interface Toast {
@@ -97,6 +98,7 @@ export default function Home() {
 
   // Handlers with useCallback
   const handleFormat = useCallback(() => {
+    trackEvent('format_json', { category: 'editor' });
     const result = format(2, filterOptions);
     if (result === 'full') {
       showToast(t.messages.formatted, 'success');
@@ -108,6 +110,7 @@ export default function Home() {
   }, [format, filterOptions, showToast, t.messages.formatted, t.messages.partialFormatted, t.messages.invalidJson]);
 
   const handleMinify = useCallback(() => {
+    trackEvent('minify_json', { category: 'editor' });
     if (minify()) {
       showToast(t.messages.minified, 'success');
     } else {
@@ -116,6 +119,7 @@ export default function Home() {
   }, [minify, showToast, t.messages.minified, t.messages.invalidJson]);
 
   const handleCopy = useCallback(async () => {
+    trackEvent('copy_json', { category: 'editor' });
     const success = await copyToClipboard(content);
     if (success) {
       showToast(t.messages.copied, 'success');
@@ -123,6 +127,7 @@ export default function Home() {
   }, [content, showToast, t.messages.copied]);
 
   const handlePaste = useCallback(async () => {
+    trackEvent('paste_json', { category: 'editor' });
     const text = await pasteFromClipboard();
     if (text !== null) {
       setContent(text);
@@ -132,6 +137,7 @@ export default function Home() {
   }, [setContent, showToast, t.messages.pasteError]);
 
   const handleDownload = useCallback(() => {
+    trackEvent('download_json', { category: 'file' });
     if (content.trim()) {
       const timestamp = new Date().toISOString().slice(0, 10);
       downloadJson(content, `json-${timestamp}.json`);
@@ -140,6 +146,7 @@ export default function Home() {
   }, [content, showToast, t.messages.downloaded]);
 
   const handleUpload = useCallback(async (file: File) => {
+    trackEvent('upload_json', { category: 'file' });
     try {
       const text = await readFile(file);
       setContent(text);
@@ -149,6 +156,7 @@ export default function Home() {
   }, [setContent, showToast, t.messages.uploadError]);
 
   const handleClear = useCallback(() => {
+    trackEvent('clear_json', { category: 'editor' });
     clear();
     showToast(t.messages.cleared, 'info');
   }, [clear, showToast, t.messages.cleared]);
@@ -286,35 +294,50 @@ export default function Home() {
         <div className="tab-bar">
           <button
             className={`tab-button ${activeTab === 'editor' ? 'active' : ''}`}
-            onClick={() => setActiveTab('editor')}
+            onClick={() => {
+              setActiveTab('editor');
+              trackEvent('select_tab', { category: 'navigation', label: 'editor' });
+            }}
           >
             <Code size={14} />
             <span>{t.editor.tabEditor}</span>
           </button>
           <button
             className={`tab-button ${activeTab === 'tree' ? 'active' : ''}`}
-            onClick={() => setActiveTab('tree')}
+            onClick={() => {
+              setActiveTab('tree');
+              trackEvent('select_tab', { category: 'navigation', label: 'tree' });
+            }}
           >
             <GitBranch size={14} />
             <span>{t.editor.tabTree}</span>
           </button>
           <button
             className={`tab-button ${activeTab === 'query' ? 'active' : ''}`}
-            onClick={() => setActiveTab('query')}
+            onClick={() => {
+              setActiveTab('query');
+              trackEvent('select_tab', { category: 'navigation', label: 'query' });
+            }}
           >
             <Terminal size={14} />
             <span>{t.query.tabQuery}</span>
           </button>
           <button
             className={`tab-button ${activeTab === 'diff' ? 'active' : ''}`}
-            onClick={() => setActiveTab('diff')}
+            onClick={() => {
+              setActiveTab('diff');
+              trackEvent('select_tab', { category: 'navigation', label: 'diff' });
+            }}
           >
             <GitCompare size={14} />
             <span>{t.editor.tabDiff ?? 'Diff'}</span>
           </button>
           <button
             className={`tab-button ${activeTab === 'converter' ? 'active' : ''}`}
-            onClick={() => setActiveTab('converter')}
+            onClick={() => {
+              setActiveTab('converter');
+              trackEvent('select_tab', { category: 'navigation', label: 'converter' });
+            }}
           >
             <RefreshCw size={14} />
             <span>{t.editor.tabConverter ?? 'Dönüştürücü'}</span>
