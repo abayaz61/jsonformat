@@ -359,6 +359,7 @@ server {
 
     location = /sitemap.xml {
         types { } default_type application/xml;
+        add_header Content-Type "application/xml; charset=utf-8" always;
         try_files /sitemap.xml =404;
     }
 
@@ -417,6 +418,7 @@ server {
 
     location = /sitemap.xml {
         types { } default_type application/xml;
+        add_header Content-Type "application/xml; charset=utf-8" always;
         try_files /sitemap.xml =404;
     }
 
