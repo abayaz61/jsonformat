@@ -108,6 +108,9 @@ export const metadata: Metadata = {
   // ── Hreflang / Alternate Languages ───────────────────────────────
   alternates: {
     canonical: "https://jsonformat.info/",
+    types: {
+      "application/xml": "https://jsonformat.info/sitemap.xml",
+    },
     languages: {
       "x-default": "https://jsonformat.info/",
       "en":        "https://jsonformat.info/?lang=en",
