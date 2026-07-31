@@ -1,5 +1,5 @@
 import type { JsonValidationResult } from '@/types';
-import { extractJwt, parseJwt } from './jwt';
+import { parseJwt } from './jwt';
 
 export interface FormatOptions {
     ignoreNull?: boolean;
@@ -42,7 +42,7 @@ function buildParseCandidates(input: string): string[] {
     const stripped = stripTrailingJunk(input);
     const repaired = repairJsonLikeInput(stripped);
     const candidates = [input, stripped, repaired, wrapAsArray(stripped), wrapAsArray(repaired)];
-    const jwtParsed = extractJwt(stripped);
+    const jwtParsed = parseJwt(stripped);
     if (jwtParsed) {
         candidates.unshift(JSON.stringify(jwtParsed));
     }
@@ -782,14 +782,14 @@ export function validateJson(input: string): JsonValidationResult {
         return { valid: true };
     }
 
-    if (extractJwt(input)) {
-        return { valid: true };
-    }
-
     try {
         JSON.parse(input);
         return { valid: true };
     } catch (e) {
+        if (parseJwt(input)) {
+            return { valid: true };
+        }
+
         const error = e as SyntaxError;
         const match = error.message.match(/at position (\d+)/);
         const position = match ? parseInt(match[1], 10) : undefined;
@@ -819,7 +819,7 @@ export function parseJson(input: string): object | null {
     try {
         return JSON.parse(input);
     } catch {
-        const jwtParsed = extractJwt(input);
+        const jwtParsed = parseJwt(input);
         if (jwtParsed) {
             return jwtParsed as unknown as object;
         }

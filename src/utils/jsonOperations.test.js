@@ -53,3 +53,22 @@ test('gecerli jwt token yapistirildiginda formatJson header, payload ve signatur
   assert.ok(formatted.includes('"raw": "eyJraWQi'));
   assert.ok(minified.includes('{"header":{"kid":"5RFOSiNIUm"'));
 });
+
+test('json icinde jwt alani varken formatJson orijinal json yapisini korur', () => {
+  const sampleToken = [
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
+    'eyJpc3MiOiJJUVgiLCJleHAiOjE3ODU1MTc0NjUsImlhdCI6MTc4NTQ5OTQ2NSwibmJmIjoxNzg1NDk5NDM1LCJpZCI6ImQ4Yzg0ODFlNjhhZjRjMzg5ZjJlZjhiNzI2Mzc2ZDgwIiwic3ViIjoiNzcwODA5IiwiY2xpIjoiTSIsImN1c3RvbWVyTm8iOiI1QjUwMkZEQy1DOTY2LTQyQ0QtOEUzNi0yMzk4QTc5ODUzMEQiLCJoYXJkd2FyZUlkIjoiMWFjNWU4ODZkZDhkN2RmOWMyRnRjM1Z1WjFOTkxWTTVNakZDIn0',
+    'signature',
+  ].join('.');
+  const input = JSON.stringify({
+    appInfo: { appTitle: 'Matriks Test' },
+    MarketDataToken: sampleToken,
+  });
+
+  const formatted = formatJson(input, 2);
+  const parsed = JSON.parse(formatted);
+
+  assert.equal(parsed.appInfo.appTitle, 'Matriks Test');
+  assert.equal(parsed.MarketDataToken, sampleToken);
+  assert.equal('header' in parsed, false);
+});

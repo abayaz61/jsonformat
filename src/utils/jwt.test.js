@@ -129,3 +129,14 @@ test('formatJwtTimeClaims payload uzerinde ham veri tiplerini korur', () => {
   assert.equal(formatted.login_date, 1784820249000);
   assert.equal(formatted.normal_id, 12345);
 });
+
+test('parseJwt json icindeki jwt alanini ayiklamaz', () => {
+  const sampleToken = [
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
+    'eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9',
+    'c2lnbmF0dXJl',
+  ].join('.');
+  const jsonWithJwt = `{"token":"${sampleToken}","other":"value"}`;
+
+  assert.equal(parseJwt(jsonWithJwt), null);
+});

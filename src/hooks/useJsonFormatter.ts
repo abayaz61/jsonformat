@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { formatJson, minifyJson, validateJson, partialFormatJson } from '@/utils/jsonOperations';
-import { extractJwt } from '@/utils/jwt';
+import { parseJwt } from '@/utils/jwt';
 import type { JsonValidationResult } from '@/types';
 import type { FormatOptions } from '@/utils/jsonOperations';
 
@@ -35,7 +35,7 @@ export function useJsonFormatter(initialContent: string = ''): UseJsonFormatterR
         }
 
         if (!isRealJsonObjectOrArray) {
-            const jwtParsed = extractJwt(newContent);
+            const jwtParsed = parseJwt(newContent);
             if (jwtParsed) {
                 const formatted = JSON.stringify(jwtParsed, null, 2);
                 setContent(formatted);

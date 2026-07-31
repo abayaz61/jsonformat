@@ -7,7 +7,7 @@ import type { JsonValidationResult } from '@/types';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
 import type { editor } from 'monaco-editor';
 import { defineMonacoTheme, getSyntaxColors } from '@/utils/monacoTheme';
-import { findJwtAtOffset, formatJwtPayloadHoverMarkdown, extractJwt } from '@/utils/jwt';
+import { findJwtAtOffset, formatJwtPayloadHoverMarkdown, parseJwt } from '@/utils/jwt';
 import { findEpochHoverAtPosition } from '@/utils/epochHover';
 
 interface JsonEditorProps {
@@ -327,30 +327,42 @@ export function JsonEditor({ value, onChange, validation }: JsonEditorProps) {
             }
         });
 
-        // Native Monaco paste listener for instant JWT parsing on any paste event
+        // Native Monaco paste listener: decode only when the entire pasted content is a JWT
         editor.onDidPaste(() => {
             setTimeout(() => {
                 const model = editor.getModel();
                 if (!model) return;
                 const currentText = model.getValue();
 
-                const decoded = extractJwt(currentText);
-                if (decoded) {
-                    let isAlreadyDecodedJwtObj = false;
-                    try {
-                        const obj = JSON.parse(currentText);
-                        if (obj && typeof obj === 'object' && 'header' in obj && 'payload' in obj) {
-                            isAlreadyDecodedJwtObj = true;
-                        }
-                    } catch {
-                        isAlreadyDecodedJwtObj = false;
+                let isJsonObjectOrArray = false;
+                try {
+                    const parsed = JSON.parse(currentText);
+                    if (parsed && typeof parsed === 'object') {
+                        isJsonObjectOrArray = true;
                     }
+                } catch {
+                    isJsonObjectOrArray = false;
+                }
 
-                    if (!isAlreadyDecodedJwtObj) {
-                        const formatted = JSON.stringify(decoded, null, 2);
-                        editor.setValue(formatted);
-                        onChange(formatted);
+                if (isJsonObjectOrArray) return;
+
+                const decoded = parseJwt(currentText);
+                if (!decoded) return;
+
+                let isAlreadyDecodedJwtObj = false;
+                try {
+                    const obj = JSON.parse(currentText);
+                    if (obj && typeof obj === 'object' && 'header' in obj && 'payload' in obj) {
+                        isAlreadyDecodedJwtObj = true;
                     }
+                } catch {
+                    isAlreadyDecodedJwtObj = false;
+                }
+
+                if (!isAlreadyDecodedJwtObj) {
+                    const formatted = JSON.stringify(decoded, null, 2);
+                    editor.setValue(formatted);
+                    onChange(formatted);
                 }
             }, 20);
         });
